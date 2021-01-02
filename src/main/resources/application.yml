@@ -1,0 +1,9 @@
+spring:
+  jpa:
+    hibernate:
+      naming:
+        physical-strategy: "com.bada.app.utils.NamingStrategy"
+  datasource:
+    url: "jdbc:postgresql://localhost:5432/bada"
+    username: "admin"
+    password: "password"
