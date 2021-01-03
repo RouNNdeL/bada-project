@@ -19,3 +19,8 @@ interface CompanyRepository : CrudRepository<Company, Long>
 interface EmployeeRepository : CrudRepository<Employee, Long> {
     fun findEmployeesByCompanyId(companyId: Long) : Set<Employee>
 }
+
+@Repository
+interface AddressRepository : CrudRepository<Address, Long> {
+    fun findAddressById(addressId: Long) : Address
+}

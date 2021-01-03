@@ -8,7 +8,7 @@ import javax.persistence.*
 class Order(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "order_id", updatable = false, nullable = false)
+    @Column(updatable = false, nullable = false)
     val id: Long,
 
     @Column(updatable = false, nullable = false)
