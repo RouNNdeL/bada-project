@@ -1,9 +1,6 @@
 package com.bada.app.repos
 
-import com.bada.app.models.Company
-import com.bada.app.models.Customer
-import com.bada.app.models.Employee
-import com.bada.app.models.Order
+import com.bada.app.models.*
 import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository
 

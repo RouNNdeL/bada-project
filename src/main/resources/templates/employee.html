@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${employee.displayName}">John Smith</title>
+</head>
+<body>
+<h1 th:text="${employee.displayName}">John Smith</h1>
+<p th:text="'Employment date: ' + ${#dates.format(employee.employmentDate, 'dd-MM-yyyy')}">Employment date: 10-02-2003</p>
+<p th:text="'Username: ' + ${employee.username}"></p>
+<p th:text="'Email: ' + ${employee.email}"></p>
+<p th:text="'Permissions: ' + ${employee.showPermissions()}"></p>
+<p th:text="'PESEL: ' + ${employee.pesel}"></p>
+<p th:text="'Phone number: ' + ${employee.phoneNumber}"></p>
+</body>
+</html>

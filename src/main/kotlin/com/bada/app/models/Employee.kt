@@ -1,5 +1,7 @@
 package com.bada.app.models
 
+import com.bada.app.utils.UserPermissionConverter
+import java.security.Permission
 import java.util.*
 import javax.persistence.*
 
@@ -19,6 +21,9 @@ class Employee (
     var pesel: String,
     var employmentDate: Date,
     var phoneNumber: String,
+
+    @Convert(converter = UserPermissionConverter::class)
+    val permissions: List<Permission>,
 
     @OneToOne
     var address: Address,
@@ -42,6 +47,11 @@ class Employee (
     fun getDisplayName() : String {
         return "$firstName $lastName"
     }
+
+    fun showPermissions(): String {
+        return permissions.joinToString(", ")
+    }
+
     enum class Permission {
         ASSIGN_ORDER,
         MODIFY_STOCK,
