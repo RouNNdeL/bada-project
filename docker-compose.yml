@@ -14,6 +14,11 @@ services:
       POSTGRES_USER: admin
       POSTGRES_DB: bada
 
+  redis:
+    image: redis
+    ports:
+    - 6379:6379
+
   app:
     image: 'roundel/bada:latest'
     build:
@@ -23,7 +28,11 @@ services:
       - 8080:8080
     depends_on:
       - db
+      - redis
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/bada
       - SPRING_DATASOURCE_USERNAME=admin
       - SPRING_DATASOURCE_PASSWORD=password
+      - SPRING_REDIS_HOST=redis
+      - SPRING_REDIS_PORT=6379
+      - SPRING_REDIS_PASSWORD=
