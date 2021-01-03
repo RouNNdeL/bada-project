@@ -64,6 +64,10 @@ ALTER TABLE warehouses
 CREATE TABLE employees
 (
     employee_id     SERIAL,
+    username    VARCHAR(20)             NOT NULL,
+    password    CHAR(76)                NOT NULL,
+    email       VARCHAR(50)             NOT NULL,
+    permissions VARCHAR(256) DEFAULT '' NOT NULL,
     first_name      VARCHAR(30)  NOT NULL,
     last_name       VARCHAR(50)  NOT NULL,
     pesel           CHAR(11)     NOT NULL,
@@ -71,7 +75,6 @@ CREATE TABLE employees
     phone_number    VARCHAR(20)  NOT NULL,
     company_id      INTEGER      NOT NULL,
     warehouse_id    INTEGER DEFAULT NULL,
-    user_id         INTEGER      NOT NULL,
     address_id      INTEGER      NOT NULL
 );
 
@@ -80,9 +83,6 @@ CREATE INDEX IX_fk_company_employs ON employees (company_id);
 
 
 CREATE INDEX IX_fk_works_in ON employees (warehouse_id);
-
-
-CREATE INDEX IX_fk_employee_is_user ON employees (user_id);
 
 
 CREATE INDEX IX_fk_employee_has_address ON employees (address_id);
@@ -130,7 +130,9 @@ ALTER TABLE price_ranges
 CREATE TABLE customers
 (
     customer_id  SERIAL,
-    user_id      INTEGER     NOT NULL,
+    username    VARCHAR(20)             NOT NULL,
+    password    CHAR(76)                NOT NULL,
+    email       VARCHAR(50)             NOT NULL,
     first_name   VARCHAR(30) NOT NULL,
     last_name    VARCHAR(50) NOT NULL,
     nip          CHAR(13),
@@ -304,23 +306,11 @@ CREATE INDEX IX_fk_is_reviewed ON scores (employee_id);
 ALTER TABLE scores
     ADD CONSTRAINT PK_scores PRIMARY KEY (score_id);
 
+ALTER TABLE employees
+    ADD CONSTRAINT UsernameEmployees UNIQUE (username);
 
-CREATE TABLE platform_users
-(
-    user_id     SERIAL,
-    username    VARCHAR(20)             NOT NULL,
-    password    CHAR(76)                NOT NULL,
-    email       VARCHAR(50)             NOT NULL,
-    permissions VARCHAR(256) DEFAULT '' NOT NULL
-);
-
-
-ALTER TABLE platform_users
-    ADD CONSTRAINT PK_platform_users PRIMARY KEY (user_id);
-
-
-ALTER TABLE platform_users
-    ADD CONSTRAINT Username UNIQUE (username);
+ALTER TABLE customers
+    ADD CONSTRAINT UsernameCustomers UNIQUE (username);
 
 
 ALTER TABLE companies
@@ -444,470 +434,9 @@ ALTER TABLE scores
 
 
 ALTER TABLE employees
-    ADD CONSTRAINT fk_employee_is_user
-        FOREIGN KEY (user_id) REFERENCES platform_users (user_id);
-
-
-ALTER TABLE customers
-    ADD CONSTRAINT fk_customer_is_user
-        FOREIGN KEY (user_id) REFERENCES platform_users (user_id);
-
-
-ALTER TABLE employees
     ADD CONSTRAINT fk_employee_has_address
         FOREIGN KEY (address_id) REFERENCES addresses (address_id);
 
-
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('cburchill0', '012345678912cac15da37073ec5849d6a14edb69cad68423b9e66af466d22bac56f737a5f93f',
-        'rblackaller0@soup.io', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('bhavercroft1', '012345678912f4e55b9659df06a7de7b594d30bd9110bc78d83a1177eb025734e1f469042470',
-        'ycourtliff1@omniture.com', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('jchalcroft2', '012345678912f11a5b9e2d3d8926097ed4786dabe8ed4dc24157cba61d02a5e195a94eebc3d3',
-        'ekindleside2@nih.gov', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('agillings3', '0123456789123ce17c4c0a9b68a353d114183a42ea3786cdfed81de11162978ea4f2379e7194',
-        'aeglaise3@photobucket.com', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('rtrippack4', '0123456789123ecaf430674c9f86c15c44b0ef209ab59b72c74aa5c9a1e1310a040ebf6c5c5f',
-        'cionnidis4@xinhuanet.com', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('rscones5', '01234567891299cc731f38a949f69f45323ba654010ebfd25a192b686e96077dc3d8bee621de',
-        'eduferie5@t-online.de', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('vratcliffe6', '01234567891238f7045670deaf9913b9c1ac8a5696ee770a0b5d97a3a9db93a183568b6e74fa',
-        'cspyby6@senate.gov', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('blux7', '012345678912335ab27157fbe76947ba5bf3f407b763cfa8976a34f5c14d2665ce962159ea94',
-        'kchamney7@skyrock.com', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('lsoff8', '01234567891274a8f2bfaf3c10c8d6f73f2e672f23e3df1e4ee16c4d82d307611ea449d50c87', 'ipusey8@msn.com',
-        ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('fgaley9', '012345678912ce1b408aef990f1f20301eb6e3db26912ef337d0104886dbdc455def7cc89543',
-        'mucchino9@constantcontact.com', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('smaletratta', '01234567891265607b08ed10e2753fcba35515d856ba0cad7a58d585b3c24f0fcb8927aa28b8',
-        'kmillsona@unblog.fr', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('fcutbushb', '012345678912a3d67756be3be98fede10babf3f4a20a4827baf29f35380cafde39deebf68f3a',
-        'kkinchingtonb@forbes.com', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('kbutterickc', '012345678912e58a6b60f5c732709a8f226eb8a55d6f8ad90e9ca64e917a9a7fab82e762e3fa',
-        'ssmullinc@google.cn', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('mdotterilld', '012345678912da7a4e6ef79749a551b27b44eea85395f28a682d3abff8ad46c6ad8204a9bb34',
-        'dcauldwelld@friendfeed.com', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('rbewshawe', '0123456789122b110bb969cdff61c7e67ea56d20178d095de3086f9da8be7ac098626b157e1a', 'eraddane@i2i.jp',
-        ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('iniessenf', '0123456789121d22c263d9789dc4427be7892fa9869c9b1d8a7afd6310b27b0f4b9b32d0b9b4',
-        'wpacquetf@buzzfeed.com', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('tgrammerg', '01234567891293272972ad98a08be61e3c5eb0eb15f0d75fbac89bb6a92099ce0f9afd2f91e3',
-        'dleverittg@cbslocal.com', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('bburrash', '012345678912a0f76bebea342dc9f8ac0670b28e4176dadb3417a2f83fa2254025f3f15a3487',
-        'jknowlingh@oracle.com', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('aoloinni', '012345678912fbc39242d02512fc1bd441931d41e40a2f318b9dc2a3f9e82055df4aee9da56f',
-        'khandleyi@weebly.com', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('dfeenanj', '0123456789123422082f0d63e29b6a992a1aec735ef7a6a72f420069068bbc825544eccde210',
-        'livankovicj@dedecms.com', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('kdorkink', '012345678912170dccf93fd5fe1eeef523c5840fab50a2462f4f37effa049c53ba9daf51edb6',
-        'bthackrayk@chronoengine.com', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('avynehalll', '0123456789129c59e3a7384d6a86aae9d8b8988e859be3440be6fd07fd90e2ffbc0115c52f1b',
-        'graynhaml@umn.edu', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('hirdalem', '0123456789125279391ba1978a3d14a9ebeb9c1ec9dabc08d1a30edcd29c217156e85385f23d',
-        'ggrinstonm@typepad.com', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('kphilipetn', '0123456789124ab506ec27b092b757a1715333242b86c2b6fe8c5b1888be19a28023329541d4',
-        'drubinekn@amazon.com', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('efeldbaumo', '0123456789128709bb426bd5ad15d86469ec4bf5441a02396ea34487e0c381598b8a05f341b6',
-        'jmacelroyo@virginia.edu', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('hhorsewoodp', '012345678912bdf6d0c26bc098287a9dbb267e2eac765ae837862f6def936174d6ec328e6251',
-        'rglaisterp@theatlantic.com', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('phulleq', '0123456789123a11e6f33d5f76f3edf187cf671db1868d7dc77240df52db2d8dfb4d824c8679',
-        'rbensteadq@google.com.hk', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('tbrownscomber', '012345678912d516d85638b4cda577b89079d0502057c32a612451152962bd8972a6b6c839dc',
-        'fdenslowr@cam.ac.uk', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('wmarkes', '01234567891264d65479463e1e3cd5852efa44ddc30d586147722dc41a9f1a87758b12449634', 'plomiss@blogs.com',
-        ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('jjakuszewskit', '0123456789121959b03612ed49ddd4891113593a263854900da0bb1f3e6d6f5008b53dcdc178',
-        'kpackingtont@etsy.com', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('apickeringu', '012345678912272578c8c5e4001b0b55d886c9739fa302de5daf81f533e71bef6d9097c11279',
-        'garelesu@webs.com', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('bstenhousev', '012345678912a5dae4d8b3632bb9fddc4e2cfe4e410482c07d1f2571874c9ec36871f92ffd33',
-        'cpiggotv@mapquest.com', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('bbellw', '01234567891271a3a92b997400c327f0d05d89a07ade77d06b94ca55501d4c79dc834d1c0652',
-        'dfloresw@prnewswire.com', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('bkalinowskyx', '0123456789128f8d12d8088950a8f00b721e787c292bca785bc7cfebf29d7a226b9fd0a66cb9',
-        'cwaumsleyx@ucsd.edu', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('jcockshuty', '012345678912c6e720e73fd7f6172c7704739f63431bda487a061ec512f0a2a8c26869f5d517',
-        'kcamposy@edublogs.org', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('hrodnightz', '012345678912a0c31ceae813628f75b5f692d6bf5cb4341d620e98fe1e44eb5dab5c69c5e653',
-        'cklimczakz@sciencedaily.com', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('hwinterbourne10', '012345678912d60b0ff925411093ee48b1451a6a14fcd8b331c80ee9c90932a099f6a09ab832',
-        'mbarron10@bing.com', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('ghaydn11', '01234567891231447ba7242e27cd05fae4ae6310f1f6579892b89c7f595c1eb7731734c87279',
-        'lolifaunt11@woothemes.com', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('tbaguley12', '01234567891244caa14487309a5a9452246f21006f53412e80cac856dc09f03e4ded87288e4e',
-        'pblue12@china.com.cn', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('rigounet13', '012345678912e9a210bb92cfcb62b39e13b6454350f9784b324fa931f25fe66ed18fad2aea36',
-        'atuft13@webmd.com', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('noshevlin14', '01234567891248cf893d5c004907dcce4bc6e50dfb56e8267ba471bfbc147c6b220c3c50a407',
-        'braiston14@pbs.org', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('ojelleman15', '012345678912199717f9176888c5690d5b868c1a2d74893dd3155898ee0e41a38553f8a70b0f',
-        'lblundan15@bluehost.com', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('yhobell16', '0123456789122d9f36464e697a6b6e547530ed06021bf5391bea0643b05e618f63c3ee7be295',
-        'otollerfield16@mayoclinic.com', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('jfarquar17', '0123456789127e39540dc4beb93e3d41037025e21e45ba58e24b4dafad0bf2672ff77991f94a',
-        'bagott17@hibu.com', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('mpetrelli18', '0123456789128a63f3cec27403ea0b3fd07355a7c6a8dcabcd5c6d79b54322b00f7cf4b9b82c',
-        'askentelbury18@ow.ly', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('sochterlony19', '01234567891203148480468cf95446f5696c88c17a42cfdb9ed2854e5a77322fff1c797e71e8',
-        'kschruyers19@ted.com', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('vwarstall1a', '012345678912a77a831d808b9efc39b4f43d1ed7e9612bacb899c8e4f8de4661f3b99e2e8c9f',
-        'cwarters1a@oracle.com', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('bmark1b', '01234567891252a432483abf00b25dcc14c34fb76664675faa7ffd0f04f56150033c949976cd',
-        'cmarlon1b@chron.com', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('ctagg1c', '012345678912515e52aa8b414b5cde54fec803cecad4b06d52740eb2832ad09b50dde1a9975f',
-        'mmcmylor1c@netvibes.com', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('shay1d', '012345678912133c9f1d78be26f7014416a148116cd9e5914ec92e883a65ee0c3a1b8c74bce6', 'bcoysh1d@nifty.com',
-        ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('dchidzoy1e', '01234567891286801de344ec76e4f59d14ef0dda7c0dc64b48d36bb2055e34fe9089fca111fc',
-        'frolfe1e@virginia.edu', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('mwindaybank1f', '01234567891213af1d3798acefa68a8b358d8bb6f15ccfe9931f04e41f8592707d04999198cd',
-        'dstairmand1f@furl.net', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('jdrinan1g', '012345678912dad75a6ad8084defd5304a8e8ffd8f686354b7e0497dedc2b6966948c1a8db9f',
-        'tbogays1g@telegraph.co.uk', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('prooksby1h', '01234567891280d45424908bb14128b8747b778ebcf8e1321b4dfb46af69f39346f904176b13',
-        'sbertl1h@blinklist.com', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('mtanzer1i', '012345678912ad81dfb937f2d6501c6453d694f6c228f82551e66406bc67ac3d9ffd087d91fd',
-        'jrudolph1i@engadget.com', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('mmohan1j', '01234567891221ba69aa6dfd388482f245c356cf213e57ba97d2dd1f7ca8363a61333e21ecba',
-        'khambleton1j@slashdot.org', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('mmccalum1k', '012345678912917e8ad5185dc8151da2a08239dd286df5fc0edc0e5a24c732d846ed69e1f3fd',
-        'eescofier1k@wp.com', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('spatley1l', '012345678912994f5f9a39e270742052a95be9067c457bc923678499b452a90338d06b1522f7',
-        'kleipoldt1l@fema.gov', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('lbendix1m', '0123456789128ca5b5c1c2c577d2731ede43ea65732b1145a1777e106ed1b5ce636d2e2fdd20',
-        'kjayume1m@vkontakte.ru', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('bfolger1n', '0123456789125e3f5e12cc9f640565d8622160aa206fd05ab3616c79e21584de8b9db8d38b5d',
-        'mdoddridge1n@va.gov', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('gthews1o', '0123456789129ef7392779647ca22861619ad2f31b8afe65064899cef6d52f1363da46c1529e',
-        'emarcoolyn1o@last.fm', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('keyre1p', '012345678912d365f134f36bd7e956d1d1911902ff1ee3ef67b1f3f9946e6ddf6147b6e34147',
-        'svockings1p@cdbaby.com', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('mvlasenko1q', '01234567891231cd5344800b70203d7f7ded81d854e6ae06cacc3cb71f159a652b4fdbf40c67',
-        'lwiffen1q@linkedin.com', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('acroster1r', '0123456789121d26f61b8cf309a09798e06f0bcfa2e3f7bf8f0f1591372460708864819288b8',
-        'njouen1r@163.com', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('jhume1s', '012345678912a3c337178b6fce8f0e9e454c1449db4ecfa5870ebf916bd395abe6d4192ccc84',
-        'sjendas1s@usnews.com', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('mcrawshay1t', '0123456789120cc88d92393818a09902918c2f45a99f26c0dbee0a7531741e06c07708a8cd91',
-        'zarias1t@histats.com', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('sjopke1u', '01234567891256b6559837acf731728acecfbd493657a8ab98e7d7ded0578b70d7109ec1caee',
-        'xsperry1u@dailymotion.com', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('bwoodard1v', '012345678912a13f1a00d1f54f9a5b427d512bec745e8292570268bdbb4badbf972a8dafa739',
-        'gcoslett1v@microsoft.com', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('csquire1w', '012345678912c9a632d0af97cfdcad4033d018797d0c975d7ec56692d639828b83a54e1f285c',
-        'heles1w@engadget.com', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('frizzetti1x', '012345678912e49103145abe7cfeed8d4b86bda62004c1d14a6f5d300f26ea1a6c2c890dcea4',
-        'mfairhurst1x@infoseek.co.jp', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('iransom1y', '0123456789127db8445b2e42e640fe8be5e461be5e86e67f92d462548625c4405720bee5330d',
-        'sdodsley1y@ustream.tv', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('ctapsell1z', '012345678912acd63779b24df6d3964ec005518df98303dac5000a70e5b5a80469999c88d35f',
-        'gmotte1z@cbsnews.com', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('kmalden20', '0123456789120f6ed3e074f5fc752071791d0a22a1516157eccadf97c41d55593a8648235027',
-        'aattew20@utexas.edu', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('lsorby21', '012345678912cf777aef9ec560c3a63165d1a05f8d9853eb6e8e47e020fcf25cadbd98fdbb5d', 'zmckew21@who.int',
-        ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('eteffrey22', '012345678912a46daa8987922eef2ce19b9b8f59b7af0d96cf99f0599126f5b7b1f2398e5813',
-        'hlammie22@sphinn.com', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('dwiz23', '0123456789125fe07f9920633a1ada223255fbf8927e274e04e53dfbaaa48fc79f72260883e9',
-        'daudley23@abc.net.au', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('lkamen24', '012345678912003a5b5b25f505a7be0fe9b20fb5cd3b67ce75c6445490b3f6435730e97b0488', 'mbennoe24@gov.uk',
-        ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('dserjeantson25', '01234567891252e61a13ca0b88a79d74658a8f8952d66a664f9174b7f00bb3ce5d35421662f7',
-        'caviss25@toplist.cz', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('mduetsche26', '0123456789127566e47da549e886f0a29bb77564ed6b4aadabfd9c105bbd74bd9c111cec4ae4',
-        'nmulberry26@va.gov', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('ttomaszkiewicz27', '012345678912f55678227c5e282c7be50a02bbeeb7485e529eba682981ef160101102bfabd9b',
-        'qkarle27@imgur.com', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('tepinay28', '012345678912f7b1d306327188b1f08e8ce6af7d6f2c688b91587965e5fafae9a03739b237bb',
-        'abeincken28@hao123.com', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('nbazeley29', '012345678912f7d78242b60d5defc34864b3db6730d65f22d841067836e8c7a1e1f1e7170f40',
-        'dbrasener29@seesaa.net', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('hgoburn2a', '012345678912ac06559d2b3294e54f14309798d6dfde1e9063f1f75b9e6f7809399e8b7ae9fb',
-        'sdinisco2a@blogtalkradio.com', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('jkarim2b', '01234567891285bc878cc2522a1e3bf0ff7075b68f9abda1c732200999fe55c61ab2ec22839b',
-        'ldepke2b@cisco.com', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('aroles2c', '012345678912e57a4aeec3f644a4eb974b0a898130ae249b33391246c94d840832881fc8eda1',
-        'dlavarack2c@blinklist.com', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('aantonijevic2d', '01234567891205b856dae8397d18038c77f1f60b228a231e0e340789b62d5e66be9f58934699',
-        'aissacson2d@clickbank.net', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('crisen2e', '0123456789124ac359261fad7c6dbf7070b9babb3a2611f54f35d590126ce63d4cf3ea505e99',
-        'bagirre2e@nsw.gov.au', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('lgreeveson2f', '012345678912db2439d3fbbe14af019040ff596bd4d81837515d2449a569564789616bcc666b',
-        'cmillgate2f@webnode.com', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('pbeechcraft2g', '012345678912de2f2dca65aeaee9d5deab6ef20dea4182df86ca09e41ee9c22bd50c6e961c10',
-        'wfrend2g@amazonaws.com', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('krowcastle2h', '012345678912e882f3e7aea84c39f252e6f50d503c4f61c72a25f8b00f4e4890042b3d1da3f2',
-        'bromney2h@aboutads.info', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('hizkovitch2i', '012345678912187fc0bbe667202cc1edfbc2137ea7f45f6a50ae08ef79ff10088e26607a93d4',
-        'ahanbidge2i@lulu.com', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('ntompkiss2j', '0123456789127a55d2985928f31827ecd2190e6147c11640886fcd7253011ad5bbbc082959dd',
-        'vrosengren2j@nationalgeographic.com', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('mkiddell2k', '012345678912556cc9e4865a6ebbb3eccbe0bb8eef646d37024080e34d3b734549d53df43d1c',
-        'lbruckenthal2k@chicagotribune.com', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('blougheid2l', '01234567891202df44e42f699d3da344c92df12c101da89bf5a5440bb307dafc839c6b5a1f81',
-        'abanasik2l@umich.edu', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('vmatyukon2m', '0123456789120723b71ecac094273010fa980e15104fd6e8f102f9c4961b94856e4233b90086',
-        'gbowcher2m@time.com', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('sbenediktovich2n', '01234567891235c9f9b6789218611f25aeb096aebaf08d129355108decfdd5803e42760e6b23',
-        'bkynan2n@biglobe.ne.jp', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('lmacon2o', '0123456789129477ac260b65f583cbf7d1162b1ff18375050cf0d813008adca4c60b84c451cc',
-        'snaisbit2o@phpbb.com', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('gclapston2p', '01234567891273ff2a3078d71171a2ba797644d20e647c279eb5e87be0f317c7492b9100148c',
-        'dmckinstry2p@wikispaces.com', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('scrozier2q', '0123456789125c173b5e5daa41ecfff421ee5793905f1b55428e5ff0b72c4589c8c24ea20598',
-        'gmatignon2q@homestead.com', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('tthorouggood2r', '012345678912e061a840c79bee8bc81400ca83300858934ff3a3c57542f752db111819cf0383',
-        'acleeton2r@wiley.com', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('dschulke2s', '012345678912559bf3740b9f0ac69b9897be3ea03ef7d3ca231056ccd31a7ad32326802e7729',
-        'schape2s@yandex.ru', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('ntuffin2t', '012345678912853708f0d807c93a2df3a062d1bfceb54b3d28d593b2cf785db763791b776abb',
-        'erosi2t@goodreads.com', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('tikringill2u', '012345678912c6db2bb7843690c7f4c378fb2e0088039821c1b7af34f091c1b89d717568d410',
-        'kbufton2u@rediff.com', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('mjacob2v', '012345678912e22c5f4f011d7bbca5933d22b66e4ccfbc71e58e017d8a04b6bf3a27d2e18290',
-        'mimpey2v@google.com.br', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('ifeechum2w', '01234567891219ff4f62701c09c9120bd8f1905ee1adc7954566b8b8e4724172f5d36716831e',
-        'erysom2w@fda.gov', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('crydzynski2x', '0123456789129992e04b006e278164b3b51de3cc0eff03b5dbbcea006e7175f897e482c44bd4',
-        'sedgeller2x@ucla.edu', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('mmcatamney2y', '012345678912d9d810f6b7a68b73569f31458139655b45036f22de221037080c8605d916f43f',
-        'ybrunsen2y@jalbum.net', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('rclemits2z', '01234567891270b728e1a90f190c89a00194e9c2f0cf2e68966112619c816169cfee04c2e860',
-        'jklulisek2z@myspace.com', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('gmckay30', '012345678912a69c4baad68cce23750a06ebc5d8f802e293cb31f122f36cd621e434d3a8369c', 'dcharge30@nba.com',
-        ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('akindleysides31', '0123456789124c8740c5f0767cae5611d0f9bf62b024eab8d0b556f6418604693050cff925f2',
-        'hmeeks31@gov.uk', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('skidder32', '012345678912fa55f7622327a5cd31f89d36c69bf2c296650318e2a4ca88ace9654548af76dd',
-        'awaistell32@baidu.com', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('rarch33', '012345678912d114b6168f68be054819450790a06ddb4109519d1a158f46c283564dee131512',
-        'cdoone33@friendfeed.com', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('ablackburne34', '01234567891296eaa6fe671ed898ac48e757a6a9ec4a7e2b0174a27440982e097dc63238351e',
-        'theffer34@amazon.co.jp', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('rcranstone35', '01234567891217dc8a1b6bd25338023d13fe6ee9b38f022bc5397d6b7d30678534f11c3c6bdb',
-        'jpadilla35@networksolutions.com', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('jtirone36', '012345678912ab45ecaaeebabfdd48a6025200c099b2f9a5d6920fd97f5aeea0bae47849e202', 'ocourt36@npr.org',
-        ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('amagill37', '012345678912c2825a3d43b28640e4af6de72725b5725e64bffd574c2abae1c1f0180b8f27b4',
-        'tfosberry37@wisc.edu', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('ajanny38', '0123456789127ccc5d1bad34698860f377fbef26aa86b923ecc50bf4506ff5db2f04b10e9e7f',
-        'mbeddoe38@tinypic.com', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('myggo39', '0123456789126e04ad4d7e2c7e010ede40a173b259dc279adc0fcd6bff4691ef48cb702a59e8',
-        'omulford39@foxnews.com', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('afried3a', '0123456789120cfb053997690ba036841f1af6ede08b560a7be392efad0aa15dca5a39c78c58',
-        'fpedlingham3a@aol.com', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('hslade3b', '012345678912b016c963a6620810c3e63a964521481c448964e9542508dee478413bb8fb7f1d',
-        'zgilmour3b@privacy.gov.au', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('daurelius3c', '0123456789121cf26c6bc76dbb72505bd137af7022e844b3d863f0a808a29fd6f77e1b6f1d04',
-        'mdallender3c@mlb.com', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('rsemarke3d', '0123456789126b935686031fd7355dc746f5c921ba14fa55ba6cf431e1124b97b8c8200ebe26',
-        'gmathon3d@umich.edu', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('belis3e', '012345678912749a542e643b099798b5710609b00a5df952a2c69ffa2842da17687350a62808',
-        'kbukowski3e@cargocollective.com', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('wleggis3f', '0123456789125ce808da69511d44c9be9476bb69607444abbb851295b628dde126f005760357',
-        'ssheardown3f@go.com', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('mmulderrig3g', '012345678912165b8cc354f709e6b3c1afeaf084e855f6b9f10c43ee75008f5c9d42dc3a8068',
-        'kdunbobbin3g@gnu.org', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('gragborne3h', '0123456789127382d48463d57a9f369e2ff6bab308598e60a7059d301b7ec0d5011271044227',
-        'dpotticary3h@disqus.com', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('dchantler3i', '0123456789123b21c918e85ef47832d6ed7fc5e9b1f1c8b0c0427d6efb54173b32a0a8e02761',
-        'rjewess3i@opensource.org', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('mtedorenko3j', '012345678912ed358cfcdbe73523b5f7a5bd4259754402ef35e46b960c1b98401f5fef575855',
-        'lsommerly3j@ucoz.com', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('salexsandrov3k', '0123456789123becffe2b2a73b78593796338ec41cfb6117abcca26282f04c1a6f32a9f16688',
-        'cscrammage3k@netscape.com', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('rhefforde3l', '012345678912ea6fe6e7261875585a019936081ab0bd6ab726be4f772bf6e8cb8660ab8e7f6f',
-        'rgeorger3l@multiply.com', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('lasken3m', '0123456789129b2e59d82f1864e13b07dc2d16feac606bec42b80f44c0da4ebf47cd2a809ceb',
-        'ahariot3m@webmd.com', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('cgeldeford3n', '012345678912626c67f12e47bbb3f8ebace258c455463ae6c10b8f6f071958479224ce337dd9',
-        'hanthona3n@oaic.gov.au', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('lwestgarth3o', '012345678912615a0e2a3dc1b8b09e36cd7f9c151f1f27e15c2599c7f89dc5e7186b443b584d',
-        'kpinkerton3o@nba.com', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('cadame3p', '0123456789127ba683ca0368e86b24d02beab63f6b451f4a52129c2cae0aa3ac5c451192b544',
-        'rtottem3p@sina.com.cn', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('aburgin3q', '012345678912a118e75ab1e9fcb406decbae64c78bf43315ec74f871e5cc25268915d640eee4',
-        'fwhyteman3q@vk.com', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('erosser3r', '012345678912036cda6ffa44308a7656924f9c22028797b5eac3da59da1f7cab86aa87f9d71e', 'nruck3r@usda.gov',
-        ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('pcalvey3s', '0123456789120b44fc7a68116c95aca620d989866d5a10406f4de32996e1a7d8740aef33b88b',
-        'dlenton3s@pagesperso-orange.fr', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('asantostefano3t', '0123456789125a9a419797657b59c583fc3a4bd1e142c7d77013435537e1f0e46037fd16e78a',
-        'rscholes3t@usnews.com', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('fbohey3u', '012345678912a9f9bf4d3b84c36ab4bd2ce45ef7d2df9c2fb1dc5f2e41462796c5c8f365531a',
-        'bhedgeley3u@jigsy.com', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('aivanin3v', '0123456789125ff8dc3df54eeb3d527314579d379f8e298f95cab1ff96349ceda5deb5db86e5',
-        'rwitchell3v@nyu.edu', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('kjeannet3w', '012345678912726237f4a8116d5d17f3987e32b62e1d74121aede543f0215acc245a45793d6b',
-        'hstannislawski3w@bluehost.com', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('rpierrepont3x', '012345678912b6c51178e78e2b834683e01fdd9346f593e71dc2bbc3134987da27358be09829',
-        'rmacelane3x@columbia.edu', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('tbolsteridge3y', '0123456789123e4d9d217cb4aff580f452eb1648d8787ab6530410d7c30199e7c99a654d67ac',
-        'tboldra3y@berkeley.edu', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('jpuckrin3z', '0123456789121cf132550e866439f3e2e78e0b4598b754dfc74ef7074c1caa67dfc5f52e52b5',
-        'asherborne3z@list-manage.com', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('lwann40', '012345678912f5c997bdcdedfb4eb296235e927d838a58bea5f175cc76fa4d4af887ed9effc7',
-        'chulburd40@tmall.com', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('tdone41', '012345678912c9ea09e61e8d711ebd58c0ce7b735d25ca23b8eae2f6ac9767833ea6875431b3', 'tshire41@chron.com',
-        ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('dtalbot42', '01234567891290a59a85fe4a7753919d9c350d3fec61008b6df25b8a73baccaf9ef65268b0d3',
-        'smacdonough42@hubpages.com', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('pmatuszyk43', '01234567891205fb0053679fe192b9fc0ed55b7f9b9aea5a50e8f263ba5e69ff0f3016b52c3d',
-        'qcattenach43@mediafire.com', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('nplumm44', '01234567891215ab711494fa2679f31ae14a0584447a8ffb8695d797f9f1aae03b3ca95a633d',
-        'wzimmermeister44@chicagotribune.com', ' ');
-INSERT INTO platform_users (username, password, email, permissions)
-VALUES ('liron45', '012345678912822979201ec599ca6cf3088422391ebcc723d43539eb394ba8032ae374aa5cfc',
-        'elovemore45@ucoz.com', ' ');
 
 INSERT INTO countries (country_name, iso_3166_1, phone_prefix)
 VALUES ('Japan', 'JP', 100);
@@ -2957,407 +2486,157 @@ VALUES (10170.43, 7, 'F', 1, 367, null);
 INSERT INTO warehouses (capacity, number_of_loading_bays, is_retail, company_id, address_id, manager_id)
 VALUES (91237.97, 10, 'T', 2, 957, null);
 
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Magdaia', 'Bruyns', '40145930722', '29-Nov-2019', '+355 450 512 1419', 2, 6, 1, 256);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Kelila', 'Murrhaupt', '61950313894', '30-Sep-2020', '+86 197 491 5383', 2, 4, 2, 409);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Bobbie', 'Girod', '29207347476', '21-Oct-2020', '+86 985 907 0196', 1, 3, 3, 146);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Joyous', 'Garvin', '57495835686', '26-Jan-2020', '+380 934 304 6102', 1, 1, 4, 136);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Peterus', 'MacWhirter', '11837105846', '07-Jul-2020', '+670 166 585 9881', 2, 4, 5, 721);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Elfreda', 'Luca', '53150165964', '23-Apr-2020', '+86 811 453 5714', 2, 5, 6, 671);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Thaxter', 'Grzes', '34940883794', '29-Aug-2020', '+62 967 472 6287', 2, 3, 7, 958);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Modesty', 'O''Tuohy', '38353664824', '03-Oct-2020', '+55 729 388 2504', 2, 7, 8, 468);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Emelina', 'Rown', '59182297906', '26-Jun-2020', '+420 168 119 9848', 1, 2, 9, 19);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Terrie', 'Corneliussen', '32439527213', '11-Jul-2020', '+63 794 818 6868', 1, 5, 10, 172);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Ermanno', 'Gocher', '11560583654', '26-Jul-2020', '+420 556 235 4445', 2, 3, 11, 646);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Rudolf', 'Coxhell', '35481297105', '21-Jun-2020', '+234 306 210 0191', 1, 10, 12, 260);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Ronald', 'Braidon', '98980734335', '01-Jan-2020', '+62 952 314 0703', 1, 9, 13, 326);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Theresina', 'Iceton', '12268529622', '06-Jun-2020', '+86 813 257 6187', 1, 10, 14, 556);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Rachel', 'Maddaford', '27025704059', '02-Dec-2019', '+232 991 643 4729', 1, 1, 15, 431);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Marielle', 'Hatherleigh', '41560789494', '05-Dec-2019', '+994 931 508 7601', 1, 6, 16, 857);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Hanna', 'Brideaux', '51669706687', '30-Jan-2020', '+55 657 730 5169', 1, 6, 17, 558);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Ab', 'Izhaky', '18285312700', '17-Feb-2020', '+57 536 750 4161', 1, 1, 18, 213);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Eli', 'Bucklan', '62258456031', '09-Mar-2020', '+49 297 624 9330', 2, 5, 19, 222);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Georgy', 'Grishechkin', '31046538871', '04-Jun-2020', '+66 690 590 5317', 2, 5, 20, 144);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Beverlie', 'O'' Dornan', '01948444162', '12-Oct-2020', '+420 888 148 4983', 1, 5, 21, 514);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Harrison', 'Reagan', '92665618785', '29-Mar-2020', '+84 954 929 1141', 1, 2, 22, 796);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Marjorie', 'Skillett', '68997281667', '08-Jun-2020', '+30 819 824 6589', 1, 6, 23, 378);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Tobin', 'Whitham', '25516463716', '31-May-2020', '+86 780 184 4811', 2, 8, 24, 948);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Doloritas', 'Branigan', '11130278590', '09-Feb-2020', '+20 930 602 8729', 1, 5, 25, 894);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Kingsley', 'Ayce', '26414540351', '26-Sep-2020', '+54 877 118 0406', 2, 5, 26, 317);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Analise', 'Grumell', '69819070501', '17-May-2020', '+86 781 757 8918', 2, 2, 27, 331);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Raf', 'Beagin', '83260501512', '07-Apr-2020', '+63 555 801 3852', 2, 7, 28, 479);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Stephie', 'Bydaway', '08124914995', '14-Mar-2020', '+359 683 118 1331', 1, 4, 29, 988);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Gina', 'Mahaffey', '19609263756', '07-Sep-2020', '+63 409 900 7199', 1, 10, 30, 674);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Genovera', 'Dwyer', '78472455295', '23-Oct-2020', '+82 306 637 0638', 1, 8, 31, 901);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Ashby', 'Corr', '91781149869', '16-Sep-2020', '+94 727 782 9298', 1, 6, 32, 903);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Micheal', 'Bovaird', '83999746408', '30-Nov-2019', '+94 569 558 4108', 1, 1, 33, 342);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Kean', 'Letteresse', '13898846790', '12-Apr-2020', '+51 259 458 9099', 1, 4, 34, 680);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Ronald', 'Henningham', '93147508724', '30-Dec-2019', '+351 487 932 8524', 1, 8, 35, 74);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Collin', 'Craigheid', '01905522171', '27-Dec-2019', '+84 796 466 8717', 1, 10, 36, 192);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('David', 'Urvoy', '15454566077', '01-Jun-2020', '+1 407 708 7241', 2, 5, 37, 442);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Ave', 'Clarage', '12900264618', '08-Jan-2020', '+63 151 403 7331', 2, 7, 38, 347);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Keen', 'Sproul', '04388454135', '30-Aug-2020', '+27 716 818 0389', 2, 10, 39, 306);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Jule', 'Fanti', '38135093316', '09-Apr-2020', '+86 814 449 0937', 1, 5, 40, 871);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Diego', 'Tattersill', '02869842535', '08-Dec-2019', '+62 315 543 6910', 1, 9, 41, 845);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Deeanne', 'Rabjohns', '83534764273', '09-Mar-2020', '+55 475 915 6862', 2, 7, 42, 625);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Sibby', 'Girardez', '35818266187', '24-Mar-2020', '+66 425 412 9781', 1, 8, 43, 174);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Hillary', 'Sousa', '21105256456', '04-Sep-2020', '+33 953 523 5869', 1, 2, 44, 277);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Nikoletta', 'Fever', '60074432039', '22-Apr-2020', '+62 414 644 9641', 1, 2, 45, 950);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Sofia', 'Czapla', '87797452249', '19-Feb-2020', '+63 147 451 1608', 2, 5, 46, 313);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Rickey', 'Pacher', '55484423989', '29-Mar-2020', '+420 874 698 7182', 1, 4, 47, 836);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Clemens', 'Hymus', '06255328775', '01-Nov-2020', '+31 801 929 7420', 2, 10, 48, 269);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Pedro', 'Lyst', '47532765943', '07-Nov-2020', '+62 257 850 7115', 1, 4, 49, 210);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Lana', 'Stowgill', '86069130736', '28-Aug-2020', '+62 240 942 8752', 1, 4, 50, 953);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Monique', 'Capponeer', '59730017351', '02-May-2020', '+86 130 138 2995', 2, 9, 51, 624);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Dew', 'Scading', '67922000180', '24-Jul-2020', '+62 644 111 4035', 1, 10, 52, 871);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Wells', 'Doust', '43452927417', '16-Mar-2020', '+351 198 319 3726', 1, 9, 53, 55);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Valentin', 'Walesa', '38646221656', '25-Jan-2020', '+39 945 491 6377', 2, 6, 54, 960);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Morgan', 'Lobb', '36200449602', '04-Feb-2020', '+30 664 638 4080', 2, 1, 55, 275);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Monroe', 'Mucklow', '89920062781', '29-Apr-2020', '+39 228 810 6159', 1, 9, 56, 691);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Shanon', 'Douberday', '50815422205', '06-Dec-2019', '+81 676 561 3414', 1, 5, 57, 586);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Celle', 'Ciccottini', '58851561427', '30-Jan-2020', '+33 220 446 1727', 1, 9, 58, 684);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Von', 'Riccardini', '96468040370', '28-Jun-2020', '+7 133 371 1295', 1, 6, 59, 131);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Sloane', 'Van Dalen', '97423045486', '05-Oct-2020', '+386 829 804 7137', 2, 5, 60, 457);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Florrie', 'Moscon', '82324713382', '12-Dec-2019', '+380 223 103 6283', 1, 4, 61, 919);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Mellie', 'Dayborne', '24535670151', '11-Sep-2020', '+358 189 821 7388', 2, 3, 62, 849);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Kelila', 'Duck', '32328621133', '11-Dec-2019', '+66 775 884 0970', 2, 10, 63, 126);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Zed', 'Flanigan', '89345715807', '06-Sep-2020', '+62 447 417 7899', 2, 10, 64, 934);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Christiane', 'Aleshkov', '02314792053', '27-Jun-2020', '+62 352 642 5665', 1, 8, 65, 704);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Sherm', 'Simms', '44379382815', '26-Aug-2020', '+62 713 408 7967', 1, 3, 66, 104);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Anna-diana', 'Kitchenman', '87244916667', '18-Feb-2020', '+256 233 666 0321', 1, 5, 67, 402);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Yance', 'Clift', '17687261914', '27-Sep-2020', '+86 875 634 1975', 1, 10, 68, 258);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Emmanuel', 'Coxhell', '78573780439', '13-Jan-2020', '+63 254 175 3936', 1, 3, 69, 367);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Hilliard', 'Nutting', '48239271539', '11-Mar-2020', '+86 458 381 4616', 2, 8, 70, 292);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Kenton', 'Dellar', '00757896111', '03-Sep-2020', '+351 985 105 8354', 1, 10, 71, 440);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Gabriel', 'Goodbourn', '35585035439', '17-Jan-2020', '+51 886 155 9347', 1, 1, 72, 272);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Bailie', 'Mainstone', '81425999039', '07-Sep-2020', '+86 863 682 2840', 1, 9, 73, 269);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Conrado', 'Burrell', '87732270649', '31-Mar-2020', '+48 142 895 6388', 1, 3, 74, 751);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Brendan', 'Purkins', '17161033717', '16-Mar-2020', '+60 172 260 7042', 2, 5, 75, 912);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Chevy', 'Ridgewell', '50454600492', '14-Mar-2020', '+62 148 388 6533', 2, 9, 76, 156);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Shawn', 'Starrs', '97270517865', '23-Jan-2020', '+998 950 890 4568', 2, 7, 77, 575);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Antonius', 'Bakster', '16699955387', '10-Feb-2020', '+253 256 556 8139', 1, 6, 78, 523);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Gale', 'Wanderschek', '13166814533', '31-Dec-2019', '+62 933 202 5072', 1, 10, 79, 652);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Dari', 'Duckett', '62082509790', '26-Dec-2019', '+33 338 898 5700', 2, 3, 80, 465);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Helen', 'Gostling', '17080085465', '28-Aug-2020', '+62 974 716 7872', 1, 9, 81, 285);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Jacquie', 'Van Waadenburg', '45484721904', '14-Sep-2020', '+66 178 423 2499', 1, 2, 82, 693);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Guglielmo', 'Barnshaw', '01341842981', '06-May-2020', '+60 469 100 2002', 1, 3, 83, 892);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Giacobo', 'MacVay', '68056356444', '20-Feb-2020', '+45 302 876 6049', 1, 4, 84, 302);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Obadias', 'Necolds', '87282867780', '12-Mar-2020', '+7 664 486 0600', 1, 7, 85, 150);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Cassy', 'Aleksashin', '83583710820', '08-May-2020', '+62 884 443 8698', 1, 1, 86, 337);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Sydel', 'Voden', '50322901024', '26-Feb-2020', '+504 155 920 4173', 1, 3, 87, 606);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Marion', 'Trump', '93723922663', '11-Aug-2020', '+255 333 138 0787', 2, 2, 88, 763);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Emile', 'Braunstein', '23887893412', '24-Aug-2020', '+33 414 795 9752', 2, 10, 89, 964);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Anne-marie', 'Draayer', '92760398591', '03-Sep-2020', '+86 412 184 9161', 2, 9, 90, 102);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Leonhard', 'Dreghorn', '37626826834', '14-Aug-2020', '+62 760 222 9596', 1, 10, 91, 775);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Em', 'Founds', '36193398593', '07-Oct-2020', '+236 426 582 4418', 1, 3, 92, 15);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('George', 'Dublin', '31727938056', '28-Aug-2020', '+95 943 556 6068', 2, 10, 93, 603);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Bevin', 'Aicheson', '16472431457', '04-Aug-2020', '+46 501 176 0466', 1, 3, 94, 190);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Darius', 'Corless', '88784272508', '09-Oct-2020', '+354 911 456 2709', 1, 7, 95, 26);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Cyrille', 'Pien', '92237848907', '17-Feb-2020', '+84 460 605 5630', 1, 10, 96, 915);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Annamaria', 'Twelve', '13829167446', '05-Oct-2020', '+62 192 117 8391', 2, 3, 97, 49);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Humberto', 'Gringley', '29107725709', '19-May-2020', '+242 948 256 2240', 2, 1, 98, 707);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Tamarra', 'Bisco', '21056199346', '06-Aug-2020', '+55 541 194 0442', 1, 7, 99, 51);
-INSERT INTO employees (first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, user_id,
-                       address_id)
-VALUES ('Elfrida', 'Vanichkov', '81110154584', '11-Dec-2019', '+51 402 779 9317', 1, 10, 100, 980);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (1, 'dsparkwill0', 'uGzilwVyX12gzGQZnUgLNEZAgMGMUUqzniY7maCSnRVEVIbZMnvivnvEwikTdrbZCnb7FwyLd2t8', 'dsparkwill0@booking.com', 'hac', 'Donnell', 'Sparkwill', '56280983160', '2020-04-09 14:00:14', '521-700-4568', 2, 2, 393);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (2, 'npoole1', '5abv5dZmxCXoIg0cNYKSQBNo1Rg6PiyhNyXZSAofxWugHhNdUE8hUq5VtWp8sw9ZQ0k66pWmdEuT', 'npoole1@friendfeed.com', 'nulla ut', 'North', 'Poole', '02152406951', '2020-10-23 00:50:34', '118-264-5825', 1, 7, 891);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (3, 'nmeineking2', 'Ns27DWO8cSZP1Cn1qTHFccpNqipnzB1AVXzpQrE3KGzXFURoEh6TDPUOtpozIpUGBC0rHwgHcOqj', 'nmeineking2@nymag.com', 'iaculis congue', 'Naoma', 'Meineking', '30084131683', '2020-12-13 01:51:57', '866-633-6121', 2, 1, 321);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (4, 'bpaumier3', '0sn3zfWEkZVVnke9g1naFIf3FJmx42rIsp5gXSotvKHrJG4RgZzxxW0cFnHq03f2f1tIyWfh0BQw', 'bpaumier3@chicagotribune.com', 'orci luctus', 'Bowie', 'Paumier', '26236154024', '2020-01-30 11:09:41', '603-209-5643', 1, 4, 714);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (5, 'ubogace4', 'Tbb1EeWlBzqZJdF2K9Tt2fc568C9aYdjrj2lBL94R5GmxxpMEgS8Q2lMfoyFqj5POGUnanM3cMCC', 'ubogace4@sphinn.com', 'ridiculus mus', 'Umeko', 'Bogace', '80507796576', '2020-04-27 15:55:41', '481-906-0935', 1, 7, 833);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (6, 'hlowbridge5', '6Z42tueaNMuxFBHuoKdFQXldchVCSm6LX3LJ49bHCdh0oPp11jfhreoPNjbSDUtichoNBJvTnZlb', 'hlowbridge5@state.gov', 'ac nibh', 'Haslett', 'Lowbridge', '87099767110', '2020-02-20 08:35:49', '299-858-7711', 2, 1, 119);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (7, 'ekloster6', 'MgYFty1F0nvxSWcYCO6carYY0WFSuuNObP9KPgONO9KgTqVdQUOUfOIg8ON5IodpOdyh9InjlTu7', 'ekloster6@marketwatch.com', 'pharetra', 'Eduino', 'Kloster', '87761359475', '2020-08-30 04:37:39', '676-840-6828', 2, 2, 729);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (8, 'cguillot7', 'TDGWOWxx7lmL9qk2hHTxixaUS1Nw5nUaahisNs36bal44NJOYBVV6Fd3SmJLiemLp560vrhzvRhU', 'cguillot7@noaa.gov', 'sapien a', 'Carly', 'Guillot', '57799952527', '2020-04-06 05:05:35', '868-889-5205', 1, 5, 757);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (9, 'lvoyce8', 'kUqDy0ARHchY9M6pdkhF8q9E3kE4rtG8aFRt9MmuZRhLboyxanoUGlfX98tTz4nU3itv5K7b7rD9', 'lvoyce8@cdc.gov', 'fusce lacus', 'Lemar', 'Voyce', '94539377878', '2020-10-03 00:17:49', '840-725-8193', 2, 7, 793);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (10, 'kpeck9', 'ODiOHf2rRvJBYdWFAcpWwpPuIIyDFKu0fJJihqZhJFyIQnchx6rVbH7U87so9EokjsP4UGpAdUFk', 'kpeck9@patch.com', 'dictumst maecenas', 'Kelcie', 'Peck', '10199434327', '2020-04-24 19:48:48', '125-706-5916', 1, 4, 438);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (11, 'tmordeya', 'u7z2VtxpRNeKYvq7lszMvkTx8yJWrf8wqip6saNpMqe55Y0zM9kIq74aKxszDOOsVDQP9VLSCCJm', 'tmordeya@nature.com', 'ut nulla', 'Titos', 'Mordey', '74405982722', '2020-06-07 06:29:53', '686-474-1982', 1, 7, 737);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (12, 'emalinowskib', '73p2ZPb1LOwHs7SClLzFrMbNYstfIdxT90tpeSrrFLgkvxUsy4XTsxK0tOCmE7DmnTxJTvwev3WS', 'emalinowskib@example.com', 'in hac', 'Eveline', 'Malinowski', '53838822049', '2020-06-10 15:27:58', '312-917-0421', 2, 2, 187);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (13, 'shassentc', '8DmznarmNaJU9RVfsz4gCC6AAY7kAPq5o3C108Prxfvjag2ovAVlULGy03BhBZym0JYcdh86Hv6g', 'shassentc@meetup.com', 'magna', 'Stace', 'Hassent', '20288554549', '2020-05-20 22:02:33', '311-662-4498', 2, 7, 823);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (14, 'jwitcombed', 'A7eTrYW5AJ1diriNRIBmWTbFW1nSupfeYN4BagiKxOlVjZNiKRb9ZkWM6NOpBEzkAkk1ObOIvkov', 'jwitcombed@ibm.com', 'phasellus', 'Jarvis', 'Witcombe', '76916976929', '2020-11-28 18:15:00', '163-659-0903', 2, 6, 160);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (15, 'fitzkovwiche', 'ch1xfuq59N7D1un50NS1ntCz3epuPIqPh1CBwCZLn6aJi49OPnu7tJQFfb4FO3w7jlYYTyG08nsn', 'fitzkovwiche@godaddy.com', 'cras', 'Frederic', 'Itzkovwich', '13619898560', '2020-03-13 04:31:24', '716-560-1970', 2, 9, 615);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (16, 'wenrightf', 'zbRzHcVTKg7vA7y5iAqXaYvWC8NWd5cFIqh5LqTM2YnIe3ScXEzKixQ74omT1SnI34JwPsyxxAsC', 'wenrightf@ehow.com', 'non mi', 'Wynn', 'Enright', '53255793126', '2020-09-07 08:29:04', '675-444-7289', 2, 9, 659);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (17, 'pcrockettg', 'SPdZtlhkcb4MViz7ucaohzzQEi9poV7rT3dLOMhjN2Z2rkxSvWa9cNQf7LArMemCiXFzarxJIZWp', 'pcrockettg@multiply.com', 'in', 'Pavel', 'Crockett', '10343193772', '2020-05-28 00:20:36', '571-457-8498', 2, 6, 690);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (18, 'wschallh', 'UlbFfRzqC6gMPloHilcyY2IK24Wf1un9fZUyI0lD2gP8TmSDOtLjPWmo9x2V2PXOU9fUCuJh3CA3', 'wschallh@netvibes.com', 'vestibulum', 'Waite', 'Schall', '53462883031', '2020-02-07 15:25:51', '859-276-2457', 2, 8, 252);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (19, 'ikumari', 'frlXflXSb0lsO3aXvnoEoARlo6Og45wO7ofNc3UQpQGE3wHDdnpmRnYtpcjcMlh8PfOxF8n97zpu', 'ikumari@blogspot.com', 'condimentum', 'Ileana', 'Kumar', '49232149609', '2020-11-14 22:57:07', '442-155-0696', 2, 4, 583);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (20, 'rbreesej', 'iXDDw9OIngpK7ig12ubXdSf3y8bjq35w3uFOhdLH4bQbmNaT63tjX3ngEqaaOGLGfFnD8GUUKZBo', 'rbreesej@oracle.com', 'quis turpis', 'Rudy', 'Breese', '21743924855', '2020-02-12 09:00:34', '488-820-4771', 2, 8, 478);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (21, 'rberthk', 'D5FCs4op5IkMbjkfjE8JAflRY4mKsakwdleoJ1NHhQctTu5HltXk2w6MqnQiCgK0QazlZVW8dUET', 'rberthk@vinaora.com', 'nisl', 'Robbie', 'Berth', '32824087610', '2020-05-10 22:26:31', '869-470-3554', 2, 9, 13);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (22, 'scrocil', '80SEuGnrZTT1NrD438M4BwoT07SXhtu2jIb7p16oNKvU3NcRgjrR7OrryKWZp0lYZ3KR52Hlq8Pb', 'scrocil@ibm.com', 'feugiat', 'Shaylynn', 'Croci', '34131013312', '2020-01-05 04:59:09', '217-982-8934', 2, 6, 751);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (23, 'jkaym', 'OT2r4F0L0HzhNAkNOMWqqqW7jie2wCtUnndTW2l21miWP6c7iQXyJWXkSTDxff7OussE5V6sPtJQ', 'jkaym@altervista.org', 'donec', 'Jennica', 'Kay', '81094157093', '2020-05-21 13:17:26', '912-701-7702', 1, 4, 878);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (24, 'cfeasleyn', 'Ke7EvzGNhO1G7T01QYRvTYPwu0SLBzdOSYi4uBJXumpSlDmFjdZiHDVvBAcxEJe60URDeDuYsyQo', 'cfeasleyn@live.com', 'duis ac', 'Caritta', 'Feasley', '68444317883', '2020-01-30 11:54:10', '777-309-4045', 1, 9, 919);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (25, 'pdecazeo', 'XSmqPKoHfzA81hNp3I59b2eODlR98eoPy3Sv9rY5fij1dhHbgeTWoKigU9WWPV8vlPXime8go3Pf', 'pdecazeo@nasa.gov', 'sed', 'Paddie', 'Decaze', '58469489171', '2020-03-12 09:37:01', '670-457-4019', 1, 3, 570);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (26, 'kjansep', 'jH2JtSkvmv2LfsryGLgtCZaJ1KYQAuhRdmDBBPHVTrpMbJ26hwpfjT7cr0x1cYJOzXzYnZ9Lj0Eq', 'kjansep@twitpic.com', 'mauris enim', 'Katee', 'Janse', '31250765786', '2020-10-27 08:03:42', '212-107-5294', 2, 4, 107);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (27, 'tswynq', 'TmhMpwQO6iuwrBVoLfUvehxgLlQ01QNLf8y1AEdLyTF0XItzE9v2rQ6FwJc1650WjEVPKLSEFPRP', 'tswynq@tripadvisor.com', 'lectus aliquam', 'Tova', 'Swyn', '64837305671', '2020-11-19 19:12:11', '940-964-2329', 2, 6, 272);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (28, 'nstoyellr', 'Eh7lKLj4UIUUrIUG2yqXYqmCIiqZueV5htMjInSxCJZNkgXPHBIHFofTioKxmPocZaDUvIPrWCAc', 'nstoyellr@weibo.com', 'at velit', 'Noble', 'Stoyell', '75203322223', '2020-11-29 22:55:02', '714-410-1921', 1, 7, 758);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (29, 'cpickfords', 'rA7cz0axlh8Nkg91CmfDM0pyyRNKgJuysliFDN0eipEKRkCscBGqjTXzbB0CYvT5q2IV4u2KAjLd', 'cpickfords@yellowpages.com', 'in', 'Caresse', 'Pickford', '56768262120', '2020-07-22 08:07:34', '954-893-3950', 1, 5, 907);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (30, 'mstedellt', 'lQ3VuUkB7vu6VCV6tlhn0FbIRbDsd1ZN0EIH1vyBO1vSDCQRAh8mflPj9b1QDEjp8OSoT3WnomuI', 'mstedellt@wisc.edu', 'turpis', 'Margalit', 'Stedell', '22572504049', '2020-09-12 14:55:41', '202-736-4542', 1, 8, 130);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (31, 'dbrendu', 'IRg3AOEslw0Ha5Zuo7iUfkormPGjv54utcdDswgLj29wFxSMbCpZ6xQ0pee9xkkczrgLrqEc6ds6', 'dbrendu@nsw.gov.au', 'quam', 'Dacy', 'Brend', '33030282504', '2020-01-27 15:52:18', '425-920-5290', 2, 8, 656);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (32, 'jtiev', 'KP5oAcv3ISAPXwpNUH0AbPUcrWyrdH7Kmpl0Gc4WfLQY2y4a80eEHN5PmdqqqMkEJHDdAbvkIJAU', 'jtiev@shutterfly.com', 'aenean', 'Jakob', 'Tie', '11051888268', '2020-01-28 18:44:23', '909-432-6990', 2, 5, 329);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (33, 'astollew', 'cKSGh3HkUzg1LgaUpapWC2eKnsdxbXU0INVU82rcHqkeefj7wILMiF2LZxHuP9FXk1D8yFSBqGpi', 'astollew@unicef.org', 'eget elit', 'Alidia', 'Stolle', '05645218303', '2020-08-13 17:27:21', '982-745-6348', 2, 4, 848);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (34, 'atattersdillx', 'zsDOrICBEvvayqJBDvXfEJHI9zGh0m4SXLC6nafIAru7BMpoh8go1BoZxV4VHAxdS7UJRj6dsxK3', 'atattersdillx@hubpages.com', 'cubilia', 'Albert', 'Tattersdill', '01331910768', '2020-12-02 01:58:31', '426-913-6757', 1, 2, 994);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (35, 'wscalesy', 'liRnibjZUT77yKECWBrExqaJdp3GeqDSBSHGHxxyTpkQaqYiHwOX5lGsOAuZHP14UO3JU2ZajpPH', 'wscalesy@yahoo.co.jp', 'velit donec', 'Wallache', 'Scales', '44867087723', '2020-09-16 04:00:34', '979-192-8480', 1, 1, 930);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (36, 'dlehrz', 'dicggamw5cVHD7NdQA1O67dfrlsY0fNyfV7p1NeRRKTlBeak6nDNEVTE7AVJR1zZHs2XtkrvS41L', 'dlehrz@ovh.net', 'etiam justo', 'Deane', 'Lehr', '70234473558', '2020-06-30 05:19:14', '839-977-5479', 1, 10, 810);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (37, 'cfairfull10', 'EYEypf2s8fnRp123s4GJ39rpWP4MgjcAXIsdNrWSozTg7PAuIyAb9HUJuhfOamncsE0GPW1uU48O', 'cfairfull10@discuz.net', 'magna vestibulum', 'Cairistiona', 'Fairfull', '29441099829', '2020-02-12 17:52:59', '961-246-6031', 1, 7, 45);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (38, 'tmamwell11', 'Lccv4eK1CnA9uZAx3pFSsGQSwdXRKJoAE41gBFm70z7cKyLLcZEoe1xnOy7O09RlZP2vml6hXReS', 'tmamwell11@cloudflare.com', 'amet', 'Talbert', 'Mamwell', '18330441216', '2020-01-03 02:25:15', '693-833-9180', 2, 2, 607);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (39, 'mkearton12', '5PMaFsOuVkqfEbK0zIVRKpiesDvVB1yZuv2MDQLaFVsXk8nWvI4Ap9MtPzKn6cJPYtFad2UsHHEr', 'mkearton12@opensource.org', 'cursus', 'Morly', 'Kearton', '20151317071', '2020-04-04 14:49:46', '985-745-2550', 2, 2, 629);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (40, 'hsummons13', 'CC6Mr9fxCEBBwPk9WwwM0kvvoubTfJsKyZxdjEN36xYHA61S7GGhlzKCyjpzzghcAFoO31kY0CMR', 'hsummons13@issuu.com', 'odio', 'Herminia', 'Summons', '17512271762', '2020-09-29 15:43:33', '157-334-1831', 2, 4, 618);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (41, 'jmadelin14', 'LRClcyiuIuor8uzduJNwtXCp3ehNvjtqrIYRTytZqy6YHLmbScppelCGGKef8T8pdgfs9V78cjqH', 'jmadelin14@imgur.com', 'lectus vestibulum', 'Jeremy', 'Madelin', '19542071146', '2020-01-13 21:18:53', '589-414-6842', 2, 4, 219);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (42, 'rcoche15', 'JRrnKIg2Bb6bxMYVBeUmjWQT5KjRSbkWpInM8JIz4QVTv2Y415R1o20uj0hWEiTzpGf6UDC1rRUp', 'rcoche15@foxnews.com', 'id', 'Roarke', 'Coche', '98042506052', '2020-02-17 19:25:05', '749-499-1999', 1, 9, 584);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (43, 'cantunes16', '0cKRAwkCYuceLE4Gz8S5nz5A8rKNraf5ZD0Z9s1vgc1C0aiTJTshSMNHszwDMoNx0jZ6ovgtiJzK', 'cantunes16@etsy.com', 'tortor eu', 'Clemmie', 'Antunes', '45645240622', '2020-09-13 06:51:12', '732-274-3011', 1, 4, 468);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (44, 'dedwards17', 'i39kh8HuMCFI72SLDb5kZD5OKmoJWRB9AfSyJmcFHtp15rab7akfBU5Lw6uF5LKKDHIPVZHoSxd7', 'dedwards17@yahoo.com', 'felis sed', 'Daffi', 'Edwards', '25719975170', '2020-04-25 07:56:29', '362-116-5720', 2, 10, 563);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (45, 'wsanders18', 'Ejg2EDdG9TpncECJ1gUKswTcaXff3ouAn6OaKILGr0ww9VXWq1Gct1B93xc2cEVdtZfqEVhJnXSx', 'wsanders18@europa.eu', 'sapien', 'Whitney', 'Sanders', '34393999062', '2020-07-12 05:56:05', '480-494-5054', 1, 1, 75);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (46, 'dcecchi19', 'swcyeBUst9wpUOP7F4BmUbNgf0rXWsfPVMXirJw1QfRZqMXXLzsXALxPkvauJwzzzHAmOKPng3xI', 'dcecchi19@noaa.gov', 'donec dapibus', 'Dot', 'Cecchi', '78976719612', '2020-12-28 18:50:56', '368-426-8756', 2, 6, 350);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (47, 'cpurseglove1a', 'yvOJMG2XGPKpN6mi0Glz0s7h7paEMiQSZcTcJ6o6zk6MY5aM5karJsfw1HiSu5cstUv3PZ1j5Lck', 'cpurseglove1a@illinois.edu', 'etiam', 'Chrissy', 'Purseglove', '28533245865', '2020-01-08 13:20:50', '968-662-7606', 1, 2, 360);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (48, 'malchin1b', 'rz5hcmH9q0TAGcSvcZoBXkU0ue37TvIZ9BMOsxTIjGaqXyZ2zQM7j6xd0jmBUiBHVAtIDRj2giyn', 'malchin1b@ucoz.com', 'in imperdiet', 'Malachi', 'Alchin', '06335783977', '2020-10-05 15:32:41', '622-290-6231', 2, 4, 701);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (49, 'jmelior1c', 'IsKj4ikkDp1n45Yfi1wqa3no9v21KqYprzetqiSoRTRZjsrMP1pfwiwYvzwOQ2gX55OCPejXUggZ', 'jmelior1c@people.com.cn', 'donec', 'Johnathan', 'Melior', '75145823461', '2020-12-26 05:56:59', '180-852-7958', 1, 3, 22);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (50, 'kdodsworth1d', 'DMhfISXzBNmvWe5YnjIB3TO3iN9Ck2YqYsnA3d5Q7thTRkm8TDN8rWaU5q16A9UdfE88lbFjkLvk', 'kdodsworth1d@dropbox.com', 'dolor', 'Keriann', 'Dodsworth', '96252529505', '2020-02-11 03:17:33', '743-198-7476', 1, 2, 844);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (51, 'dbusain1e', 'ZOLjfk6K1Q8fHDdUj9jxGpPxE93a8koJTFTEYcl8QhXwk8FpIDutvmctqZYDns0IDEwTbBCgGa6p', 'dbusain1e@facebook.com', 'mauris', 'Duke', 'Busain', '65286933534', '2020-02-27 04:22:37', '563-771-8101', 1, 1, 584);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (52, 'mmulliner1f', 'fDzt0bcRwWiyoDjryB5cATE8AItiOc5UawMZ9NyJAf4GSYk5CEsCFiaud7bUkzb85UqVKbX3xKaR', 'mmulliner1f@alexa.com', 'vestibulum', 'Modestia', 'Mulliner', '99831098181', '2020-10-08 19:50:01', '178-160-1265', 2, 10, 559);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (53, 'aloving1g', 'BeaJp6BSTVzPvP5xlWgCMpWSDj5mtgH4y3LGpAtA737bQUyjrnAdiO0Di53mCdx5WfGndZUYtsAF', 'aloving1g@liveinternet.ru', 'cursus id', 'Amy', 'Loving', '42481264662', '2020-06-03 14:00:53', '668-832-6001', 2, 7, 637);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (54, 'lmannie1h', 'wQMB3iVPhhENT7dUWYNbpOPai1c9KfKN1TGudQo7jsOkwxFyxNcjrpCEMmBcfSkEM73Zx9A9DaNk', 'lmannie1h@sakura.ne.jp', 'vulputate luctus', 'Leda', 'Mannie', '82553739132', '2020-07-18 22:45:25', '204-491-7875', 1, 2, 644);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (55, 'lforsbey1i', 'fq1O7kCW9ggbcVECli08ow4uFuK7hBXCMVnu9m1vUmknSGYJiQjW8oe9NG2630nxnuS7pHNgYJbu', 'lforsbey1i@fotki.com', 'duis', 'Laurence', 'Forsbey', '40926507882', '2020-05-12 01:50:12', '597-579-8721', 1, 8, 105);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (56, 'edodsworth1j', 'Y427A1YOiQJU9tk3jmxd569BndmAd4co3MdJRIw39rjoYEjdAvoslg41p8Ewow9IGsqne6eNy6ae', 'edodsworth1j@bandcamp.com', 'interdum', 'Eldon', 'Dodsworth', '07647528678', '2020-02-29 20:11:34', '354-551-0544', 1, 7, 431);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (57, 'kworsnup1k', 'hPeTv6gkSfnd3ytsu4JeP50C23KYL2cVQrgkitckCpw4xXXsQRW5nlOIkQ9qNEqEUlgPOBSuqDkg', 'kworsnup1k@barnesandnoble.com', 'amet eros', 'Kara-lynn', 'Worsnup', '51808699369', '2020-02-07 05:42:53', '998-976-8919', 2, 1, 102);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (58, 'akiefer1l', 'Sn6dgrjnDaWzGk8mL4RPfqXA1ca89oDYuhnkJqZ28IHhz8e9BY5QaapjtkUP8K78lIji5rwSkhrj', 'akiefer1l@bigcartel.com', 'eleifend', 'Abran', 'Kiefer', '27073146920', '2020-09-01 18:07:47', '761-706-6372', 1, 1, 701);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (59, 'rrozzell1m', 'Sg2nnFyi39l9rNP29K5nQP5VfE9xPQzrZ7T3e9HpjK6qfytR4cSdw7sFGvwGt96Cz5FY6QB5Xobj', 'rrozzell1m@hexun.com', 'faucibus', 'Rosie', 'Rozzell', '18231602319', '2020-01-21 01:50:54', '944-101-0407', 1, 8, 662);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (60, 'kdilger1n', 'u7MD7u4hTWydV9KlptlkVxHoDFWjqWkEP0UqOvCnmzcioWcwK5AtCGPBYGdDqBOrDE6PfWT22XE3', 'kdilger1n@columbia.edu', 'tincidunt', 'Krishna', 'Dilger', '85472076337', '2020-01-13 02:42:58', '213-163-4881', 1, 5, 291);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (61, 'amarchelli1o', 'qniDwZyHv5yTmx7Eb7WlUbVOMdD4HF6dNQxQoH6drmq5pJE3VyzAPWCxwjUPZMZoI1TJWwBOk3jA', 'amarchelli1o@nationalgeographic.com', 'cubilia curae', 'Ava', 'Marchelli', '82003580157', '2020-07-05 11:59:17', '813-947-7131', 2, 9, 921);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (62, 'dcoultard1p', '2WE65462fd48d5iLntqTaxYSANo6IA07ZTdBhPD5avVDzzIdYJzTZkkqk47lo8TKi1FmFo0HUogP', 'dcoultard1p@jugem.jp', 'neque', 'Dorisa', 'Coultard', '84007742478', '2020-07-24 15:12:53', '742-189-9169', 1, 7, 379);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (63, 'cmariault1q', 'SgmiqLuNTZAl6gJoeEbl5fkg221HH2hmOysZFhqwrcdBrTEQJB6lpuwsbIR7T9V1yarlO9s948jt', 'cmariault1q@chron.com', 'neque libero', 'Codie', 'Mariault', '40350478328', '2020-01-29 08:58:41', '701-803-7463', 2, 7, 581);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (64, 'gbridges1r', 'z1MnVeyC8gzCVqQ1cZaswpOWOVMVFDed9XzmbNFoN8XqfTMG9U66dJHxmdg0gZDRfFqFMxjFkz5t', 'gbridges1r@csmonitor.com', 'vehicula', 'Gertruda', 'Bridges', '13402013005', '2020-04-13 14:11:29', '874-848-7924', 1, 9, 660);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (65, 'tshapera1s', '9aJq5aamZOlG2rTvTwTE2jdJICOJhCS8Ts2NN3vu7cPaCI6aEymFyTh8wYZIMKRXIL9Ct5Z38SeZ', 'tshapera1s@ucoz.com', 'nulla', 'Tadeas', 'Shapera', '11972392363', '2020-02-13 13:55:36', '576-635-4880', 1, 3, 816);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (66, 'gshakelady1t', 'RJGASp9dlsvruZqjCVUKemZGvy4Qyyom3QnvzVGBZu6ApuHWOHEQLgH34iFi5agDjbU6k6EZ5Usu', 'gshakelady1t@prlog.org', 'quisque erat', 'Gallagher', 'Shakelady', '42148724331', '2020-05-09 12:37:38', '224-617-6275', 2, 3, 71);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (67, 'lrymill1u', 'ebIezaYOQeUqJ3Jph5vNKFcGkZVij68hbJXkca9jzhzjuRGp4pkJ3KsBdd8eUz4oHkhQcjVZXzfm', 'lrymill1u@xinhuanet.com', 'sed vestibulum', 'Liza', 'Rymill', '11153735794', '2020-01-12 05:04:35', '755-674-6262', 2, 2, 787);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (68, 'imedland1v', 'MUXzJnou9hxWLjMiYK7r94qWA3fYkHQjZQFz0DcL0wMlr3wq9sxQv6vqN8gYXkuipw4lONPBcqYO', 'imedland1v@unesco.org', 'eget rutrum', 'Ingeberg', 'Medland', '75379521999', '2020-03-27 23:38:05', '107-118-4205', 1, 5, 253);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (69, 'abeverley1w', 'UJF5XPlWpWat9qvWOD5nT66et4zgseGLyhNGQdcDKndWgKYjumbnVvhcnHnOjbNbZRB75pTRoq4n', 'abeverley1w@netvibes.com', 'amet nunc', 'Adriaens', 'Beverley', '73709432103', '2020-01-07 07:20:59', '822-703-2427', 1, 10, 106);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (70, 'gsambrook1x', 'v6SBIZHXwfM7AzELO1lH99VCbsMkcZBQ00VzGviBGRhe0SoOLynb7iGqsAa84Bm8CC47cV0NAXfO', 'gsambrook1x@shinystat.com', 'nulla', 'Glenn', 'Sambrook', '87441294447', '2020-09-18 10:31:24', '464-258-0033', 1, 2, 349);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (71, 'cscuse1y', 'nVXmTfFLN11XDoXOWTpedHtfaCUWUCyI5mzTdDjY8e0oZiv6IpDdtzuIihAd2vGaetbsiLRmvW02', 'cscuse1y@pagesperso-orange.fr', 'vitae', 'Crista', 'Scuse', '29350964627', '2020-03-09 04:45:57', '501-339-4056', 2, 9, 441);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (72, 'pziem1z', '4RvyfvwZ4BbyBrOSASvoTzUWQ3tOZ5Kh4dXCNofcOBDVI0RUz9abfb9fcUxwxZCwBsW1kQdkF4BK', 'pziem1z@ycombinator.com', 'non mi', 'Penni', 'Ziem', '66269244469', '2020-08-21 05:34:07', '643-196-1561', 2, 1, 82);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (73, 'ngarton20', 'kSwDPJJKAjNmbzADGletRejVYuB7PS7thspzzy4tdL3NxqU1nKJzYy38DKsylrDMPwCxd22Cv5fz', 'ngarton20@illinois.edu', 'eget eros', 'Nanine', 'Garton', '56589801016', '2020-10-25 06:54:53', '204-446-1953', 2, 10, 359);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (74, 'hblaszkiewicz21', 'zmOA5PJQDgmKc4TCJkUE2aUZEOrXfbuMYqCsyDDFP6BF6abtFdtC6gxlkaZ3I3YE5xK5VCsYtrfc', 'hblaszkiewicz21@last.fm', 'luctus cum', 'Hurley', 'Blaszkiewicz', '22270595474', '2020-05-11 22:20:13', '492-897-0654', 2, 4, 959);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (75, 'cexell22', 'NHhIeiNmQhYwVPgp0gdEImETf05wXIzC2CmvBFZhLRNrQmiRAS9ecuPpd5n7tqPlUPssJD9paPe8', 'cexell22@cargocollective.com', 'nec nisi', 'Charlton', 'Exell', '83955540321', '2020-06-11 12:54:27', '700-150-8257', 2, 8, 447);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (76, 'rseignior23', '9Henz7c1F0PDAopNROwIODIANLo2EVQLgFLpNt3fvijMrgXVbTMbEJoAsUiEAGTgXEIPEClfoygC', 'rseignior23@dyndns.org', 'turpis enim', 'Rennie', 'Seignior', '79269852941', '2020-11-22 06:40:38', '288-828-1028', 2, 10, 960);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (77, 'xromera24', '97yRB6MZOHZDbhHx5v7PIp8pi06ZTHWdXPFjFICIMUdVcqJshIcayYJbu3LH34Z86AQXhGcEPvyD', 'xromera24@studiopress.com', 'posuere', 'Xerxes', 'Romera', '88541804263', '2020-09-13 17:30:27', '174-548-9700', 1, 6, 821);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (78, 'dleupold25', 'snWPTm4RhrzMJTgeWcruecH8Mfqiwd7vVVEfQn1hvAdKOq4Zm6fTlQTTd4NRoYMj4ZPwQu8SqXGd', 'dleupold25@lycos.com', 'rhoncus', 'Dolores', 'Leupold', '53565064481', '2020-01-05 08:03:59', '758-675-2359', 1, 10, 918);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (79, 'kropartz26', 'dwiyPVtStRNf6RL7VDCXG5KIIMWFRYSDWFmkl4WMcDdNgNiAsgcFtMYxkNlWSnvlg7KvSE7vJnxe', 'kropartz26@cbc.ca', 'congue', 'Korella', 'Ropartz', '14978174834', '2020-06-07 05:00:41', '557-363-3102', 2, 4, 461);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (80, 'pholah27', 'FQYNWoaTrfdbnwCtfgY3gmvKZ58obbhxa4V7VbBnabSIvW5llF4ImD90Wfa6Mtox4bhKDkAOvor6', 'pholah27@hao123.com', 'sit', 'Phyllis', 'Holah', '27074578622', '2020-08-19 23:34:36', '316-632-0637', 1, 8, 587);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (81, 'gfulkes28', 'TDLCBUbZGkMGHQztWSG8kZXSupgEXk6SlGDnlCHfuWWs1KBmFs0G8R4Orou0CReMwwyGGku7MZVb', 'gfulkes28@wikimedia.org', 'suscipit', 'Germayne', 'Fulkes', '52073494542', '2020-11-29 00:24:04', '654-123-1544', 1, 5, 77);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (82, 'banyene29', 'dVTch0uFRLihptC7jr5hvXheDE76fpBmFglkxqA4TWRLhzTdPAVWKlaNgWCuNM9bAh59hEYWJBlx', 'banyene29@bloglovin.com', 'blandit', 'Beilul', 'Anyene', '16388352325', '2020-10-20 02:00:47', '641-568-2306', 1, 2, 455);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (83, 'nmcroberts2a', 'pHmCU8kJd4nGouNejzpS5YgTdq9CMdmmAm0iEnYVYw4GlJIzpdBvLhnuSJljG8kqDd3FQLYN4htg', 'nmcroberts2a@ebay.co.uk', 'donec', 'Nicolai', 'McRoberts', '99396377415', '2020-11-24 23:41:28', '532-938-7044', 1, 2, 194);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (84, 'glegassick2b', 'sAhDdIT1xPLz9VNKB31rG9H9nHtPSJXZkkvtuL4lCugqJaREbNw7xUxbb5fAjvvT37Ed9QA91toI', 'glegassick2b@icio.us', 'cum sociis', 'Godfree', 'Le Gassick', '62153810953', '2020-11-01 13:57:47', '781-857-7006', 2, 3, 331);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (85, 'msinkin2c', 'B02BJmJPoeqgQlmOoEjWET26jw8qzawPj6rWO9cUbdfPiHKal0fsVrglyqZPXI9tghxGgUqubsQA', 'msinkin2c@columbia.edu', 'massa donec', 'Marlow', 'Sinkin', '32364601830', '2020-06-16 01:23:16', '557-936-1266', 2, 9, 410);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (86, 'mcapehorn2d', 'T0Rm7vo8c8LBJBUSevJ9tysfo5g5E2d07syrLjtZMPO6KqOzgAVT1YIPyxc3Vxtzj43VruZIaJp5', 'mcapehorn2d@cornell.edu', 'sapien ut', 'Michail', 'Capehorn', '23518087627', '2020-04-08 22:16:40', '531-307-6351', 1, 8, 118);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (87, 'rbache2e', 'K3060H9x9ImD2dtqqOeHxDC3bQn98tXpktKYPB97nmONxygxCNH80uLgcjFmMbNyOvAzKaIpOgoK', 'rbache2e@washingtonpost.com', 'eros elementum', 'Ronalda', 'Bache', '48678435474', '2020-12-06 10:27:21', '159-486-6530', 1, 9, 286);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (88, 'vcrystal2f', 'U5hXsU8mkGdJ9kUouTVCnztmbv1zbmczbLHQ5bSx7ehASz8mvV4GQNK3FQgpT4ZDZ9I3DdoZxu1k', 'vcrystal2f@google.ca', 'in', 'Vlad', 'Crystal', '29096306990', '2020-12-06 04:39:55', '166-829-3242', 2, 5, 716);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (89, 'tquinby2g', 'WRnN3k8bMlkcy4EN67aCoRNJ2m4MVoptz6rFOGdKGT5huRGHCA5OSn1mGSaJrDtPtMfXTKMSaJqq', 'tquinby2g@over-blog.com', 'integer pede', 'Thedric', 'Quinby', '47959825437', '2020-10-06 16:10:50', '442-780-3807', 2, 3, 303);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (90, 'gcayser2h', 'uQxeZwp7fdwOVBUdUHeSRJirIooGq5XDgD1X9OqatMbNgOPg9cmpIRQmyyPrQcBbqYkgtZYlT6w0', 'gcayser2h@globo.com', 'sem mauris', 'Gabriel', 'Cayser', '77609829005', '2020-05-11 07:12:24', '459-519-8865', 2, 3, 307);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (91, 'frevelle2i', 'XGowdexjXRWgm3xoMnWQJYreqqDxOlj1aiZDTe8TA6FwnaT2Wf9D6HzKd0epTLPiXU9IUc5dHuKx', 'frevelle2i@moonfruit.com', 'condimentum id', 'Fredric', 'Revelle', '47366882307', '2020-12-31 15:45:22', '821-905-6919', 1, 2, 594);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (92, 'vprinnett2j', 'rs5vT6JZcYiDyai1s20ifrAe9VAzAV4ALRjd77x9kfBRMegQ8GivSts8cSqhSER60EsK1TS2NalQ', 'vprinnett2j@tripod.com', 'lectus', 'Viki', 'Prinnett', '00912131799', '2020-12-18 21:43:47', '853-701-2347', 2, 6, 828);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (93, 'mtonry2k', '6DtOwfM61klMQUlhUKitpoqCjnepQczFvzyi3boT59E21NVMmoHP46PgrglbH1PcX48xomfUEH0Q', 'mtonry2k@woothemes.com', 'primis in', 'Marcille', 'Tonry', '96263952176', '2020-07-06 23:55:14', '432-591-3570', 2, 10, 274);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (94, 'cdevuyst2l', 'nzPApcN6kvniAHAqRZPYRlqebiCQdwEJCvVeEZwBuwsR0dt1qtxsRp9kqiX9swKXATvdGLxiDjGU', 'cdevuyst2l@liveinternet.ru', 'erat fermentum', 'Caril', 'De Vuyst', '30918135226', '2020-12-15 07:29:26', '581-716-9417', 2, 5, 561);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (95, 'mblasdale2m', 'DfWanUTtW1MWGLx5XCQfPJYGIDMNTrmMXcJtVMosM42APxum2LQmVLRTI9erps6prn78erdzfa3J', 'mblasdale2m@jalbum.net', 'donec', 'Marcelle', 'Blasdale', '54620118928', '2020-09-12 06:52:39', '638-121-6188', 1, 2, 527);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (96, 'klilley2n', '0XMY3mmFgcPzJnZiTnUGY21Qgnvlj1e3a3rysfn33WP6PS0ZtH623w6E4DJIr8pXrnBpjO7xNmn2', 'klilley2n@ca.gov', 'risus auctor', 'Kass', 'Lilley', '57358648094', '2020-02-19 21:57:23', '649-567-2334', 1, 2, 778);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (97, 'lryland2o', 'durKhP3rvsRUpyWXPMa9YTE6ayjGAMwlyEw1TlpNO6QnIa2A0GEjKRV7IHj61KrHBaCXKmyQLXTD', 'lryland2o@desdev.cn', 'ullamcorper', 'Leslie', 'Ryland', '88942940203', '2020-12-06 23:42:08', '763-352-1493', 1, 8, 208);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (98, 'fthorburn2p', 'f0VEMG3OsmhLvEKo71SamyTAMWjhgwClaEUEeoyhXoNwkUuqcPKPgxHHAXqQnPWxVAsAFTVQbqQg', 'fthorburn2p@google.com.hk', 'vitae', 'Faye', 'Thorburn', '68149189596', '2020-07-23 12:42:05', '555-966-2901', 1, 9, 775);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (99, 'lgodon2q', '2IwHqb0yuQhfo82hlwPXisPBwJug03ZGvI6kOzKmeJS4t7f91TdGIQw0WsOBGKZxTZhADG8qs7Lu', 'lgodon2q@amazon.co.uk', 'vestibulum', 'Lila', 'Godon', '61722557073', '2020-09-02 08:11:06', '278-964-7838', 1, 2, 762);
+insert into employees (employee_id, username, password, email, permissions, first_name, last_name, pesel, employment_date, phone_number, company_id, warehouse_id, address_id) values (100, 'slaste2r', 'G2ZSEYUnNxNsV5RfejzefPPMACOK4WRPumIoMQpu3lGDvTN3VlahvJAO6WOinYbvU6AahBk45Xly', 'slaste2r@myspace.com', 'turpis', 'Sheff', 'Laste', '37170764606', '2020-04-02 02:49:32', '883-940-1914', 1, 3, 741);
 
-INSERT INTO customers (user_id, first_name, last_name, nip, phone_number, company_id, address_id)
-VALUES (101, 'Sabra', 'Duro', '0145201736363', '+355 200 926 5795', 2, 387);
-INSERT INTO customers (user_id, first_name, last_name, nip, phone_number, company_id, address_id)
-VALUES (102, 'Phillip', 'Rohlfs', '2162573232062', '+86 387 911 7343', 2, 639);
-INSERT INTO customers (user_id, first_name, last_name, nip, phone_number, company_id, address_id)
-VALUES (103, 'Allina', 'Frantz', '1126303923556', '+46 426 583 9478', 1, 435);
-INSERT INTO customers (user_id, first_name, last_name, nip, phone_number, company_id, address_id)
-VALUES (104, 'Morgan', 'Kells', '1441540241760', '+86 653 809 0343', 1, 563);
-INSERT INTO customers (user_id, first_name, last_name, nip, phone_number, company_id, address_id)
-VALUES (105, 'Mona', 'Peele', '4776546221301', '+351 700 915 0171', 2, 70);
-INSERT INTO customers (user_id, first_name, last_name, nip, phone_number, company_id, address_id)
-VALUES (106, 'Othelia', 'Kleinbaum', '2912147927887', '+62 428 978 2221', 1, 933);
-INSERT INTO customers (user_id, first_name, last_name, nip, phone_number, company_id, address_id)
-VALUES (107, 'Gerianna', 'McPeeters', '0924153604516', '+7 310 924 4934', 2, 778);
-INSERT INTO customers (user_id, first_name, last_name, nip, phone_number, company_id, address_id)
-VALUES (108, 'Erika', 'Jealous', '0179014134004', '+351 643 765 2896', 2, 287);
-INSERT INTO customers (user_id, first_name, last_name, nip, phone_number, company_id, address_id)
-VALUES (109, 'Lev', 'Bohman', '4326760771426', '+420 930 503 3089', 2, 233);
-INSERT INTO customers (user_id, first_name, last_name, nip, phone_number, company_id, address_id)
-VALUES (110, 'Isaiah', 'Winstanley', '8036785530699', '+254 176 248 3069', 1, 668);
-INSERT INTO customers (user_id, first_name, last_name, nip, phone_number, company_id, address_id)
-VALUES (111, 'Cathe', 'Balsom', '4197986738022', '+381 175 892 4327', 2, 532);
-INSERT INTO customers (user_id, first_name, last_name, nip, phone_number, company_id, address_id)
-VALUES (112, 'Johnny', 'Dockwra', '5347781825722', '+48 125 371 7965', 1, 993);
-INSERT INTO customers (user_id, first_name, last_name, nip, phone_number, company_id, address_id)
-VALUES (113, 'Margareta', 'Vanes', '9849539448996', '+57 880 146 8710', 1, 354);
-INSERT INTO customers (user_id, first_name, last_name, nip, phone_number, company_id, address_id)
-VALUES (114, 'Ulrick', 'Woodyatt', '7827186875355', '+62 386 846 9355', 2, 61);
-INSERT INTO customers (user_id, first_name, last_name, nip, phone_number, company_id, address_id)
-VALUES (115, 'Andros', 'Peggram', '1179954686968', '+55 592 254 6171', 2, 494);
-INSERT INTO customers (user_id, first_name, last_name, nip, phone_number, company_id, address_id)
-VALUES (116, 'Waylen', 'Yglesia', '2355896314335', '+234 154 425 5929', 1, 406);
-INSERT INTO customers (user_id, first_name, last_name, nip, phone_number, company_id, address_id)
-VALUES (117, 'Gilbertine', 'Delle', '2268546540491', '+86 930 548 8082', 2, 245);
-INSERT INTO customers (user_id, first_name, last_name, nip, phone_number, company_id, address_id)
-VALUES (118, 'Delphine', 'Wahncke', '7387036849623', '+7 435 326 8683', 1, 639);
-INSERT INTO customers (user_id, first_name, last_name, nip, phone_number, company_id, address_id)
-VALUES (119, 'Alidia', 'Vanini', '4430984368459', '+358 990 131 1589', 1, 276);
-INSERT INTO customers (user_id, first_name, last_name, nip, phone_number, company_id, address_id)
-VALUES (120, 'Les', 'Marcinkus', '5218691894311', '+1 926 434 4191', 2, 817);
-INSERT INTO customers (user_id, first_name, last_name, nip, phone_number, company_id, address_id)
-VALUES (121, 'Hercule', 'Titterell', '0816507292861', '+420 219 390 5673', 2, 548);
-INSERT INTO customers (user_id, first_name, last_name, nip, phone_number, company_id, address_id)
-VALUES (122, 'Falito', 'Borris', '0548133059697', '+30 841 719 5155', 1, 372);
-INSERT INTO customers (user_id, first_name, last_name, nip, phone_number, company_id, address_id)
-VALUES (123, 'Farly', 'Reignard', '5630506361263', '+7 507 940 3093', 2, 357);
-INSERT INTO customers (user_id, first_name, last_name, nip, phone_number, company_id, address_id)
-VALUES (124, 'Ruby', 'Rennebach', '5861881418063', '+86 454 626 8698', 2, 968);
-INSERT INTO customers (user_id, first_name, last_name, nip, phone_number, company_id, address_id)
-VALUES (125, 'Pierson', 'Clemmey', '3896604727437', '+30 228 840 1446', 1, 573);
-INSERT INTO customers (user_id, first_name, last_name, nip, phone_number, company_id, address_id)
-VALUES (126, 'Darrin', 'Harryman', '2192872007755', '+251 803 823 7838', 1, 449);
-INSERT INTO customers (user_id, first_name, last_name, nip, phone_number, company_id, address_id)
-VALUES (127, 'Roseanne', 'Jordison', '3330367122657', '+970 179 817 3055', 2, 497);
-INSERT INTO customers (user_id, first_name, last_name, nip, phone_number, company_id, address_id)
-VALUES (128, 'Lindi', 'Streets', '5980203656043', '+687 525 734 5214', 1, 58);
-INSERT INTO customers (user_id, first_name, last_name, nip, phone_number, company_id, address_id)
-VALUES (129, 'Caddric', 'Bernardinelli', '6783089245647', '+234 627 645 7681', 1, 709);
-INSERT INTO customers (user_id, first_name, last_name, nip, phone_number, company_id, address_id)
-VALUES (130, 'Karel', 'Trittam', '6387241289718', '+86 482 454 1088', 1, 937);
-INSERT INTO customers (user_id, first_name, last_name, nip, phone_number, company_id, address_id)
-VALUES (131, 'Brittaney', 'Whitcomb', '3894662539308', '+95 893 178 7817', 1, 32);
-INSERT INTO customers (user_id, first_name, last_name, nip, phone_number, company_id, address_id)
-VALUES (132, 'Alix', 'Rosenfield', '5414706005606', '+57 933 466 2770', 2, 955);
-INSERT INTO customers (user_id, first_name, last_name, nip, phone_number, company_id, address_id)
-VALUES (133, 'Hanny', 'Lyddiatt', '2147118414318', '+55 162 307 0014', 1, 564);
-INSERT INTO customers (user_id, first_name, last_name, nip, phone_number, company_id, address_id)
-VALUES (134, 'Ephraim', 'Wastling', '7859831253483', '+351 316 378 5051', 2, 173);
-INSERT INTO customers (user_id, first_name, last_name, nip, phone_number, company_id, address_id)
-VALUES (135, 'Russell', 'Kidwell', '6271719974154', '+86 916 913 7033', 2, 251);
-INSERT INTO customers (user_id, first_name, last_name, nip, phone_number, company_id, address_id)
-VALUES (136, 'Joeann', 'Fenney', '3405065489957', '+55 895 364 7189', 1, 13);
-INSERT INTO customers (user_id, first_name, last_name, nip, phone_number, company_id, address_id)
-VALUES (137, 'Eilis', 'Ovitz', '3682404693246', '+7 364 330 9743', 2, 304);
-INSERT INTO customers (user_id, first_name, last_name, nip, phone_number, company_id, address_id)
-VALUES (138, 'Dex', 'Perillo', '5258414258972', '+62 201 415 1951', 1, 860);
-INSERT INTO customers (user_id, first_name, last_name, nip, phone_number, company_id, address_id)
-VALUES (139, 'Malinda', 'Legg', '9649250358565', '+507 279 864 9101', 2, 347);
-INSERT INTO customers (user_id, first_name, last_name, nip, phone_number, company_id, address_id)
-VALUES (140, 'Harry', 'Schottli', '2659114385514', '+33 449 586 3456', 2, 973);
-INSERT INTO customers (user_id, first_name, last_name, nip, phone_number, company_id, address_id)
-VALUES (141, 'Emalia', 'Kertess', '0570738406453', '+351 677 831 0002', 2, 835);
-INSERT INTO customers (user_id, first_name, last_name, nip, phone_number, company_id, address_id)
-VALUES (142, 'Ingeberg', 'Lafuente', '0354534294485', '+86 383 855 2362', 1, 641);
-INSERT INTO customers (user_id, first_name, last_name, nip, phone_number, company_id, address_id)
-VALUES (143, 'Nicolina', 'Teresse', '2555833449851', '+1 405 364 1163', 1, 335);
-INSERT INTO customers (user_id, first_name, last_name, nip, phone_number, company_id, address_id)
-VALUES (144, 'Lesly', 'Tschersich', '0546749179377', '+81 461 238 5202', 2, 592);
-INSERT INTO customers (user_id, first_name, last_name, nip, phone_number, company_id, address_id)
-VALUES (145, 'Worthington', 'Swalough', '6669316344628', '+81 330 726 5394', 1, 15);
-INSERT INTO customers (user_id, first_name, last_name, nip, phone_number, company_id, address_id)
-VALUES (146, 'Fielding', 'Hiland', '8655848802202', '+86 432 514 4672', 2, 335);
-INSERT INTO customers (user_id, first_name, last_name, nip, phone_number, company_id, address_id)
-VALUES (147, 'Dare', 'Clubley', '7249882206236', '+58 232 300 2984', 1, 574);
-INSERT INTO customers (user_id, first_name, last_name, nip, phone_number, company_id, address_id)
-VALUES (148, 'Eziechiele', 'McIlherran', '8981095956384', '+597 457 806 0001', 1, 514);
-INSERT INTO customers (user_id, first_name, last_name, nip, phone_number, company_id, address_id)
-VALUES (149, 'Hetty', 'Botwood', '7845143313322', '+7 205 797 3303', 2, 711);
-INSERT INTO customers (user_id, first_name, last_name, nip, phone_number, company_id, address_id)
-VALUES (150, 'Annnora', 'Fidele', '9896108415660', '+63 622 891 8827', 2, 655);
+insert into customers (customer_id, username, password, email, first_name, last_name, nip, phone_number, company_id, address_id) values (1, 'pdimblebee0', 'JqW8BCbIJGwY3NVOTrTl2J5BvbTMpwNhH5JZJjslUE4uLBMGbN1L0LuQS6hfg42PE4uDUYDaqL9e', 'pdimblebee0@prlog.org', 'Pattin', 'Dimblebee', '4895011041', '889-371-2316', 2, 121);
+insert into customers (customer_id, username, password, email, first_name, last_name, nip, phone_number, company_id, address_id) values (2, 'wlowndsbrough1', 'u3IzajIAEmzEazqlvUnjn9OVdbV9axtYMydCg7vaYeoU3bDciEXlFsaEWmhmrr7bojd6BdZkBXnD', 'wlowndsbrough1@newsvine.com', 'Wald', 'Lowndsbrough', '5798756352', '609-269-3797', 2, 445);
+insert into customers (customer_id, username, password, email, first_name, last_name, nip, phone_number, company_id, address_id) values (3, 'agregory2', '9vt5JdO3c2fYT6ecBxRmrrMWRUT7cCGFlGGxuak6Q8CBp01BCSGf9t086odJxjPW4RiDVnqev6jn', 'agregory2@com.com', 'Adolpho', 'Gregory', '3812388160', '514-674-7963', 1, 93);
+insert into customers (customer_id, username, password, email, first_name, last_name, nip, phone_number, company_id, address_id) values (4, 'ggilbride3', 'LoCxAB2MrNL5isTQWdlyIIA9OYaa396rjnmw1wMP26msGYMPwm8dwtZpoIDdgcnPobLHGDQCXEPe', 'ggilbride3@paypal.com', 'Gideon', 'Gilbride', '0951834365', '467-172-0924', 1, 927);
+insert into customers (customer_id, username, password, email, first_name, last_name, nip, phone_number, company_id, address_id) values (5, 'gheaney4', 'lwPsupMRAMBtOHgFNS2RD8adXXeNXtgkG67MvGCOUUJPd3gfUHNKYMnPGhsQVOBZueAnJirkMVbH', 'gheaney4@bloglines.com', 'Gilberte', 'Heaney', '9091751832', '912-782-2105', 1, 841);
+insert into customers (customer_id, username, password, email, first_name, last_name, nip, phone_number, company_id, address_id) values (6, 'blaban5', 'Yzehtnt7JqibFgmik9wXduq8h9G6lh2ECRBFO2DMK6xw3tqBF5fSqdiXN9b6UtAsOKvaSjV63PgR', 'blaban5@webs.com', 'Bryan', 'Laban', '0535792353', '205-212-3453', 2, 527);
+insert into customers (customer_id, username, password, email, first_name, last_name, nip, phone_number, company_id, address_id) values (7, 'dcornish6', '6ouQ5pvWjd6D5LyjOOqRaDdClHeCVrixtELy4S4pVRMcKsWB8z0ikz0ZmMizc1eYc0v6pP4vhDKT', 'dcornish6@kickstarter.com', 'Darlleen', 'Cornish', '9919536249', '502-597-5673', 1, 473);
+insert into customers (customer_id, username, password, email, first_name, last_name, nip, phone_number, company_id, address_id) values (8, 'jpatullo7', 'WqN3PZnB6VYoMEW8rwV0y7I9fHPNAdRbvgKYn1w2a5ghIRdI5maxLtyGmjcp669Hs19maacT1EkY', 'jpatullo7@auda.org.au', 'Jareb', 'Patullo', '7366411555', '868-474-3398', 1, 945);
+insert into customers (customer_id, username, password, email, first_name, last_name, nip, phone_number, company_id, address_id) values (9, 'jgutch8', '593ktESs32jtH7RJHV6BjDWFloNQUsyIPPDila1ZuJoYE2yErc9ASM8n9xsCJZKyYJwpktbWVbkJ', 'jgutch8@ed.gov', 'Jeniffer', 'Gutch', '3587020801', '552-344-5855', 2, 852);
+insert into customers (customer_id, username, password, email, first_name, last_name, nip, phone_number, company_id, address_id) values (10, 'cwingrove9', 'TVgQWq8V38ASanXqWnu6SLyFwgPBc3iwHUjRaUBVqQAJLcw781URlsdmnsQL8FA0x00ghNZkgm7W', 'cwingrove9@marketwatch.com', 'Curtice', 'Wingrove', '6520415350', '500-465-8601', 2, 104);
+insert into customers (customer_id, username, password, email, first_name, last_name, nip, phone_number, company_id, address_id) values (11, 'pbernardinoa', 'E9BDWR5dBvAOGMczTawAmdvpYdGcgFTBysEShwK235vX6R2omcsIFZFdkttEqVPFujo0AmfazUTC', 'pbernardinoa@globo.com', 'Phaidra', 'Bernardino', '1333311779', '948-243-2125', 2, 668);
+insert into customers (customer_id, username, password, email, first_name, last_name, nip, phone_number, company_id, address_id) values (12, 'bwarsopb', 'tQGAuuChuGbUYIELOkBF6pDJt2EKY0J9kYkRocrjrsK8zh7otBjEMB0f3IfE7r46WOmgPp3t4yVt', 'bwarsopb@godaddy.com', 'Brad', 'Warsop', '7890695389', '443-197-2013', 2, 309);
+insert into customers (customer_id, username, password, email, first_name, last_name, nip, phone_number, company_id, address_id) values (13, 'mnilesc', 'qCxvGWHK5SMGOJ534Fqk9ph0gGvwirIidMtLydBQtqW2LqC0Ta0Bakav0QFOy5FmAzI8lbM1HX38', 'mnilesc@vinaora.com', 'Morris', 'Niles', '5594567213', '801-744-5689', 1, 636);
+insert into customers (customer_id, username, password, email, first_name, last_name, nip, phone_number, company_id, address_id) values (14, 'hspoonerd', 'zKCpjQ0XyX2lO7Fvau8RadJnyIwIDruqeWNHSFN1sRaFlbrTL8ueBqapjku8PYv7NNmJiE2nxibJ', 'hspoonerd@gmpg.org', 'Hunfredo', 'Spooner', '8467612951', '495-594-9320', 1, 41);
+insert into customers (customer_id, username, password, email, first_name, last_name, nip, phone_number, company_id, address_id) values (15, 'gbeaue', '4bFbLQo805Ofk4wS5dbKXmjF5qXffVOD2mnrv3I2HdwrY7nqeRztNznQL1K6LXb8haGm3emt0DNr', 'gbeaue@shareasale.com', 'Gabi', 'Beau', '8393266520', '216-842-9106', 2, 456);
+insert into customers (customer_id, username, password, email, first_name, last_name, nip, phone_number, company_id, address_id) values (16, 'nwildgoosef', 'XcFhnmpDH0tAa6PI5uXv2Nv7nBZHN2KU7Z9JFQ2m2Tt2NvpnNjZxtHsVbvjS7bqu5CyvLEEz3PZY', 'nwildgoosef@princeton.edu', 'Ninetta', 'Wildgoose', '4510019349', '702-995-3146', 1, 954);
+insert into customers (customer_id, username, password, email, first_name, last_name, nip, phone_number, company_id, address_id) values (17, 'cteshg', 'bucLSDoniDWDQ56rgZY9dTtSZapjMVRvDp2cSdT1iGmTsOu3joCH7yCZXaSPCuwjHq9zveJkbGns', 'cteshg@ameblo.jp', 'Cece', 'Tesh', '1492667335', '682-979-4720', 1, 596);
+insert into customers (customer_id, username, password, email, first_name, last_name, nip, phone_number, company_id, address_id) values (18, 'doehmh', 'P9n9sJyky7khX7pQwXh5pKhZAAmQ4ltfvqdzxqEMpSWInzEahp4wsCnrFOwkyNCv9UCn8bhZQGQC', 'doehmh@cisco.com', 'Donnajean', 'Oehm', '2028863234', '345-926-5170', 2, 857);
+insert into customers (customer_id, username, password, email, first_name, last_name, nip, phone_number, company_id, address_id) values (19, 'smongaini', 'lTpkfNLGxI6EBEVz85ivK0JA3jRY6HzlsjCjfWNdS308SqTQXsfU6Rn2EmhL27Wauuartdg3XSFI', 'smongaini@mit.edu', 'Salomi', 'Mongain', '5053057247', '358-289-9713', 1, 391);
+insert into customers (customer_id, username, password, email, first_name, last_name, nip, phone_number, company_id, address_id) values (20, 'bpeagrimj', 'WgKyZ8PMxWaEmllZ0eECGOYXCCFQmNOuPhmJktusNumhIMeDc2dATwErQTlwqsVAskJ9Z3ZgvljD', 'bpeagrimj@state.tx.us', 'Bidget', 'Peagrim', '0209359919', '940-203-7736', 1, 615);
+insert into customers (customer_id, username, password, email, first_name, last_name, nip, phone_number, company_id, address_id) values (21, 'bwalentynowiczk', 'BsGDLwVNJs0mT9PuBAiTR3KtWQLAARMzVpq0YezplBNOm7JwSkEbXWxr3lZuhw3HUC9mKXgDdxtZ', 'bwalentynowiczk@squidoo.com', 'Berry', 'Walentynowicz', '0821964496', '144-318-7268', 2, 168);
+insert into customers (customer_id, username, password, email, first_name, last_name, nip, phone_number, company_id, address_id) values (22, 'fmillichipl', 'QYAYIyaQs7PJWJCxZdt59tuLILOfgVi8tvCLFRUGnwk9IRqmVWvALcMePIu0vsMpaxpJRcodQejT', 'fmillichipl@addtoany.com', 'Filia', 'Millichip', '4898413142', '159-952-0886', 2, 775);
+insert into customers (customer_id, username, password, email, first_name, last_name, nip, phone_number, company_id, address_id) values (23, 'aitzhakm', 'xvvMkdGcH86Ui5isHpzRVTe4ialQhCgud14QjIpdj8Q19XQ2S6ZdKQg6szk97gy9QMLZTNrYphwQ', 'aitzhakm@networkadvertising.org', 'Aleen', 'Itzhak', '5385913036', '912-795-3184', 1, 155);
+insert into customers (customer_id, username, password, email, first_name, last_name, nip, phone_number, company_id, address_id) values (24, 'gcasinn', '33LwbLPO3tLpdVQ1wqTLbpftPQ8TxJufuukK960xpkVhsPCv55qDusvnu43DS5Y0ZjTLTlV5yG1g', 'gcasinn@behance.net', 'Glyn', 'Casin', '1865927556', '763-409-5492', 2, 629);
+insert into customers (customer_id, username, password, email, first_name, last_name, nip, phone_number, company_id, address_id) values (25, 'kpendergasto', 'hkPew2repV1hMQryNoH6RRf3ftraokxQiywDiV9hK4EbKRaOfkLxiBvdHsiBMscEfRNigosJAqsS', 'kpendergasto@goodreads.com', 'Kellsie', 'Pendergast', '8578064608', '729-214-9998', 1, 737);
+insert into customers (customer_id, username, password, email, first_name, last_name, nip, phone_number, company_id, address_id) values (26, 'dperonp', 'QWiy9cclhAISg8PWmzBiOqK1XbWIXiceNrvj5e0i2olqb6PYvSerPRekKxtbMUt1IK17JLFZ6yM0', 'dperonp@yale.edu', 'Dalton', 'Peron', '5597819499', '695-525-3887', 1, 767);
+insert into customers (customer_id, username, password, email, first_name, last_name, nip, phone_number, company_id, address_id) values (27, 'mfosdykeq', 'spqLIxbbPrAszO4nXXjM1fUxOjrY8dqGlFuedOk6GFcAAgnNNqWTEwocEFwntgi9rH0FQCWZcDWE', 'mfosdykeq@cornell.edu', 'Merline', 'Fosdyke', '8956972157', '129-972-3170', 1, 74);
+insert into customers (customer_id, username, password, email, first_name, last_name, nip, phone_number, company_id, address_id) values (28, 'mlunar', 'Hm0agEAhUqmqseYDxhFPCyWC0TXq23aYyHsDIv0PZSeLZH3uQ7OW08UH5TrasHx73bn5z7PzRIf4', 'mlunar@cnbc.com', 'Mickie', 'Luna', '0926692903', '503-518-8481', 2, 640);
+insert into customers (customer_id, username, password, email, first_name, last_name, nip, phone_number, company_id, address_id) values (29, 'rlodemanns', '8aytYN6aaaNtisphpzJR3tiK0lulr5MoOFM1AMsAwQE8Ae81PseueWGSMd3RxEGsUQQ65nwOS1Jw', 'rlodemanns@live.com', 'Rodney', 'Lodemann', '5688082923', '171-927-3887', 1, 715);
+insert into customers (customer_id, username, password, email, first_name, last_name, nip, phone_number, company_id, address_id) values (30, 'ogalliet', 'YSFMpYEqXnjUm9J9k5CL2ziAsFY6vy4xN6py4lQOZZURYcjSq55GRGQLEwsasqayH5XI5HKqrO07', 'ogalliet@imgur.com', 'Oby', 'Gallie', '9459836931', '199-649-3865', 2, 636);
+insert into customers (customer_id, username, password, email, first_name, last_name, nip, phone_number, company_id, address_id) values (31, 'iafonsou', 'ZRxtVQVQXrIGgFYrwtbcLshov0AIkz6dp2Bf81dnOUSh8bNQQX1KvLOmn0bSv15jg7FYnsdEp3XG', 'iafonsou@cbsnews.com', 'Irwin', 'Afonso', '7905575775', '115-674-6808', 1, 744);
+insert into customers (customer_id, username, password, email, first_name, last_name, nip, phone_number, company_id, address_id) values (32, 'ajacquemyv', 'XAILc3w1uGgp8neKFa7TznVQhvUQopWncMF1yCepJF8TgjmYsJuWoQr97STyTmKNk6HQlsR7YhEi', 'ajacquemyv@gizmodo.com', 'Ardella', 'Jacquemy', '9726708524', '456-938-8696', 1, 563);
+insert into customers (customer_id, username, password, email, first_name, last_name, nip, phone_number, company_id, address_id) values (33, 'fsidnallw', 'ocokbhkTCKDO8sNSiTmeM0R57Y4RXeBa5UKd3e4U72xLrMXj7kJizDYiCILwTVowrzb4xfvG7PoV', 'fsidnallw@odnoklassniki.ru', 'Freddy', 'Sidnall', '3412079792', '816-446-7367', 2, 205);
+insert into customers (customer_id, username, password, email, first_name, last_name, nip, phone_number, company_id, address_id) values (34, 'kburgenx', '7hoVkE6yda0WmfM2TqGiQd4YnKwEi1F1JdpwnsTjgw3zoGkh5zAulLNrYCjoU6dz3LYoCEDqsyOP', 'kburgenx@psu.edu', 'Kylen', 'Burgen', '2503686722', '457-972-0388', 1, 135);
+insert into customers (customer_id, username, password, email, first_name, last_name, nip, phone_number, company_id, address_id) values (35, 'idownery', 'qXlvBTf6irfz9UBFUteTDvkomljFfUuSGwKC1EQE7BZepOT5QhS1KxsOuTIrap3pKTKPIbxY1ZW3', 'idownery@hubpages.com', 'Ingaborg', 'Downer', '8497680933', '803-461-7576', 1, 474);
+insert into customers (customer_id, username, password, email, first_name, last_name, nip, phone_number, company_id, address_id) values (36, 'khullerz', 'pY1j8S11UqbMrPbz0Bmxd3VkHZdqJwZMXoi7XuPbZnyor1KvZ78hOMNrLlYnedmo5E93fQPAE5Yf', 'khullerz@edublogs.org', 'Kirbee', 'Huller', '4196168075', '480-940-0079', 1, 622);
+insert into customers (customer_id, username, password, email, first_name, last_name, nip, phone_number, company_id, address_id) values (37, 'pgolbourn10', 'CPvFRTM2WmQq72tz47MbF1DF6dP2fYjgrOWihSaPhInAJoVB5tTGSEehGFj7HtA7jCJwFrz9aFmY', 'pgolbourn10@about.com', 'Petronella', 'Golbourn', '4717425195', '987-668-5314', 2, 75);
+insert into customers (customer_id, username, password, email, first_name, last_name, nip, phone_number, company_id, address_id) values (38, 'rrikel11', 'dt2VRIzQCaY00L84Lda6fNo6L7aMKz90pfekedEVIJZoCXuCmPIqbwDCMrTjkjr3eiAsypKHXZxc', 'rrikel11@live.com', 'Rolland', 'Rikel', '7105852427', '645-760-5010', 2, 567);
+insert into customers (customer_id, username, password, email, first_name, last_name, nip, phone_number, company_id, address_id) values (39, 'rquesne12', '90UX3Ics0SGbllYAFlCnb9WMdnrstaai17U5Id1VYQtjuxYsGRxUgOO4QCEEAxXNF6N26OcnP3Yk', 'rquesne12@canalblog.com', 'Rica', 'Quesne', '7728934032', '489-209-2006', 2, 42);
+insert into customers (customer_id, username, password, email, first_name, last_name, nip, phone_number, company_id, address_id) values (40, 'pcooley13', 'ZOwppRu2ofuRaTypGfYv8M5zIxHkbxlCOIGapqvhw6Wu6CFN4icLANnZtZMqn3BVwDGOWoEE9gcl', 'pcooley13@merriam-webster.com', 'Philippe', 'Cooley', '9573751736', '198-856-2090', 1, 618);
+insert into customers (customer_id, username, password, email, first_name, last_name, nip, phone_number, company_id, address_id) values (41, 'tlopez14', 'yFGQPq8jtja4k3f53Nz2kChcNhrrv7W64U6EmjR5NSTExaz4RS6AdhENG8rTRkCzd8Bzo1yf4evH', 'tlopez14@huffingtonpost.com', 'Tades', 'Lopez', '8523304096', '705-145-9270', 2, 270);
+insert into customers (customer_id, username, password, email, first_name, last_name, nip, phone_number, company_id, address_id) values (42, 'lmoizer15', 'fOApBrMSNv2DYFTB2b9jiXn4gGt3Z5R5yaOmESnmWPHtLX0TRo2v8m4Ke7yYtk0rJ0rlj2ii3oQu', 'lmoizer15@list-manage.com', 'Ludovika', 'Moizer', '9610103814', '300-780-7268', 2, 275);
+insert into customers (customer_id, username, password, email, first_name, last_name, nip, phone_number, company_id, address_id) values (43, 'jgarrison16', 'wv1t0Aaem4OnKyzmJcX1uFTMJrgip3QCJgxu7NdluEzstaZScE5XvLJ3P4qAlMtJq0GpfkjhgwsG', 'jgarrison16@360.cn', 'Jacquelin', 'Garrison', '6076522800', '446-729-3936', 2, 499);
+insert into customers (customer_id, username, password, email, first_name, last_name, nip, phone_number, company_id, address_id) values (44, 'emoreton17', 'WunXhRIQAiPmrd8O3EbztbgVMcOf476EbLyEGRUTo8JycS4LLgiLaDxQ3NCsqZDEg5OAzTzQpr7a', 'emoreton17@cloudflare.com', 'Ezequiel', 'Moreton', '4649940897', '240-538-7545', 1, 844);
+insert into customers (customer_id, username, password, email, first_name, last_name, nip, phone_number, company_id, address_id) values (45, 'pstraw18', 'coa4fZkDxCObfnX4kWa6ZwIPHm7eOmPVCjcDjOZaqHGMPIVX7Dv19YYcfXJt67towv3xy31Xb1uF', 'pstraw18@home.pl', 'Piotr', 'Straw', '9296820988', '472-169-2438', 1, 637);
+insert into customers (customer_id, username, password, email, first_name, last_name, nip, phone_number, company_id, address_id) values (46, 'mpalin19', 'YgB68SUvvpXVmB2ITabhwXO7mDbnUK4uYUVRnOOnzU80tADvgsxGpvu0iquoAqM31sgZ4DZwKYgI', 'mpalin19@simplemachines.org', 'Margit', 'Palin', '3566621567', '386-950-8149', 2, 198);
+insert into customers (customer_id, username, password, email, first_name, last_name, nip, phone_number, company_id, address_id) values (47, 'clecky1a', 'HY91prncGidXg8Gen4oRCeUzMPGLD5RpsghMjnSJEsca8AKg3ilI7bakKi4k0cmaPcpKmTZ6yvtV', 'clecky1a@accuweather.com', 'Catarina', 'Lecky', '5726876311', '944-572-2608', 1, 407);
+insert into customers (customer_id, username, password, email, first_name, last_name, nip, phone_number, company_id, address_id) values (48, 'amcphail1b', 'bV8h4UIl2fvFASy1A2il3BZ3RL7I9qx9XevIKL2mdyJIoA00WmMQ5BLMu4yaLo3mTqjvw8MFkzay', 'amcphail1b@hud.gov', 'Annmaria', 'McPhail', '3303060991', '241-235-5393', 1, 276);
+insert into customers (customer_id, username, password, email, first_name, last_name, nip, phone_number, company_id, address_id) values (49, 'kcoupman1c', 'P78AUamJWtGJxex9fnwBrv98jkTEzWW6ppwTnzqon52GgiQknGN6X9tZJEpfOROwkTGqlVH19456', 'kcoupman1c@1und1.de', 'Killie', 'Coupman', '7765908548', '592-198-9051', 2, 415);
+insert into customers (customer_id, username, password, email, first_name, last_name, nip, phone_number, company_id, address_id) values (50, 'abrammall1d', 'NODV1XWtnfkrhCqUfYzyQ9I6dUCCYHLsl66vW5mGRih49ktMfSD7ORXCqs1raXdKfVssgsIHna2k', 'abrammall1d@studiopress.com', 'Andromache', 'Brammall', '5172703676', '226-968-8859', 2, 624);
 
 INSERT INTO items (name, description)
 VALUES ('Descurainia pinnata (Walter) Britton',
