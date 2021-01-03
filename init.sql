@@ -147,16 +147,15 @@ CREATE INDEX IX_fk_is_customer_of ON customers (company_id);
 
 
 ALTER TABLE customers
-    ADD CONSTRAINT Unique_Identifier3 PRIMARY KEY (customer_id,
-                                                   user_id);
+    ADD CONSTRAINT Unique_Identifier3 PRIMARY KEY (customer_id);
 
 -- Table orders
 
 CREATE TABLE orders
 (
     order_id      SERIAL,
-    order_date    TIMESTAMP(0) NOT NULL,
-    status        VARCHAR(20)  NOT NULL
+    date    TIMESTAMP(0) NOT NULL,
+    status        VARCHAR(20)  NOT NULL DEFAULT 'RECEIVED'
         CONSTRAINT status_constraint
             CHECK (status in
                    ('RECEIVED',
@@ -165,12 +164,11 @@ CREATE TABLE orders
                     'COMPLETED')),
     shipping_cost DECIMAL(10, 2),
     customer_id   INTEGER      NOT NULL,
-    address_id    INTEGER      NOT NULL,
-    user_id       INTEGER DEFAULT NULL
+    address_id    INTEGER      NOT NULL
 );
 
 
-CREATE INDEX IX_fk_places_order ON orders (customer_id, user_id);
+CREATE INDEX IX_fk_places_order ON orders (customer_id);
 
 
 CREATE INDEX IX_is_ordered_to ON orders (address_id);
@@ -337,8 +335,7 @@ ALTER TABLE warehouses
 
 ALTER TABLE orders
     ADD CONSTRAINT fk_places_order
-        FOREIGN KEY (customer_id,
-                     user_id) REFERENCES customers (customer_id, user_id);
+        FOREIGN KEY (customer_id) REFERENCES customers (customer_id);
 
 
 ALTER TABLE employees
@@ -3881,25 +3878,25 @@ VALUES (99, 1, null, 53.51);
 INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
 VALUES (100, 1, null, 29.2);
 
-INSERT INTO orders (order_date, status, shipping_cost, customer_id, address_id)
+INSERT INTO orders (date, status, shipping_cost, customer_id, address_id)
 VALUES ('20-Oct-25', 'RECEIVED', null, 19, 826);
-INSERT INTO orders (order_date, status, shipping_cost, customer_id, address_id)
+INSERT INTO orders (date, status, shipping_cost, customer_id, address_id)
 VALUES ('20-Jul-09', 'RECEIVED', null, 32, 256);
-INSERT INTO orders (order_date, status, shipping_cost, customer_id, address_id)
+INSERT INTO orders (date, status, shipping_cost, customer_id, address_id)
 VALUES ('20-Jan-08', 'RECEIVED', null, 35, 535);
-INSERT INTO orders (order_date, status, shipping_cost, customer_id, address_id)
+INSERT INTO orders (date, status, shipping_cost, customer_id, address_id)
 VALUES ('20-Apr-07', 'RECEIVED', 499.71, 10, 244);
-INSERT INTO orders (order_date, status, shipping_cost, customer_id, address_id)
+INSERT INTO orders (date, status, shipping_cost, customer_id, address_id)
 VALUES ('20-Feb-08', 'RECEIVED', null, 14, 254);
-INSERT INTO orders (order_date, status, shipping_cost, customer_id, address_id)
+INSERT INTO orders (date, status, shipping_cost, customer_id, address_id)
 VALUES ('20-Mar-31', 'RECEIVED', 22.28, 7, 517);
-INSERT INTO orders (order_date, status, shipping_cost, customer_id, address_id)
+INSERT INTO orders (date, status, shipping_cost, customer_id, address_id)
 VALUES ('20-Mar-23', 'RECEIVED', null, 24, 457);
-INSERT INTO orders (order_date, status, shipping_cost, customer_id, address_id)
+INSERT INTO orders (date, status, shipping_cost, customer_id, address_id)
 VALUES ('19-Dec-22', 'RECEIVED', 179.03, 15, 758);
-INSERT INTO orders (order_date, status, shipping_cost, customer_id, address_id)
+INSERT INTO orders (date, status, shipping_cost, customer_id, address_id)
 VALUES ('20-Jul-31', 'RECEIVED', 683.65, 27, 632);
-INSERT INTO orders (order_date, status, shipping_cost, customer_id, address_id)
+INSERT INTO orders (date, status, shipping_cost, customer_id, address_id)
 VALUES ('20-Mar-03', 'RECEIVED', 307.24, 13, 284);
 
 INSERT INTO orders_items (order_id, item_id, ordered_item_quantity)

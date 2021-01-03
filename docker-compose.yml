@@ -27,4 +27,3 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/bada
       - SPRING_DATASOURCE_USERNAME=admin
       - SPRING_DATASOURCE_PASSWORD=password
-      - SPRING_JPA_HIBERNATE_DDL_AUTO=update

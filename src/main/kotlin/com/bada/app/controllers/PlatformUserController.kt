@@ -1,5 +1,6 @@
 package com.bada.app
 
+import com.bada.app.repos.CustomerRepository
 import com.bada.app.repos.PlatformUserRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Controller
@@ -19,5 +20,15 @@ class PlatformUserController(val repository: PlatformUserRepository) {
         }
 
         return "not-found"
+    }
+}
+
+@Controller
+class CustomerController(val repository: CustomerRepository) {
+    @GetMapping("/customer/{name}")
+    fun userInfo(@PathVariable(value = "name") username: String, model: Model): String? {
+        val customer = repository.findByUsername(username)
+        model.addAttribute("customer", customer)
+        return "customer"
     }
 }
