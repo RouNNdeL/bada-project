@@ -21,7 +21,7 @@ class Order(
     var shippingCost: Float?,
 
     @OneToMany(mappedBy = "order", cascade = [CascadeType.ALL], orphanRemoval = true)
-    val items: Set<OrderItem>
+    val items: List<OrderItem>
 ) {
 
 
