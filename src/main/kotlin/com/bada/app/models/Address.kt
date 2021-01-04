@@ -1,5 +1,6 @@
 package com.bada.app.models
 
+import java.io.Serializable
 import javax.persistence.*
 
 @Entity
@@ -23,7 +24,7 @@ class Address(
     var country: Country
 
 
-) {
+) : Serializable {
     override fun toString(): String {
         return "$addressLine1\n$addressLine2\n$zipcode $state\n$country"
     }

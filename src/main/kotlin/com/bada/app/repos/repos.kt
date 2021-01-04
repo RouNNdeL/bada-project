@@ -3,6 +3,7 @@ package com.bada.app.repos
 import com.bada.app.models.*
 import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository
+import java.util.*
 
 @Repository
 interface OrderRepository : CrudRepository<Order, Long>
@@ -18,6 +19,7 @@ interface CompanyRepository : CrudRepository<Company, Long>
 @Repository
 interface EmployeeRepository : CrudRepository<Employee, Long> {
     fun findEmployeesByCompanyId(companyId: Long) : Set<Employee>
+    fun findEmployeeByUsername(username: String): Optional<Employee>
 }
 
 @Repository
