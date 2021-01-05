@@ -15,8 +15,9 @@ class EmployeeDetailsService(
             throw UsernameNotFoundException("Username cannot be null")
         }
 
-        return employeeRepository.findEmployeeByUsername(username).orElseThrow {
+        val employee = employeeRepository.findEmployeeByUsername(username).orElseThrow {
             throw UsernameNotFoundException("User does not exist")
         }
+        return employee.getUserDetails()
     }
 }
