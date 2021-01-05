@@ -13,7 +13,7 @@ class Item(
     val name: String,
     val description: String,
 
-    @ManyToMany(mappedBy = "items")
+    @ManyToMany
     val warehouses: List<Warehouse>,
 
     @OneToMany
