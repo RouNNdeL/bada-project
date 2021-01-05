@@ -10,9 +10,14 @@ COPY --from=cache /cache /home/gradle/.gradle
 COPY . .
 RUN gradle --no-daemon build --stacktrace --info
 
-FROM openjdk:11-jre-slim
+FROM openjdk:8-jre-alpine
 WORKDIR /app
+RUN apk --no-cache add curl
 COPY --from=builder /app/build/libs/*.jar /bada.jar
+ENV PORT 8080
 EXPOSE 8080
 
-ENTRYPOINT ["java","-jar","/bada.jar"]
+HEALTHCHECK --timeout=5s --start-period=5s --retries=1 \
+    CMD curl -f http://localhost:$PORT/health_check
+
+CMD ["java","-jar","-Dspring.profiles.active=default","/bada.jar"]
