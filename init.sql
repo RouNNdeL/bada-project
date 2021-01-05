@@ -154,18 +154,19 @@ ALTER TABLE customers
 
 CREATE TABLE orders
 (
-    id            SERIAL,
-    date          TIMESTAMP(0) NOT NULL,
-    status        VARCHAR(20)  NOT NULL DEFAULT 'RECEIVED'
+    id                   SERIAL,
+    date                 TIMESTAMP(0) NOT NULL,
+    status               VARCHAR(20)  NOT NULL DEFAULT 'RECEIVED'
         CONSTRAINT status_constraint
             CHECK (status in
                    ('RECEIVED',
                     'IN_PROGRESS',
                     'READY_FOR_SHIPMENT',
                     'COMPLETED')),
-    shipping_cost DECIMAL(10, 2),
-    customer_id   INTEGER      NOT NULL,
-    address_id    INTEGER      NOT NULL
+    shipping_cost        DECIMAL(10, 2),
+    customer_id          INTEGER      NOT NULL,
+    assigned_employee_id INTEGER,
+    address_id           INTEGER      NOT NULL
 );
 
 
@@ -196,14 +197,6 @@ CREATE TABLE items_categories
 (
     item_id     INTEGER NOT NULL,
     category_id INTEGER NOT NULL
-);
-
-
-CREATE TABLE orders_employees
-(
-    order_id    INTEGER NOT NULL,
-    employee_id INTEGER NOT NULL,
-    role        VARCHAR(30)
 );
 
 -- Table orders_items
@@ -327,6 +320,15 @@ ALTER TABLE orders
         FOREIGN KEY (customer_id) REFERENCES customers (id);
 
 
+ALTER TABLE orders
+    ADD CONSTRAINT fk_handles_order
+        FOREIGN KEY (assigned_employee_id) REFERENCES employees (id);
+
+ALTER TABLE employees
+    ADD CONSTRAINT fk_works_in
+        FOREIGN KEY (warehouse_id) REFERENCES warehouses (id);
+
+
 ALTER TABLE employees
     ADD CONSTRAINT fk_company_employs
         FOREIGN KEY (company_id) REFERENCES companies (id);
@@ -341,25 +343,9 @@ ALTER TABLE items_categories
     ADD CONSTRAINT fk_is_in_category_items
         FOREIGN KEY (item_id) REFERENCES items (id);
 
-
 ALTER TABLE items_categories
     ADD CONSTRAINT fk_is_in_category_categories
         FOREIGN KEY (category_id) REFERENCES categories (id);
-
-
-ALTER TABLE orders_employees
-    ADD CONSTRAINT fk_handles_order_orders
-        FOREIGN KEY (order_id) REFERENCES orders (id);
-
-
-ALTER TABLE orders_employees
-    ADD CONSTRAINT fk_handles_order_employees
-        FOREIGN KEY (employee_id) REFERENCES employees (id);
-
-
-ALTER TABLE employees
-    ADD CONSTRAINT fk_works_in
-        FOREIGN KEY (warehouse_id) REFERENCES warehouses (id);
 
 
 ALTER TABLE orders_items
@@ -2487,13 +2473,15 @@ VALUES (91237.97, 10, 'T', 2, 957, null);
 
 insert into employees (id, username, password, email, role, first_name, last_name, pesel,
                        employment_date, phone_number, company_id, warehouse_id, address_id)
-values (1, 'dsparkwill0', 'uGzilwVyX12gzGQZnUgLNEZAgMGMUUqzniY7maCSnRVEVIbZMnvivnvEwikTdrbZCnb7FwyLd2t8',
-        'dsparkwill0@booking.com', 'hac', 'Donnell', 'Sparkwill', '56280983160', '2020-04-09 14:00:14', '521-700-4568',
+values (1, 'user1', '{noop}password1',
+        'dsparkwill0@booking.com', 'WAREHOUSE_EMPLOYEE', 'Donnell', 'Sparkwill', '56280983160', '2020-04-09 14:00:14',
+        '521-700-4568',
         2, 2, 393);
 insert into employees (id, username, password, email, role, first_name, last_name, pesel,
                        employment_date, phone_number, company_id, warehouse_id, address_id)
-values (2, 'npoole1', '5abv5dZmxCXoIg0cNYKSQBNo1Rg6PiyhNyXZSAofxWugHhNdUE8hUq5VtWp8sw9ZQ0k66pWmdEuT',
-        'npoole1@friendfeed.com', 'nulla ut', 'North', 'Poole', '02152406951', '2020-10-23 00:50:34', '118-264-5825', 1,
+values (2, 'user2', '{noop}password2',
+        'npoole1@friendfeed.com', 'WAREHOUSE_MANAGER', 'North', 'Poole', '02152406951', '2020-10-23 00:50:34',
+        '118-264-5825', 1,
         7, 891);
 insert into employees (id, username, password, email, role, first_name, last_name, pesel,
                        employment_date, phone_number, company_id, warehouse_id, address_id)
@@ -3703,26 +3691,26 @@ VALUES (99, 1, null, 53.51);
 INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
 VALUES (100, 1, null, 29.2);
 
-INSERT INTO orders (date, status, shipping_cost, customer_id, address_id)
-VALUES ('20-Oct-25', 'RECEIVED', null, 19, 826);
-INSERT INTO orders (date, status, shipping_cost, customer_id, address_id)
-VALUES ('20-Jul-09', 'RECEIVED', null, 32, 256);
-INSERT INTO orders (date, status, shipping_cost, customer_id, address_id)
-VALUES ('20-Jan-08', 'RECEIVED', null, 35, 535);
-INSERT INTO orders (date, status, shipping_cost, customer_id, address_id)
-VALUES ('20-Apr-07', 'RECEIVED', 499.71, 10, 244);
-INSERT INTO orders (date, status, shipping_cost, customer_id, address_id)
-VALUES ('20-Feb-08', 'RECEIVED', null, 14, 254);
-INSERT INTO orders (date, status, shipping_cost, customer_id, address_id)
-VALUES ('20-Mar-31', 'RECEIVED', 22.28, 7, 517);
-INSERT INTO orders (date, status, shipping_cost, customer_id, address_id)
-VALUES ('20-Mar-23', 'RECEIVED', null, 24, 457);
-INSERT INTO orders (date, status, shipping_cost, customer_id, address_id)
-VALUES ('19-Dec-22', 'RECEIVED', 179.03, 15, 758);
-INSERT INTO orders (date, status, shipping_cost, customer_id, address_id)
-VALUES ('20-Jul-31', 'RECEIVED', 683.65, 27, 632);
-INSERT INTO orders (date, status, shipping_cost, customer_id, address_id)
-VALUES ('20-Mar-03', 'RECEIVED', 307.24, 13, 284);
+INSERT INTO orders (date, status, shipping_cost, customer_id, assigned_employee_id, address_id)
+VALUES ('20-Oct-25', 'RECEIVED', null, 19, 1, 826);
+INSERT INTO orders (date, status, shipping_cost, customer_id, assigned_employee_id, address_id)
+VALUES ('20-Jul-09', 'RECEIVED', null, 32, 1, 256);
+INSERT INTO orders (date, status, shipping_cost, customer_id, assigned_employee_id, address_id)
+VALUES ('20-Jan-08', 'RECEIVED', null, 35, 1, 535);
+INSERT INTO orders (date, status, shipping_cost, customer_id, assigned_employee_id, address_id)
+VALUES ('20-Apr-07', 'RECEIVED', 499.71, 10, 2, 244);
+INSERT INTO orders (date, status, shipping_cost, customer_id, assigned_employee_id, address_id)
+VALUES ('20-Feb-08', 'RECEIVED', null, 14, 10, 254);
+INSERT INTO orders (date, status, shipping_cost, customer_id, assigned_employee_id, address_id)
+VALUES ('20-Mar-31', 'RECEIVED', 22.28, 7, 5, 517);
+INSERT INTO orders (date, status, shipping_cost, customer_id, assigned_employee_id, address_id)
+VALUES ('20-Mar-23', 'RECEIVED', null, 24, 7, 457);
+INSERT INTO orders (date, status, shipping_cost, customer_id, assigned_employee_id, address_id)
+VALUES ('19-Dec-22', 'RECEIVED', 179.03, 15, 2, 758);
+INSERT INTO orders (date, status, shipping_cost, customer_id, assigned_employee_id, address_id)
+VALUES ('20-Jul-31', 'RECEIVED', 683.65, 27, 3, 632);
+INSERT INTO orders (date, status, shipping_cost, customer_id, assigned_employee_id, address_id)
+VALUES ('20-Mar-03', 'RECEIVED', 307.24, 13, 1, 284);
 
 INSERT INTO orders_items (order_id, item_id, ordered_item_quantity)
 VALUES (10, 29, 33);
@@ -3764,17 +3752,6 @@ INSERT INTO orders_items (order_id, item_id, ordered_item_quantity)
 VALUES (7, 24, 97);
 INSERT INTO orders_items (order_id, item_id, ordered_item_quantity)
 VALUES (5, 44, 76);
-
-INSERT INTO orders_employees (order_id, employee_id, role)
-VALUES (7, 44, 'logistical');
-INSERT INTO orders_employees (order_id, employee_id, role)
-VALUES (2, 53, 'contingency');
-INSERT INTO orders_employees (order_id, employee_id, role)
-VALUES (5, 23, 'optimal');
-INSERT INTO orders_employees (order_id, employee_id, role)
-VALUES (9, 58, 'emulation');
-INSERT INTO orders_employees (order_id, employee_id, role)
-VALUES (1, 56, 'optimal');
 
 INSERT INTO items_categories (item_id, category_id)
 VALUES (32, 4);
