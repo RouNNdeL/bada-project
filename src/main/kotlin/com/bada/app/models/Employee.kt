@@ -7,7 +7,6 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import org.springframework.security.core.GrantedAuthority
 import java.util.*
 import javax.persistence.*
-import kotlin.jvm.Transient
 
 @JsonSerialize
 @Entity
@@ -47,6 +46,10 @@ class Employee(
     @JsonIgnore
     @OneToMany(mappedBy = "manager")
     val managedWarehouses: Set<Warehouse>,
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "assignedEmployee")
+    val handledOrders: Set<Order>,
 
     @JsonIgnore
     @OneToMany
