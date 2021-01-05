@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title th:text="${employee.displayName}">John Smith</title>
+<head th:insert="fragments/layout :: head(title=${employee.displayName})">
 </head>
 <body>
 <h1 th:text="${employee.displayName}">John Smith</h1>
