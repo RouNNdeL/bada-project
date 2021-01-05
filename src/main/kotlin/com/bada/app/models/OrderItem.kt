@@ -8,12 +8,10 @@ import javax.persistence.*
 class OrderItem(
     @ManyToOne
     @MapsId("orderId")
-    @JoinColumn(name = "order_id")
     val order: Order,
 
     @ManyToOne
     @MapsId("itemId")
-    @JoinColumn(name = "item_id")
     val item: Item,
 
     @EmbeddedId

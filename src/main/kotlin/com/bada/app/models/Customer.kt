@@ -2,18 +2,23 @@ package com.bada.app.models
 
 import javax.persistence.*
 
-// TODO: Merge PlatformUser properties into both Customer and Employee
 @Entity
 @Table(name = "customers")
-@PrimaryKeyJoinColumn(name = "user_id")
 class Customer (
-    @Column(name = "customer_id", updatable = false, nullable = false)
-    val customerId: Long,
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(updatable = false, nullable = false)
+    val id: Long,
 
+    @Column(name = "username", unique = true)
+    var username: String,
+    var password: String,
+    var email: String,
     var firstName: String,
     var lastName: String,
     var nip: String,
     var phoneNumber: String,
 
-
-) : PlatformUser()
+    @ManyToOne
+    var company: Company,
+)

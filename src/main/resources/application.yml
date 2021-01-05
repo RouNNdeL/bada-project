@@ -1,9 +1,29 @@
 spring:
+  devtools:
+    restart:
+      poll-interval: 2s
+      quiet-period: 1s
+  redis:
+    host: localhost
+    password: password
+    port: 6379
+  session:
+    store-type: redis
+    redis:
+      namespace: spring:session
+      flush-mode: on_save
   jpa:
-    hibernate:
-      naming:
-        physical-strategy: "com.bada.app.utils.NamingStrategy"
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
   datasource:
-    url: "jdbc:postgresql://localhost:5432/bada"
-    username: "admin"
-    password: "password"
+    url: jdbc:postgresql://localhost:5432/bada
+    username: admin
+    password: password
+
+server:
+  servlet:
+    session:
+      timeout: 72h

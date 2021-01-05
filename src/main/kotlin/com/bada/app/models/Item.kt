@@ -7,9 +7,15 @@ import javax.persistence.*
 class Item(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "item_id", updatable = false, nullable = false)
+    @Column(updatable = false, nullable = false)
     val id: Long,
 
     val name: String,
-    val description: String
+    val description: String,
+
+    @ManyToMany(mappedBy = "items")
+    val warehouses: List<Warehouse>,
+
+    @OneToMany
+    val priceRanges: List<PriceRange>
 )

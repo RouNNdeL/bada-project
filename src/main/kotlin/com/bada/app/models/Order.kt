@@ -8,7 +8,7 @@ import javax.persistence.*
 class Order(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "order_id", updatable = false, nullable = false)
+    @Column(updatable = false, nullable = false)
     val id: Long,
 
     @Column(updatable = false, nullable = false)
@@ -21,7 +21,7 @@ class Order(
     var shippingCost: Float?,
 
     @OneToMany(mappedBy = "order", cascade = [CascadeType.ALL], orphanRemoval = true)
-    val items: Set<OrderItem>
+    val items: List<OrderItem>
 ) {
 
 
