@@ -33,7 +33,7 @@ class Employee(
     var role: Role,
 
     @JsonIgnore
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     var address: Address,
 
     @JsonIgnore

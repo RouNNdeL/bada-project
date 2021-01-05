@@ -18,9 +18,6 @@ class ApplicationSecurityConfig(
         http?.run {
             authorizeRequests()
                 .antMatchers("/", "/index", "/js/*", "/css/*").permitAll()
-                .antMatchers("/store").hasAuthority(Permissions.READ_STOCK.name)
-                .anyRequest()
-                .authenticated()
                 .and()
                 .formLogin()
                 .and()
