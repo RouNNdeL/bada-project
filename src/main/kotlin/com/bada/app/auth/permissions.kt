@@ -14,6 +14,7 @@ enum class Permissions {
 }
 
 enum class Role(permissions: MutableList<Permissions>) {
+    DEFAULT(arrayListOf()),
     CUSTOMER(arrayListOf(Permissions.READ_STOCK, Permissions.CREATE_ORDER)),
     WAREHOUSE_EMPLOYEE(arrayListOf(Permissions.READ_STOCK, Permissions.WRITE_STOCK, Permissions.HANDLE_ORDER)),
     WAREHOUSE_MANAGER(arrayListOf(Permissions.READ_STOCK, Permissions.WRITE_STOCK, Permissions.ASSIGN_ORDERS));

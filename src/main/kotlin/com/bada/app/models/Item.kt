@@ -13,8 +13,8 @@ class Item(
     val name: String,
     val description: String,
 
-    @ManyToMany(mappedBy = "items")
-    val warehouses: List<Warehouse>,
+    @OneToMany(mappedBy = "item", cascade = [CascadeType.ALL], orphanRemoval = true)
+    val warehouseItems: List<WarehouseItem>,
 
     @OneToMany
     val priceRanges: List<PriceRange>

@@ -1,14 +1,11 @@
 package com.bada.app.models
 
+import com.bada.app.auth.EmployeeUserDetails
 import com.bada.app.auth.Role
-import com.bada.app.util.SimpleUserDetails
-import com.fasterxml.jackson.annotation.JsonIgnore
-import com.fasterxml.jackson.databind.annotation.JsonSerialize
-import org.springframework.security.core.GrantedAuthority
+import com.bada.app.auth.SimpleUserDetails
 import java.util.*
 import javax.persistence.*
 
-@JsonSerialize
 @Entity
 @Table(name = "employees")
 class Employee(
@@ -17,68 +14,46 @@ class Employee(
     @Column(updatable = false, nullable = false)
     val id: Long,
     @Column(unique = true)
-    private var username: String,
+    var username: String,
     private var password: String,
     var email: String,
     var firstName: String,
     var lastName: String,
     var pesel: String,
 
-    @JsonIgnore
     var employmentDate: Date,
     var phoneNumber: String,
 
     @Enumerated(EnumType.STRING)
     var role: Role,
 
-    @JsonIgnore
     @OneToOne(fetch = FetchType.LAZY)
     var address: Address,
 
-    @JsonIgnore
     @ManyToOne
     var company: Company,
 
-    @JsonIgnore
     @ManyToOne
     var warehouse: Warehouse?,
 
-    @JsonIgnore
     @OneToMany(mappedBy = "manager")
     val managedWarehouses: Set<Warehouse>,
 
-    @JsonIgnore
     @OneToMany(mappedBy = "assignedEmployee")
     val handledOrders: Set<Order>,
 
-    @JsonIgnore
     @OneToMany
     val salaries: List<Salary>,
 
-    @JsonIgnore
     @OneToMany
     val scores: List<Score>
 
-) : SimpleUserDetails {
+) {
 
-    // Slightly funky overrides due to the way Kotlin generates getters
-    override fun getUsername() = username
-    override fun getPassword() = password
-
-    @JsonIgnore
-    override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
-        return role.getAuthorities()
+    fun getUserDetails(): EmployeeUserDetails {
+        return EmployeeUserDetails(username, password, role)
     }
 
-    fun setUsername(username: String) {
-        this.username = username
-    }
-
-    fun setPassword(password: String) {
-        this.password = password
-    }
-
-    @JsonIgnore
     fun getDisplayName(): String {
         return "$firstName $lastName"
     }

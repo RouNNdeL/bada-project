@@ -1,22 +1,22 @@
 package com.bada.app.auth
 
-import com.bada.app.repos.EmployeeRepository
+import com.bada.app.repos.CustomerRepository
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.stereotype.Service
 
 @Service
-class EmployeeDetailsService(
-    val employeeRepository: EmployeeRepository
+class CustomerDetailsService(
+    val customerRepository: CustomerRepository
 ) : UserDetailsService {
-    override fun loadUserByUsername(username: String?): EmployeeUserDetails {
+    override fun loadUserByUsername(username: String?): CustomerUserDetails {
         if (username == null) {
             throw UsernameNotFoundException("Username cannot be null")
         }
 
-        val employee = employeeRepository.findEmployeeByUsername(username).orElseThrow {
+        val customer = customerRepository.findCustomerByUsername(username).orElseThrow {
             throw UsernameNotFoundException("User does not exist")
         }
-        return employee.getUserDetails()
+        return customer.getUserDetails()
     }
 }

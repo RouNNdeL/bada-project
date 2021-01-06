@@ -36,15 +36,15 @@ interface OrderRepository : CrudRepository<Order, Long>
 
 @Repository
 interface CustomerRepository : CrudRepository<Customer, Long> {
-    fun findByUsername(username: String): Customer
+    fun findCustomerByUsername(username: String): Optional<Customer>
 }
 
 @Repository
 interface CompanyRepository : CrudRepository<Company, Long>
 
 @Repository
-interface EmployeeRepository : CrudRepository<Employee, Long>, RefreshRepository<Employee, Long> {
-    fun findEmployeesByCompanyId(companyId: Long): Set<Employee>
+interface EmployeeRepository : CrudRepository<Employee, Long> {
+    fun findEmployeesByCompanyId(companyId: Long) : Set<Employee>
     fun findEmployeeByUsername(username: String): Optional<Employee>
 }
 
@@ -52,3 +52,6 @@ interface EmployeeRepository : CrudRepository<Employee, Long>, RefreshRepository
 interface AddressRepository : CrudRepository<Address, Long> {
     fun findAddressById(addressId: Long): Address
 }
+
+@Repository
+interface WarehousesRepository : CrudRepository<Warehouse, Long>
