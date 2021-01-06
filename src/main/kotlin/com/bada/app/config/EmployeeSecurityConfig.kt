@@ -1,6 +1,5 @@
 package com.bada.app.config
 
-import com.bada.app.auth.CustomerDetailsService
 import com.bada.app.auth.EmployeeDetailsService
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.annotation.Order
@@ -22,7 +21,11 @@ class EmployeeSecurityConfig(
                 .antMatchers("/", "/index", "/js/*", "/css/*").permitAll()
                 .and()
                 .formLogin()
+                .loginProcessingUrl("/management/login")
                 .loginPage("/management/login")
+                .usernameParameter("username")
+                .passwordParameter("password")
+                .defaultSuccessUrl("/")
                 .permitAll()
                 .and()
                 .rememberMe()

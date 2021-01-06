@@ -1,7 +1,6 @@
 package com.bada.app.config
 
 import com.bada.app.auth.CustomerDetailsService
-import com.bada.app.auth.EmployeeDetailsService
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.annotation.Order
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
@@ -23,6 +22,7 @@ class CustomerSecurityConfig(
                 .and()
                 .formLogin()
                 .loginPage("/login")
+                .defaultSuccessUrl("/")
                 .permitAll()
                 .and()
                 .rememberMe()
