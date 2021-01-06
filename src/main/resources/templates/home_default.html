@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/layout :: head('Home')">
+
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <ul class="list-group">
+                <li class="list-group-item" th:each="order: ${orders}">
+                    <div class="d-flex w-100 justify-content-between">
+                        <a th:href="@{/orders/__${order.id}__}"><h5 class="mb-1" th:text="'Order #'+${order.id}">Order
+                            #1234</h5></a>
+                        <small th:text="${#dates.format(order.getDate(), 'HH:mm, dd/MM/yyyy')}">16:34,
+                            01/01/2021</small>
+                    </div>
+                    <p class="mb-1"></p>
+                    <select class="custom-select">
+                        <option th:each="status : ${T(com.bada.app.models.Order.Status).values()}"
+                                th:text="${status}" th:value="${status}" th:selected="${status == order.status}">
+                            RECEVIED
+                        </option>
+                    </select>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+</body>
+</html>
