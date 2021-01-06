@@ -25,6 +25,6 @@ class WarehouseController(val warehousesRepository: WarehousesRepository) {
         }
         model.addAttribute("warehouse", warehouse.get())
 
-        return "warehouse"
+        return "warehouses"
     }
 }

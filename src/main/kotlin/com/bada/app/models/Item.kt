@@ -14,7 +14,7 @@ class Item(
     val description: String,
 
     @ManyToMany
-    val warehouses: List<Warehouse>,
+    val warehouseItems: List<WarehouseItem>,
 
     @OneToMany
     val priceRanges: List<PriceRange>

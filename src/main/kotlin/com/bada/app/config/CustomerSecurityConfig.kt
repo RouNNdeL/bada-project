@@ -11,9 +11,9 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 
 @Configuration
 @EnableWebSecurity
-@Order(1)
-class EmployeeSecurityConfig(
-    val employeeDetailsService: EmployeeDetailsService
+@Order(2)
+class CustomerSecurityConfig(
+    val customerDetailsService: CustomerDetailsService
 ) : WebSecurityConfigurerAdapter() {
 
     override fun configure(http: HttpSecurity?) {
@@ -22,7 +22,7 @@ class EmployeeSecurityConfig(
                 .antMatchers("/", "/index", "/js/*", "/css/*").permitAll()
                 .and()
                 .formLogin()
-                .loginPage("/management/login")
+                .loginPage("/login")
                 .permitAll()
                 .and()
                 .rememberMe()
@@ -31,7 +31,7 @@ class EmployeeSecurityConfig(
 
     override fun configure(auth: AuthenticationManagerBuilder?) {
         auth?.run {
-            userDetailsService(employeeDetailsService)
+            userDetailsService(customerDetailsService)
         }
     }
 }
