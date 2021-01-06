@@ -20,4 +20,14 @@ class CompanyController(
         model.addAttribute("employees", employeeRepository.findEmployeesByCompanyId(id.toLong()))
         return "employees"
     }
+
+    @GetMapping("/login")
+    fun login() : String {
+        return "login"
+    }
+
+    @GetMapping("/management/login")
+    fun login2() : String {
+        return "login2"
+    }
 }

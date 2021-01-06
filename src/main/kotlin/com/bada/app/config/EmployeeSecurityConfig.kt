@@ -1,7 +1,7 @@
 package com.bada.app.config
 
+import com.bada.app.auth.CustomerDetailsService
 import com.bada.app.auth.EmployeeDetailsService
-import com.bada.app.auth.Permissions
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
@@ -10,8 +10,9 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 
 @Configuration
 @EnableWebSecurity
-class ApplicationSecurityConfig(
-    val employeeDetailsService: EmployeeDetailsService
+class EmployeeSecurityConfig(
+    val employeeDetailsService: EmployeeDetailsService,
+    val customerDetailsService: CustomerDetailsService
 ) : WebSecurityConfigurerAdapter() {
 
     override fun configure(http: HttpSecurity?) {
@@ -20,6 +21,11 @@ class ApplicationSecurityConfig(
                 .antMatchers("/", "/index", "/js/*", "/css/*").permitAll()
                 .and()
                 .formLogin()
+                .loginPage("/management/login")
+                .and()
+                .formLogin()
+                .loginPage("/login")
+                .permitAll()
                 .and()
                 .rememberMe()
         }
@@ -28,6 +34,8 @@ class ApplicationSecurityConfig(
     override fun configure(auth: AuthenticationManagerBuilder?) {
         auth?.run {
             userDetailsService(employeeDetailsService)
+                .and()
+                .userDetailsService(customerDetailsService)
 
         }
     }

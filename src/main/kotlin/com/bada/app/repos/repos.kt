@@ -36,7 +36,7 @@ interface OrderRepository : CrudRepository<Order, Long>
 
 @Repository
 interface CustomerRepository : CrudRepository<Customer, Long> {
-    fun findByUsername(username: String): Customer
+    fun findCustomerByUsername(username: String): Optional<Customer>
 }
 
 @Repository

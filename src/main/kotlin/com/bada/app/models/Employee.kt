@@ -1,7 +1,8 @@
 package com.bada.app.models
 
+import com.bada.app.auth.EmployeeUserDetails
 import com.bada.app.auth.Role
-import com.bada.app.util.SimpleUserDetails
+import com.bada.app.auth.SimpleUserDetails
 import java.util.*
 import javax.persistence.*
 
@@ -49,8 +50,8 @@ class Employee(
 
 ) {
 
-    fun getUserDetails(): SimpleUserDetails {
-        return SimpleUserDetails(username, password, role)
+    fun getUserDetails(): EmployeeUserDetails {
+        return EmployeeUserDetails(username, password, role)
     }
 
     fun getDisplayName(): String {
