@@ -13,7 +13,7 @@ class Item(
     val name: String,
     val description: String,
 
-    @ManyToMany
+    @OneToMany(mappedBy = "item", cascade = [CascadeType.ALL], orphanRemoval = true)
     val warehouseItems: List<WarehouseItem>,
 
     @OneToMany
