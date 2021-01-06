@@ -10,9 +10,9 @@ COPY --from=cache /cache /home/gradle/.gradle
 COPY . .
 RUN gradle --no-daemon build --stacktrace --info
 
-FROM openjdk:8-jre-alpine
+FROM openjdk:11-jre-slim
 WORKDIR /app
-RUN apk --no-cache add curl
+RUN apt-get update && apt-get install -y curl
 COPY --from=builder /app/build/libs/*.jar /bada.jar
 ENV PORT 8080
 EXPOSE 8080
