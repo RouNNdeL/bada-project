@@ -11,13 +11,23 @@ class CompanyController(
     val employeeRepository: EmployeeRepository
 ) {
     @GetMapping("/companies")
-    fun getAllCompanies(model: Model) : String {
+    fun getAllCompanies(model: Model): String {
         return "comapies"
     }
 
     @GetMapping("/companies/{id}/employees")
-    fun getEmployees(@PathVariable("id") id: String, model: Model) : String {
+    fun getEmployees(@PathVariable("id") id: String, model: Model): String {
         model.addAttribute("employees", employeeRepository.findEmployeesByCompanyId(id.toLong()))
         return "employees"
+    }
+
+    @GetMapping("/login")
+    fun customerLogin(): String {
+        return "customer-login"
+    }
+
+    @GetMapping("/management/login")
+    fun managementLogin(): String {
+        return "management-login"
     }
 }

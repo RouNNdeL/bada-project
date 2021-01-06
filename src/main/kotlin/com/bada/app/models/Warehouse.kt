@@ -26,10 +26,6 @@ class Warehouse(
     @OneToMany(mappedBy = "warehouse")
     val employees: Set<Employee>,
 
-    @ManyToMany
-    @JoinTable(
-        name = "warehouses_items",
-        joinColumns = [JoinColumn(name = "warehouse_id")],
-        inverseJoinColumns = [JoinColumn(name = "item_id")])
-    val items: Set<Item>,
+    @OneToMany(mappedBy = "warehouse", cascade = [CascadeType.ALL], orphanRemoval = true)
+    val items: List<WarehouseItem>
 )
