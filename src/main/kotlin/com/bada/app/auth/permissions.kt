@@ -20,10 +20,15 @@ enum class Role(permissions: MutableList<Permissions>) {
     WAREHOUSE_MANAGER(arrayListOf(Permissions.READ_STOCK, Permissions.WRITE_STOCK, Permissions.ASSIGN_ORDERS));
 
     val permissions: List<String>
+
     init {
         val permissionList = permissions.mapTo(ArrayList()) { it.name }
         permissionList.add("ROLE_$name")
         this.permissions = permissionList
+    }
+
+    fun hasPermission(permission: Permissions): Boolean {
+        return permissions.contains(permission.name)
     }
 
     fun getAuthorities() = permissions.map { SimpleGrantedAuthority(it) }.toMutableList()
