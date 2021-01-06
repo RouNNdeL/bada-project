@@ -44,8 +44,8 @@ interface CompanyRepository : CrudRepository<Company, Long>
 
 @Repository
 interface EmployeeRepository : CrudRepository<Employee, Long> {
-    fun findEmployeesByCompanyId(companyId: Long) : Set<Employee>
-    fun findEmployeeByUsername(username: String): Optional<Employee>
+    fun findEmployeesByCompanyId(companyId: Long): Set<Employee>
+    fun findByUsername(username: String): Optional<Employee>
 }
 
 @Repository

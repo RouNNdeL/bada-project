@@ -2973,11 +2973,11 @@ values (100, 'slaste2r', 'G2ZSEYUnNxNsV5RfejzefPPMACOK4WRPumIoMQpu3lGDvTN3VlahvJ
 
 insert into customers (id, username, password, email, first_name, last_name, nip, phone_number, company_id,
                        address_id)
-values (1, 'pdimblebee0', 'JqW8BCbIJGwY3NVOTrTl2J5BvbTMpwNhH5JZJjslUE4uLBMGbN1L0LuQS6hfg42PE4uDUYDaqL9e',
+values (1, 'user1', '{noop}password1',
         'pdimblebee0@prlog.org', 'Pattin', 'Dimblebee', '4895011041', '889-371-2316', 2, 121);
 insert into customers (id, username, password, email, first_name, last_name, nip, phone_number, company_id,
                        address_id)
-values (2, 'wlowndsbrough1', 'u3IzajIAEmzEazqlvUnjn9OVdbV9axtYMydCg7vaYeoU3bDciEXlFsaEWmhmrr7bojd6BdZkBXnD',
+values (2, 'user2', '{noop}password2',
         'wlowndsbrough1@newsvine.com', 'Wald', 'Lowndsbrough', '5798756352', '609-269-3797', 2, 445);
 insert into customers (id, username, password, email, first_name, last_name, nip, phone_number, company_id,
                        address_id)

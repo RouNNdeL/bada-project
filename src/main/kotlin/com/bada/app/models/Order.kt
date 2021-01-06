@@ -33,3 +33,7 @@ class Order(
         COMPLETED
     }
 }
+
+class OrderStatusUpdate(
+    val status: Order.Status,
+)

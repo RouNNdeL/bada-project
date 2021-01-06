@@ -1,6 +1,5 @@
 package com.bada.app.auth
 
-import com.bada.app.auth.Role
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import org.springframework.security.core.GrantedAuthority
@@ -8,9 +7,9 @@ import org.springframework.security.core.userdetails.UserDetails
 
 @JsonSerialize
 open class SimpleUserDetails(
-    private val username: String,
-    private val password: String,
-    private val role: Role,
+    private var username: String,
+    private var password: String,
+    var role: Role,
 ) : UserDetails {
     constructor() : this("", "", Role.DEFAULT)
 
@@ -19,14 +18,20 @@ open class SimpleUserDetails(
         return role.getAuthorities()
     }
 
-    @JsonIgnore
     override fun getPassword(): String {
         return password
     }
 
-    @JsonIgnore
     override fun getUsername(): String {
         return username
+    }
+
+    fun setUsername(username: String) {
+        this.username = username
+    }
+
+    fun setPassword(password: String) {
+        this.password = password
     }
 
     @JsonIgnore
