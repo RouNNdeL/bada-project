@@ -5,6 +5,7 @@ import com.bada.app.auth.Role
 import com.bada.app.models.Employee
 import com.bada.app.models.OrderStatusUpdate
 import com.bada.app.repos.EmployeeRepository
+import com.bada.app.repos.ItemRepository
 import com.bada.app.repos.OrderRepository
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -19,10 +20,11 @@ import org.springframework.web.server.ResponseStatusException
 @Controller
 class CompanyController(
     val employeeRepository: EmployeeRepository,
-    val orderRepository: OrderRepository
+    val orderRepository: OrderRepository,
+    val itemRepository: ItemRepository
 ) {
     @GetMapping("/companies/{id}/employees")
-    fun getEmployees(@PathVariable("id") id: String, model: Model): String {
+    fun getEmployees(@PathVariable("id") id: String, model: Model) : String {
         model.addAttribute("employees", employeeRepository.findEmployeesByCompanyId(id.toLong()))
         return "employees"
     }
@@ -90,6 +92,27 @@ class CompanyController(
         }
 
         return "home_default"
+    }
+
+    @GetMapping("/store/item/{id}")
+    fun item(@PathVariable("id") id: String, model: Model, authentication: Authentication?): String {
+        if (authentication == null) {
+            throw ResponseStatusException(HttpStatus.UNAUTHORIZED)
+        }
+
+        when (val user = authentication.principal) {
+            is EmployeeUserDetails -> {
+
+            }
+        }
+
+        val item = itemRepository.findById(id.toLong()).orElseThrow {
+            throw ResponseStatusException(HttpStatus.NOT_FOUND)
+        }
+
+        model.addAttribute("item", item)
+
+        return "store_item"
     }
 
     private fun employeeHome(model: Model, employee: Employee): String {

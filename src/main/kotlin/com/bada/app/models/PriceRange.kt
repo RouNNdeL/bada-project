@@ -11,6 +11,8 @@ class PriceRange(
     val id: Long,
 
     var minQuantity: Int,
-    var maxQuantity: Int,
-    var price: Double
+    var price: Double,
+
+    @ManyToOne
+    var item: Item
 )
