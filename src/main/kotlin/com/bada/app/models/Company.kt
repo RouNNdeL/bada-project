@@ -1,16 +1,14 @@
 package com.bada.app.models
 
 import java.util.*
-import javax.persistence.*
+import javax.persistence.Entity
+import javax.persistence.ManyToOne
+import javax.persistence.OneToMany
+import javax.persistence.Table
 
 @Entity
 @Table(name = "companies")
 class Company(
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(updatable = false, nullable = false)
-    val id: Long,
-
     var name: String,
     var nip: String,
     var establishmentDate: Date,
@@ -29,4 +27,4 @@ class Company(
 
     @OneToMany(mappedBy = "company")
     val customers: Set<Customer>,
-)
+) : AbstractEntityLong()

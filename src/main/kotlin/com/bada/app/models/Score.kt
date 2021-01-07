@@ -1,15 +1,12 @@
 package com.bada.app.models
 
-import javax.persistence.*
+import javax.persistence.Column
+import javax.persistence.Entity
+import javax.persistence.Table
 
 @Entity
 @Table(name = "scores")
 class Score(
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(updatable = false, nullable = false)
-    val id: Long,
-
     @Column(name = "score_year")
     var year: Int,
 
@@ -17,4 +14,4 @@ class Score(
     var quarter: Int,
 
     var score: Double
-)
+) : AbstractEntityLong()

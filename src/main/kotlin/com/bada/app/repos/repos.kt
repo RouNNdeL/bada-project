@@ -54,7 +54,9 @@ interface AddressRepository : CrudRepository<Address, Long> {
 }
 
 @Repository
-interface WarehousesRepository : CrudRepository<Warehouse, Long>
+interface WarehousesRepository : CrudRepository<Warehouse, Long> {
+    fun findAllByCompanyId(companyId: Long): Iterable<Warehouse>
+}
 
 @Repository
 interface ItemRepository : CrudRepository<Item, Long>

@@ -6,11 +6,6 @@ import javax.persistence.*
 @Entity
 @Table(name = "orders")
 class Order(
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(updatable = false, nullable = false)
-    val id: Long,
-
     @Column(updatable = false, nullable = false)
     val date: Date,
 
@@ -25,7 +20,7 @@ class Order(
 
     @OneToMany(mappedBy = "order", cascade = [CascadeType.ALL], orphanRemoval = true)
     val items: List<OrderItem>
-) {
+) : AbstractEntityLong() {
     enum class Status {
         RECEIVED,
         IN_PROGRESS,

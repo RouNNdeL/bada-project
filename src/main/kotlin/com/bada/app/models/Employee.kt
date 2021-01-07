@@ -2,17 +2,12 @@ package com.bada.app.models
 
 import com.bada.app.auth.EmployeeUserDetails
 import com.bada.app.auth.Role
-import com.bada.app.auth.SimpleUserDetails
 import java.util.*
 import javax.persistence.*
 
 @Entity
 @Table(name = "employees")
 class Employee(
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(updatable = false, nullable = false)
-    val id: Long,
     @Column(unique = true)
     var username: String,
     private var password: String,
@@ -40,7 +35,7 @@ class Employee(
     val managedWarehouses: Set<Warehouse>,
 
     @OneToMany(mappedBy = "assignedEmployee")
-    val handledOrders: Set<Order>,
+    val handledOrders: List<Order>,
 
     @OneToMany
     val salaries: List<Salary>,
@@ -48,10 +43,10 @@ class Employee(
     @OneToMany
     val scores: List<Score>
 
-) {
+) : AbstractEntityLong() {
 
     fun getUserDetails(): EmployeeUserDetails {
-        return EmployeeUserDetails(username, password, role)
+        return EmployeeUserDetails(username, password, role, company.id)
     }
 
     fun getDisplayName(): String {

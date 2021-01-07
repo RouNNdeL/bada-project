@@ -1,18 +1,15 @@
 package com.bada.app.models
 
 import java.util.*
-import javax.persistence.*
+import javax.persistence.Column
+import javax.persistence.Entity
+import javax.persistence.Table
 
 @Entity
 @Table(name = "salaries")
 class Salary(
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(updatable = false, nullable = false)
-    val id: Long,
-
     @Column(name = "salary_date")
     val date: Date,
 
     val salary: Double
-)
+) : AbstractEntityLong()

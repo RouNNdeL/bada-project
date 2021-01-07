@@ -1,17 +1,14 @@
 package com.bada.app.models
 
 import com.bada.app.auth.CustomerUserDetails
-import com.bada.app.auth.Role
-import javax.persistence.*
+import javax.persistence.Column
+import javax.persistence.Entity
+import javax.persistence.ManyToOne
+import javax.persistence.Table
 
 @Entity
 @Table(name = "customers")
 class Customer(
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(updatable = false, nullable = false)
-    val id: Long,
-
     @Column(name = "username", unique = true)
     var username: String,
     var password: String,
@@ -21,14 +18,10 @@ class Customer(
     var nip: String,
     var phoneNumber: String,
 
-
-    @Enumerated(EnumType.STRING)
-    val role: Role = Role.CUSTOMER,
-
     @ManyToOne
     var company: Company,
-) {
+) : AbstractEntityLong() {
     fun getUserDetails(): CustomerUserDetails {
-        return CustomerUserDetails(username, password, role)
+        return CustomerUserDetails(username, password, company.id)
     }
 }

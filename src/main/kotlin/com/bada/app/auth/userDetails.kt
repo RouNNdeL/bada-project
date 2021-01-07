@@ -10,12 +10,18 @@ open class SimpleUserDetails(
     private var username: String,
     private var password: String,
     var role: Role,
+    var companyId: Long
 ) : UserDetails {
-    constructor() : this("", "", Role.DEFAULT)
+    constructor() : this("", "", Role.DEFAULT, -1)
 
     @JsonIgnore
     override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
         return role.getAuthorities()
+    }
+
+    @JsonIgnore
+    fun hasPermission(permission: Permission): Boolean {
+        return role.hasPermission(permission)
     }
 
     override fun getPassword(): String {
@@ -50,11 +56,13 @@ open class SimpleUserDetails(
 @JsonSerialize
 class EmployeeUserDetails : SimpleUserDetails {
     constructor() : super()
-    constructor(username: String, password: String, role: Role) : super(username, password, role)
+    constructor(username: String, password: String, role: Role, companyId: Long) :
+            super(username, password, role, companyId)
 }
 
 @JsonSerialize
 class CustomerUserDetails : SimpleUserDetails {
     constructor() : super()
-    constructor(username: String, password: String, role: Role) : super(username, password, role)
+    constructor(username: String, password: String, companyId: Long) :
+            super(username, password, Role.CUSTOMER, companyId)
 }

@@ -2,22 +2,31 @@ package com.bada.app.auth
 
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 
-enum class Permissions {
+enum class Permission {
     READ_STOCK,
     READ_SELF,
     CREATE_ORDER,
-    WRITE_STOCK,
+    CHANGE_STOCK,
+    CHANGE_STOCK_ALL,
+    CHANGE_PRICE,
     HANDLE_ORDER,
     ASSIGN_ORDERS,
     READ_EMPLOYEES,
     WRITE_EMPLOYEES
 }
 
-enum class Role(permissions: MutableList<Permissions>) {
+enum class Role(permissions: MutableList<Permission>) {
     DEFAULT(arrayListOf()),
-    CUSTOMER(arrayListOf(Permissions.READ_STOCK, Permissions.CREATE_ORDER)),
-    WAREHOUSE_EMPLOYEE(arrayListOf(Permissions.READ_STOCK, Permissions.WRITE_STOCK, Permissions.HANDLE_ORDER)),
-    WAREHOUSE_MANAGER(arrayListOf(Permissions.READ_STOCK, Permissions.WRITE_STOCK, Permissions.ASSIGN_ORDERS));
+    CUSTOMER(arrayListOf(Permission.READ_STOCK, Permission.CREATE_ORDER)),
+    WAREHOUSE_EMPLOYEE(arrayListOf(Permission.READ_STOCK, Permission.CHANGE_STOCK, Permission.HANDLE_ORDER)),
+    WAREHOUSE_MANAGER(
+        arrayListOf(
+            Permission.READ_STOCK,
+            Permission.CHANGE_STOCK,
+            Permission.ASSIGN_ORDERS,
+            Permission.CHANGE_PRICE
+        )
+    );
 
     val permissions: List<String>
 
@@ -27,7 +36,7 @@ enum class Role(permissions: MutableList<Permissions>) {
         this.permissions = permissionList
     }
 
-    fun hasPermission(permission: Permissions): Boolean {
+    fun hasPermission(permission: Permission): Boolean {
         return permissions.contains(permission.name)
     }
 

@@ -14,12 +14,11 @@ class OrderItem(
     @MapsId("itemId")
     val item: Item,
 
-    @EmbeddedId
-    val id: OrderItemId = OrderItemId(order.id, item.id),
-
-
     @Column(name = "ordered_item_quantity")
-    val quantity: Int
+    val quantity: Int,
+
+    @EmbeddedId
+    val id: OrderItemId = OrderItemId(order.id, item.id)
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

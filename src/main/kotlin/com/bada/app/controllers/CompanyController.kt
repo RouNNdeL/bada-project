@@ -2,11 +2,13 @@ package com.bada.app.controllers
 
 import com.bada.app.auth.EmployeeUserDetails
 import com.bada.app.auth.Role
+import com.bada.app.auth.SimpleUserDetails
 import com.bada.app.models.Employee
 import com.bada.app.models.OrderStatusUpdate
 import com.bada.app.repos.EmployeeRepository
 import com.bada.app.repos.ItemRepository
 import com.bada.app.repos.OrderRepository
+import com.bada.app.repos.WarehousesRepository
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -21,7 +23,8 @@ import org.springframework.web.server.ResponseStatusException
 class CompanyController(
     val employeeRepository: EmployeeRepository,
     val orderRepository: OrderRepository,
-    val itemRepository: ItemRepository
+    val itemRepository: ItemRepository,
+    val warehousesRepository: WarehousesRepository
 ) {
     @GetMapping("/companies/{id}/employees")
     fun getEmployees(@PathVariable("id") id: String, model: Model) : String {
@@ -95,22 +98,24 @@ class CompanyController(
     }
 
     @GetMapping("/store/item/{id}")
-    fun item(@PathVariable("id") id: String, model: Model, authentication: Authentication?): String {
+    fun item(@PathVariable id: Long, model: Model, authentication: Authentication?): String {
         if (authentication == null) {
             throw ResponseStatusException(HttpStatus.UNAUTHORIZED)
         }
 
-        when (val user = authentication.principal) {
-            is EmployeeUserDetails -> {
+        val user = authentication.principal as? SimpleUserDetails ?: throw RuntimeException("Invalid user principal")
 
-            }
-        }
-
-        val item = itemRepository.findById(id.toLong()).orElseThrow {
+        model.addAttribute("user", user)
+        val item = itemRepository.findById(id).orElseThrow {
             throw ResponseStatusException(HttpStatus.NOT_FOUND)
         }
 
+        val warehouses = warehousesRepository.findAllByCompanyId(user.companyId)
+
         model.addAttribute("item", item)
+        model.addAttribute("stock", item.getMergedStock(warehouses.toList()))
+
+        itemRepository.save(item)
 
         return "store_item"
     }
