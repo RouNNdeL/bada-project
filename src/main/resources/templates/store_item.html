@@ -22,42 +22,92 @@
 </nav>
 <div class="container">
     <div class="card mt-3" style="width: 100%;">
-        <div class="card-body">
-            <h5 class="card-title" th:text="${item.name}">10k resistor</h5>
-            <h6 class="card-subtitle mb-2 text-muted font-weight-light" th:text="|ID: ${item?.id}|">ID: 123455</h6>
-            <p class="card-text" th:text="${item.description}">This is a long item description</p>
-            <ul class="list-group">
-                <li class="list-group-item d-flex justify-content-center font-weight-bold">
-                    Price Ranges
-                </li>
-                <li class="list-group-item" th:each="priceRange: ${item.priceRanges}">
-                    <div class="d-flex w-100 justify-content-between align-items-center">
-                        <div>
-                            <p class="m-0" th:text="|${priceRange.minQuantity}+|">3+</p>
+        <form th:action="@{/store/item/__${item?.id}__/update}" method="post" id="itemSaveForm">
+            <div class="card-body">
+                <h5 class="card-title" th:text="${item.name}">10k resistor</h5>
+                <h6 class="card-subtitle mb-2 text-muted font-weight-light" th:text="|ID: ${item?.id}|">ID: 123455</h6>
+                <p class="card-text" th:text="${item.description}">This is a long item description</p>
+                <ul class="list-group" id="priceRangeList">
+                    <li class="list-group-item d-flex justify-content-center font-weight-bold">
+                        Price Ranges
+                    </li>
+                    <li class="list-group-item priceRange align-items-center"
+                        th:each="priceRange, i: ${item.priceRanges}">
+                        <div class="d-flex w-100 justify-content-between align-items-center">
+                            <div>
+                                <input class="m-0 priceRangeQuantity" th:value="${priceRange.minQuantity}" value="1"
+                                       style="max-width: 75px"
+                                       th:if="${user.hasPermission('CHANGE_PRICE')}"/>
+                                <p class="m-0" th:text="|${priceRange.minQuantity}+|"
+                                   th:unless="${user.hasPermission('CHANGE_PRICE')}">3+</p>
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <input class="m-0 priceRangePrice" th:value="${priceRange.price}" value="10"
+                                       style="max-width: 75px"
+                                       th:if="${user.hasPermission('CHANGE_PRICE')}"/>
+                                <button th:if="${user.hasPermission('CHANGE_PRICE')}"
+                                        class="btn btn-danger btn-sm removePriceRangeBtn ml-2" type="button">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                         class="bi bi-trash-fill" viewBox="0 0 16 16">
+                                        <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
+                                    </svg>
+                                </button>
+                                <p class="m-0" th:text="${priceRange.price}"
+                                   th:unless="${user.hasPermission('CHANGE_PRICE')}">5$</p>
+                            </div>
                         </div>
-                        <div>
-                            <p class="m-0" th:text="${priceRange.price}">5$</p>
-                        </div>
-                    </div>
-                </li>
-            </ul>
+                    </li>
+                </ul>
+                <button class="btn btn-secondary btn-sm mt-2" type="button" id="addPriceRangeBtn"
+                        th:if="${user.hasPermission('CHANGE_PRICE')}">
+                    Add price range
+                </button>
 
 
-            <ul class="list-group mt-3">
-                <li class="list-group-item d-flex justify-content-center font-weight-bold">
-                    Availability
-                </li>
-                <li class="list-group-item d-flex justify-content-between align-items-center"
-                    th:each="warehouseItem: ${stock}">
-                    <p class="m-0"
-                       th:text="${warehouseItem.warehouse.cityOrCountry()}">
-                        Warszawa</p>
-                    <span class="badge bg-primary rounded-pill text-white px-2 py-1"
-                          th:text="${warehouseItem.quantity}">14</span>
-                </li>
-            </ul>
-        </div>
+                <ul class="list-group mt-3">
+                    <li class="list-group-item d-flex justify-content-center font-weight-bold">
+                        Availability
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center"
+                        th:each="stockItem: ${stock}"
+                        th:id="|warehouseStockId${stockItem.warehouse.id}=${warehouseIdEdit}|">
+                        <p class="m-0"
+                           th:text="${stockItem.warehouse.cityOrCountry()}">
+                            Warszawa</p>
+                        <span class="badge bg-primary rounded-pill text-white px-2 py-1"
+                              th:unless="${user.hasPermission('CHANGE_STOCK_ALL') || (user.hasPermission('CHANGE_STOCK') && warehouseIdEdit == stockItem.warehouse.id)}"
+                              th:text="${stockItem.quantity}">14</span>
+                        <input class="m-0 itemStock" th:value="${stockItem.quantity}" value="10" style="max-width: 75px"
+                               th:attr="data-warehouse-id=${stockItem.warehouse.id}"
+                               th:if="${user.hasPermission('CHANGE_STOCK_ALL') || (user.hasPermission('CHANGE_STOCK') && warehouseIdEdit == stockItem.warehouse.id)}"/>
+                    </li>
+                </ul>
+                <button class="btn btn-primary mt-2" type="button" id="saveItem"
+                        th:if="${canSave}">
+                    Save
+                </button>
+            </div>
+        </form>
     </div>
+</div>
+
+<div class="invisible" th:if="${user.hasPermission('CHANGE_PRICE')}">
+    <li class="list-group-item priceRange" id="priceRangeTemplate">
+        <div class="d-flex w-100 justify-content-between align-items-center">
+            <div>
+                <input class="m-0 priceRangeQuantity" style="max-width: 75px">
+            </div>
+            <div>
+                <input class="m-0 priceRangePrice" style="max-width: 75px">
+                <button class="btn btn-danger btn-sm removePriceRangeBtn ml-2" type="button">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                         class="bi bi-trash-fill" viewBox="0 0 16 16">
+                        <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </li>
 </div>
 
 </body>

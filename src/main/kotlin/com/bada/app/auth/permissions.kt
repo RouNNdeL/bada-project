@@ -37,7 +37,11 @@ enum class Role(permissions: MutableList<Permission>) {
     }
 
     fun hasPermission(permission: Permission): Boolean {
-        return permissions.contains(permission.name)
+        return hasPermission(permission.name)
+    }
+
+    fun hasPermission(permission: String): Boolean {
+        return permissions.contains(permission)
     }
 
     fun getAuthorities() = permissions.map { SimpleGrantedAuthority(it) }.toMutableList()

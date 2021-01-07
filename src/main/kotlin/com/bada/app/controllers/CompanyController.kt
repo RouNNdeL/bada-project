@@ -1,14 +1,11 @@
 package com.bada.app.controllers
 
 import com.bada.app.auth.EmployeeUserDetails
+import com.bada.app.auth.Permission
 import com.bada.app.auth.Role
 import com.bada.app.auth.SimpleUserDetails
-import com.bada.app.models.Employee
-import com.bada.app.models.OrderStatusUpdate
-import com.bada.app.repos.EmployeeRepository
-import com.bada.app.repos.ItemRepository
-import com.bada.app.repos.OrderRepository
-import com.bada.app.repos.WarehousesRepository
+import com.bada.app.models.*
+import com.bada.app.repos.*
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -24,10 +21,12 @@ class CompanyController(
     val employeeRepository: EmployeeRepository,
     val orderRepository: OrderRepository,
     val itemRepository: ItemRepository,
-    val warehousesRepository: WarehousesRepository
+    val warehousesRepository: WarehousesRepository,
+    val priceRangeRepository: PriceRangeRepository,
+    val warehouseItemRepository: WarehouseItemRepository
 ) {
     @GetMapping("/companies/{id}/employees")
-    fun getEmployees(@PathVariable("id") id: String, model: Model) : String {
+    fun getEmployees(@PathVariable("id") id: String, model: Model): String {
         model.addAttribute("employees", employeeRepository.findEmployeesByCompanyId(id.toLong()))
         return "employees"
     }
@@ -61,7 +60,7 @@ class CompanyController(
 
         val orderO = orderRepository.findById(id)
         if (orderO.isEmpty) {
-            return ResponseEntity.notFound().build()
+            throw ResponseStatusException(HttpStatus.NOT_FOUND)
         }
         val order = orderO.get()
 
@@ -70,7 +69,7 @@ class CompanyController(
         }
 
         if (order.assignedEmployee?.id != employee.id) {
-            throw ResponseStatusException(HttpStatus.UNAUTHORIZED)
+            throw ResponseStatusException(HttpStatus.FORBIDDEN)
         }
 
         order.status = orderStatusUpdate.status
@@ -104,20 +103,85 @@ class CompanyController(
         }
 
         val user = authentication.principal as? SimpleUserDetails ?: throw RuntimeException("Invalid user principal")
-
-        model.addAttribute("user", user)
         val item = itemRepository.findById(id).orElseThrow {
             throw ResponseStatusException(HttpStatus.NOT_FOUND)
         }
+
+        if (user is EmployeeUserDetails) {
+            val employee = employeeRepository.findByUsername(user.username).orElseThrow {
+                throw ResponseStatusException(HttpStatus.UNAUTHORIZED)
+            }
+
+            if (user.hasPermission(Permission.CHANGE_STOCK)) {
+                model.addAttribute("warehouseIdEdit", employee.warehouse?.id)
+            }
+        }
+
+        val canSave = user.hasPermission(Permission.CHANGE_STOCK) || user.hasPermission(Permission.CHANGE_STOCK_ALL) ||
+                user.hasPermission(Permission.CHANGE_PRICE)
+
+        model.addAttribute("user", user)
 
         val warehouses = warehousesRepository.findAllByCompanyId(user.companyId)
 
         model.addAttribute("item", item)
         model.addAttribute("stock", item.getMergedStock(warehouses.toList()))
+        model.addAttribute("canSave", canSave)
 
         itemRepository.save(item)
 
         return "store_item"
+    }
+
+    @PostMapping(
+        "/store/item/{id}/update",
+        consumes = [MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_FORM_URLENCODED_VALUE],
+        produces = [MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE]
+    )
+    fun updateItem(
+        @PathVariable id: Long,
+        @RequestBody itemUpdate: ItemUpdate,
+        authentication: Authentication?
+    ): ResponseEntity<String> {
+        if (authentication == null) {
+            throw ResponseStatusException(HttpStatus.UNAUTHORIZED)
+        }
+
+        val user = authentication.principal as? SimpleUserDetails ?: throw RuntimeException("Invalid user principal")
+        val item = itemRepository.findById(id).orElseThrow {
+            throw ResponseStatusException(HttpStatus.NOT_FOUND)
+        }
+
+        if (user !is EmployeeUserDetails) {
+            throw ResponseStatusException(HttpStatus.FORBIDDEN)
+        }
+
+        val employee = employeeRepository.findByUsername(user.username).orElseThrow {
+            throw ResponseStatusException(HttpStatus.UNAUTHORIZED)
+        }
+
+        if (user.hasPermission(Permission.CHANGE_PRICE)) {
+            priceRangeRepository.deleteAll(item.priceRanges)
+            itemUpdate.priceRanges.forEach {
+                priceRangeRepository.save(PriceRange(it.minQuantity, it.price, item))
+            }
+        } else if (itemUpdate.priceRanges.isNotEmpty()) {
+            throw ResponseStatusException(HttpStatus.FORBIDDEN)
+        }
+
+        itemUpdate.stock.forEach {
+            if (user.hasPermission(Permission.CHANGE_STOCK_ALL) ||
+                (user.hasPermission(Permission.CHANGE_STOCK) && employee.warehouse?.id == it.warehouse)
+            ) {
+                warehouseItemRepository.save(
+                    WarehouseItem(warehousesRepository.getOne(it.warehouse), item, it.quantity)
+                )
+            } else {
+                throw ResponseStatusException(HttpStatus.FORBIDDEN)
+            }
+        }
+
+        return ResponseEntity.ok().body("Success")
     }
 
     private fun employeeHome(model: Model, employee: Employee): String {

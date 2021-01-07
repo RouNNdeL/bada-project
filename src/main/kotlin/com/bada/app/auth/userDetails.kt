@@ -24,6 +24,11 @@ open class SimpleUserDetails(
         return role.hasPermission(permission)
     }
 
+    @JsonIgnore
+    fun hasPermission(permission: String): Boolean {
+        return role.hasPermission(permission)
+    }
+
     override fun getPassword(): String {
         return password
     }

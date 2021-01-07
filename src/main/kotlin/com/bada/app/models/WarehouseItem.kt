@@ -42,8 +42,8 @@ class WarehouseItem(
 
 @Embeddable
 data class WarehouseItemId(
-    @Column(name = "item_id")
-    var itemId: Long,
     @Column(name = "warehouse_id")
-    var warehouseId: Long
+    var warehouseId: Long,
+    @Column(name = "item_id")
+    var itemId: Long
 ) : Serializable
