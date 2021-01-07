@@ -16,6 +16,6 @@ class Item(
     @OneToMany(mappedBy = "item", cascade = [CascadeType.ALL], orphanRemoval = true)
     val warehouseItems: List<WarehouseItem>,
 
-    @OneToMany
+    @OneToMany(mappedBy = "item")
     val priceRanges: List<PriceRange>
 )

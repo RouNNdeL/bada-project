@@ -27,5 +27,8 @@ class Warehouse(
     val employees: Set<Employee>,
 
     @OneToMany(mappedBy = "warehouse", cascade = [CascadeType.ALL], orphanRemoval = true)
-    val items: List<WarehouseItem>
+    val items: List<WarehouseItem>,
+
+    @OneToOne
+    val address: Address
 )

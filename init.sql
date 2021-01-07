@@ -13,13 +13,16 @@ CREATE TABLE companies
 );
 
 
-CREATE INDEX IX_fk_parent_company ON companies (id);
+CREATE
+INDEX IX_fk_parent_company ON companies (id);
 
 
-CREATE INDEX IX_fk_has_hq ON companies (id);
+CREATE
+INDEX IX_fk_has_hq ON companies (id);
 
 
-CREATE INDEX IX_fk_has_tax_address ON companies (id);
+CREATE
+INDEX IX_fk_has_tax_address ON companies (id);
 
 
 ALTER TABLE companies
@@ -47,13 +50,16 @@ CREATE TABLE warehouses
 );
 
 
-CREATE INDEX IX_fk_company_has_warehouse ON warehouses (id);
+CREATE
+INDEX IX_fk_company_has_warehouse ON warehouses (id);
 
 
-CREATE INDEX IX_warehouse_has_address ON warehouses (id);
+CREATE
+INDEX IX_warehouse_has_address ON warehouses (id);
 
 
-CREATE INDEX IX_manages ON warehouses (id);
+CREATE
+INDEX IX_manages ON warehouses (id);
 
 
 ALTER TABLE warehouses
@@ -79,13 +85,16 @@ CREATE TABLE employees
 );
 
 
-CREATE INDEX IX_fk_company_employs ON employees (id);
+CREATE
+INDEX IX_fk_company_employs ON employees (id);
 
 
-CREATE INDEX IX_fk_works_in ON employees (id);
+CREATE
+INDEX IX_fk_works_in ON employees (id);
 
 
-CREATE INDEX IX_fk_employee_has_address ON employees (id);
+CREATE
+INDEX IX_fk_employee_has_address ON employees (id);
 
 
 ALTER TABLE employees
@@ -108,21 +117,20 @@ ALTER TABLE items
 
 CREATE TABLE price_ranges
 (
-    item_id      SERIAL,
+    id           SERIAL,
+    item_id      INTEGER,
     min_quantity INTEGER        NOT NULL
         CONSTRAINT min_quantity_greater_0 CHECK (min_quantity >= 0),
-    max_quantity INTEGER,
     price        DECIMAL(10, 2) NOT NULL
-        CONSTRAINT price_geq_0 CHECK (price > 0),
-    CONSTRAINT min_leq_max CHECK (min_quantity <= max_quantity)
+        CONSTRAINT price_geq_0 CHECK (price > 0)
 );
 
 
-CREATE INDEX IX_fk_has_price_range ON price_ranges (item_id);
-
+CREATE
+INDEX IX_fk_has_price_range ON price_ranges (item_id);
 
 ALTER TABLE price_ranges
-    ADD CONSTRAINT key1 PRIMARY KEY (item_id, min_quantity);
+    ADD CONSTRAINT PK_price_ranges PRIMARY KEY (id);
 
 -- Table customers
 
@@ -141,10 +149,12 @@ CREATE TABLE customers
 );
 
 
-CREATE INDEX IX_fk_customer_has_address ON customers (id);
+CREATE
+INDEX IX_fk_customer_has_address ON customers (id);
 
 
-CREATE INDEX IX_fk_is_customer_of ON customers (id);
+CREATE
+INDEX IX_fk_is_customer_of ON customers (id);
 
 
 ALTER TABLE customers
@@ -170,10 +180,12 @@ CREATE TABLE orders
 );
 
 
-CREATE INDEX IX_fk_places_order ON orders (id);
+CREATE
+INDEX IX_fk_places_order ON orders (id);
 
 
-CREATE INDEX IX_is_ordered_to ON orders (id);
+CREATE
+INDEX IX_is_ordered_to ON orders (id);
 
 
 ALTER TABLE orders
@@ -229,7 +241,8 @@ CREATE TABLE addresses
 );
 
 
-CREATE INDEX IX_fk_address_country ON addresses (id);
+CREATE
+INDEX IX_fk_address_country ON addresses (id);
 
 
 ALTER TABLE addresses
@@ -272,7 +285,8 @@ CREATE TABLE salaries
 );
 
 
-CREATE INDEX IX_fk_is_paid ON salaries (id);
+CREATE
+INDEX IX_fk_is_paid ON salaries (id);
 
 
 ALTER TABLE salaries
@@ -292,7 +306,8 @@ CREATE TABLE scores
 );
 
 
-CREATE INDEX IX_fk_is_reviewed ON scores (id);
+CREATE
+INDEX IX_fk_is_reviewed ON scores (id);
 
 
 ALTER TABLE scores
@@ -3490,206 +3505,206 @@ INSERT INTO categories (name, description)
 VALUES ('Mendrina',
         'consequat in consequat ut nulla sed accumsan felis ut at dolor quis odio consequat varius integer ac leo pellentesque ultrices mattis odio donec vitae nisi nam ultrices libero');
 
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (1, 1, 620134, 91.79);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (2, 1, null, 71.4);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (3, 1, null, 12.42);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (4, 1, null, 3.81);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (5, 1, 806844, 62.88);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (6, 1, null, 82.11);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (7, 1, null, 96.39);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (8, 1, null, 15.7);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (9, 1, null, 42.67);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (10, 1, null, 4.84);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (11, 1, null, 59.66);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (12, 1, null, 76.2);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (13, 1, null, 16.14);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (14, 1, null, 75.55);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (15, 1, null, 48.83);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (16, 1, null, 18.85);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (17, 1, null, 35.44);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (18, 1, null, 73.33);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (19, 1, null, 43.23);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (20, 1, null, 67.04);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (21, 1, null, 60.57);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (22, 1, null, 57.92);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (23, 1, null, 65.1);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (24, 1, null, 88.51);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (25, 1, 795254, 1.53);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (26, 1, null, 65.26);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (27, 1, null, 28.28);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (28, 1, null, 24.34);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (29, 1, null, 23.01);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (30, 1, null, 21.77);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (31, 1, null, 93.89);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (32, 1, 727786, 87.38);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (33, 1, null, 3.91);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (34, 1, null, 26.45);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (35, 1, null, 74.18);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (36, 1, null, 0.08);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (37, 1, null, 21.12);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (38, 1, null, 14.35);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (39, 1, null, 97.6);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (40, 1, null, 44.12);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (41, 1, null, 66.32);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (42, 1, null, 50.08);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (43, 1, null, 46.13);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (44, 1, 518594, 80.17);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (45, 1, 844033, 7.16);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (46, 1, null, 45.87);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (47, 1, 92357, 55.09);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (48, 1, null, 49.05);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (49, 1, null, 42.21);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (50, 1, null, 82.94);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (51, 1, null, 99.42);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (52, 1, 856213, 43.37);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (53, 1, null, 2.99);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (54, 1, null, 98.97);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (55, 1, 65023, 26.58);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (56, 1, 868024, 5.34);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (57, 1, null, 16.21);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (58, 1, null, 89.95);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (59, 1, 632899, 70.91);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (60, 1, null, 2.29);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (61, 1, null, 55.11);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (62, 1, null, 47.74);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (63, 1, null, 61.15);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (64, 1, null, 58.36);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (65, 1, null, 7.14);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (66, 1, null, 7.05);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (67, 1, null, 1.96);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (68, 1, null, 70.6);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (69, 1, null, 32.09);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (70, 1, null, 92.09);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (71, 1, null, 34.84);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (72, 1, null, 93.58);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (73, 1, null, 20.79);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (74, 1, 738136, 56.16);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (75, 1, null, 56.04);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (76, 1, null, 22.03);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (77, 1, null, 56.84);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (78, 1, null, 42.54);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (79, 1, 938165, 6.37);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (80, 1, null, 2.76);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (81, 1, null, 81.09);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (82, 1, null, 43.89);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (83, 1, null, 22.76);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (84, 1, null, 60.04);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (85, 1, null, 6.29);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (86, 1, null, 86.28);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (87, 1, null, 99.87);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (88, 1, null, 5.72);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (89, 1, null, 96.87);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (90, 1, null, 70.54);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (91, 1, 471020, 3.01);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (92, 1, null, 35.39);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (93, 1, null, 26.65);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (94, 1, null, 41.18);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (95, 1, null, 17.65);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (96, 1, null, 39.86);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (97, 1, null, 74.41);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (98, 1, null, 52.19);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (99, 1, null, 53.51);
-INSERT INTO price_ranges (item_id, min_quantity, max_quantity, price)
-VALUES (100, 1, null, 29.2);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (1,1, 91.79);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (2,1, 71.4);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (3,1, 12.42);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (4,1, 3.81);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (5,1, 62.88);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (6,1, 82.11);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (7,1, 96.39);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (8,1, 15.7);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (9,1, 42.67);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (10,1, 4.84);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (11,1, 59.66);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (12,1, 76.2);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (13,1, 16.14);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (14,1, 75.55);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (15,1, 48.83);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (16,1, 18.85);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (17,1, 35.44);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (18,1, 73.33);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (19,1, 43.23);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (20,1, 67.04);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (21,1, 60.57);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (22,1, 57.92);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (23,1, 65.1);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (24,1, 88.51);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (25,1, 1.53);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (26,1, 65.26);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (27,1, 28.28);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (28,1, 24.34);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (29,1, 23.01);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (30,1, 21.77);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (31,1, 93.89);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (32,1, 87.38);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (33,1, 3.91);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (34,1, 26.45);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (35,1, 74.18);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (36,1, 0.08);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (37,1, 21.12);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (38,1, 14.35);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (39,1, 97.6);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (40,1, 44.12);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (41,1, 66.32);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (42,1, 50.08);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (43,1, 46.13);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (44,1, 80.17);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (45,1, 7.16);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (46,1, 45.87);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (47,1, 55.09);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (48,1, 49.05);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (49,1, 42.21);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (50,1, 82.94);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (51,1, 99.42);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (52,1, 43.37);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (53,1, 2.99);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (54,1, 98.97);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (55,1, 26.58);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (56,1, 5.34);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (57,1, 16.21);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (58,1, 89.95);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (59,1, 70.91);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (60,1, 2.29);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (61,1, 55.11);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (62,1, 47.74);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (63,1, 61.15);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (64,1, 58.36);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (65,1, 7.14);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (66,1, 7.05);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (67,1, 1.96);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (68,1, 70.6);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (69,1, 32.09);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (70,1, 92.09);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (71,1, 34.84);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (72,1, 93.58);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (73,1, 20.79);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (74,1, 56.16);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (75,1, 56.04);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (76,1, 22.03);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (77,1, 56.84);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (78,1, 42.54);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (79,1, 6.37);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (80,1, 2.76);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (81,1, 81.09);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (82,1, 43.89);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (83,1, 22.76);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (84,1, 60.04);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (85,1, 6.29);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (86,1, 86.28);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (87,1, 99.87);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (88,1, 5.72);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (89,1, 96.87);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (90,1, 70.54);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (91,1, 3.01);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (92,1, 35.39);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (93,1, 26.65);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (94,1, 41.18);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (95,1, 17.65);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (96,1, 39.86);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (97,1, 74.41);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (98,1, 52.19);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (99,1, 53.51);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (100,1, 29.2);
 
 INSERT INTO orders (date, status, shipping_cost, customer_id, assigned_employee_id, address_id)
 VALUES ('20-Oct-25', 'RECEIVED', null, 19, 1, 826);

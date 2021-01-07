@@ -55,3 +55,6 @@ interface AddressRepository : CrudRepository<Address, Long> {
 
 @Repository
 interface WarehousesRepository : CrudRepository<Warehouse, Long>
+
+@Repository
+interface ItemRepository : CrudRepository<Item, Long>
