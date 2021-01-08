@@ -5,8 +5,8 @@
     <title>Assigned orders</title>
 </head>
 <body>
-<nav th:replace="fragments/layout :: navbar(~{ :: .mr-auto}, ~{ :: .ml-auto})">
-    <ul class="navbar-nav mr-auto">
+<nav th:replace="fragments/layout :: navbar(~{ :: #navbarRight}, ~{ :: #navbarLeft})">
+    <ul class="navbar-nav mr-auto" id="navbarRight">
         <li class="nav-item active">
             <a class="nav-link" th:href="@{/}">Home</a>
         </li>
@@ -14,7 +14,7 @@
             <a class="nav-link active" th:href="@{/store}">Store</a>
         </li>
     </ul>
-    <ul class="navbar-nav ml-auto">
+    <ul class="navbar-nav ml-auto" id="navbarLeft">
         <li class="nav-item">
             <a class="nav-link" th:href="@{/logout}">Logout</a>
         </li>
