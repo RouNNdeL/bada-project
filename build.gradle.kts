@@ -11,6 +11,9 @@ plugins {
 group = "com.bada"
 version = "1.0.0"
 java.sourceCompatibility = JavaVersion.VERSION_11
+springBoot {
+    mainClass.set("com.bada.app.AppApplicationKt")
+}
 
 repositories {
     jcenter()
