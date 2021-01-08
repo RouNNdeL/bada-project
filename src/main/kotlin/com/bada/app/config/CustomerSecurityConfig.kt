@@ -16,7 +16,6 @@ class CustomerSecurityConfig(
     override fun configure(http: HttpSecurity?) {
         http?.run {
             authorizeRequests()
-                .antMatchers("/", "/index", "/js/*", "/css/*").permitAll()
                 .and()
                 .formLogin()
                 .loginPage("/login")

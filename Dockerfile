@@ -1,14 +1,15 @@
-FROM gradle:jdk11 AS cache
+FROM gradle:6.7.1-jdk11 AS cache
 WORKDIR /app
+RUN mkdir -p /cache
 ENV GRADLE_USER_HOME /cache
 COPY build.gradle.kts settings.gradle.kts ./
-RUN gradle --no-daemon jar --stacktrace
+RUN gradle clean build --stacktrace --info
 
-FROM gradle:jdk11 AS builder
+FROM gradle:6.7.1-jdk11 AS builder
 WORKDIR /app
 COPY --from=cache /cache /home/gradle/.gradle
 COPY . .
-RUN gradle --no-daemon build --stacktrace --info
+RUN gradle bootJar --stacktrace --info
 
 FROM openjdk:11-jre-slim
 WORKDIR /app
