@@ -1,25 +1,12 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/layout :: head('Assigned orders')">
+<head th:replace="fragments/layout :: head('Store')">
     <meta charset="UTF-8">
-    <title>Assigned orders</title>
+    <title>Store</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/static/css/store.css}"/>
 </head>
-<body>
-<nav th:replace="fragments/layout :: navbar(~{ :: .mr-auto}, ~{ :: .ml-auto})">
-    <ul class="navbar-nav mr-auto">
-        <li class="nav-item active">
-            <a class="nav-link" th:href="@{/}">Home</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link active" th:href="@{/store}">Store</a>
-        </li>
-    </ul>
-    <ul class="navbar-nav ml-auto">
-        <li class="nav-item">
-            <a class="nav-link" th:href="@{/logout}">Logout</a>
-        </li>
-    </ul>
-</nav>
+
+<!--TODO static css file doesn't work-->
 <style>
     html,
     body {
@@ -35,14 +22,30 @@
         top: 1em
     }
 </style>
+<body>
+<nav th:replace="fragments/layout :: navbar(~{ :: #navbarRight}, ~{ :: #navbarLeft})">
+    <ul class="navbar-nav mr-auto" id="navbarRight">
+        <li class="nav-item active">
+            <a class="nav-link" th:href="@{/}">Home</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link active" th:href="@{/store}">Store</a>
+        </li>
+    </ul>
+    <ul class="navbar-nav ml-auto" id="navbarLeft">
+        <li class="nav-item">
+            <a class="nav-link" th:href="@{/logout}">Logout</a>
+        </li>
+    </ul>
+</nav>
 
 <div class="container-fluid d-flex flex-column">
-
     <div class="row flex-grow-1 d-flex justify-content-center px-2 py-3">
         <div class="col-sm-9 px-2">
             <div class="card bg-white p-3">
                 <div class="list-group-flush">
-                    <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
+                    <a href="#" th:href="@{/store/item/__${item?.id}__}"
+                       class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
                        th:each="item : ${items}">
                         <div class="mr-auto">
                             <div>
@@ -67,17 +70,19 @@
                     <h5 class="card-title">Shopping Cart</h5>
                     <h6 class="card-subtitle mb-2 text-muted">Total Cost: $5</h6>
                     <ul class="list-group list-group-flush mb-2">
-                        <li class="list-group-item px-0"><div class="d-flex w-100 justify-content-between align-items-center">
-                            <p class="font-weight-normal m-0 mr-auto">
-                                <a class="text-reset">Rezystroy 10k</a>
-                            </p>
-                            <p class="m-0" >4 &times; $5</p>
-                        </div>
+                        <li class="list-group-item px-0">
+                            <div class="d-flex w-100 justify-content-between align-items-center">
+                                <p class="font-weight-normal m-0 mr-auto">
+                                    <a class="text-reset">Rezystroy 10k</a>
+                                </p>
+                                <p class="m-0">4 &times; $5</p>
+                            </div>
                             <div class="d-flex w-100 justify-content-between">
 
-                            </div></li>
+                            </div>
+                        </li>
                     </ul>
-                    <a href="#" class="card-link">Checkout</a>
+                    <a href="#" th:href="@{/store/checkout}" class="card-link">Checkout</a>
                     <a href="#" class="card-link">Clear</a>
                 </div>
             </div>
