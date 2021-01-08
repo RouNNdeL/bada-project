@@ -15,7 +15,9 @@ class CustomerSecurityConfig(
 
     override fun configure(http: HttpSecurity?) {
         http?.run {
-            formLogin()
+            authorizeRequests()
+                .and()
+                .formLogin()
                 .loginPage("/login")
                 .defaultSuccessUrl("/")
                 .permitAll()
