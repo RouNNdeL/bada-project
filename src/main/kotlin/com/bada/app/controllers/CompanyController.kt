@@ -184,6 +184,13 @@ class CompanyController(
         return ResponseEntity.ok().body("Success")
     }
 
+    @GetMapping("/store")
+    fun store(model: Model) : String {
+        val items = itemRepository.findAll()
+        model.addAttribute("items", items)
+        return "store"
+    }
+
     private fun employeeHome(model: Model, employee: Employee): String {
         return when (employee.role) {
             Role.WAREHOUSE_EMPLOYEE -> {
