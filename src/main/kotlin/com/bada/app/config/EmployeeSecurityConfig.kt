@@ -20,7 +20,7 @@ class EmployeeSecurityConfig(
     override fun configure(http: HttpSecurity?) {
         http?.run {
             authorizeRequests()
-                .antMatchers("/", "/index", "/js/*", "/css/*").permitAll()
+                .antMatchers("/", "/index", "/static/**").permitAll()
                 .and()
                 .formLogin()
                 .loginProcessingUrl("/management/login")
