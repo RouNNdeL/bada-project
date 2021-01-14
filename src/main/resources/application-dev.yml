@@ -16,4 +16,4 @@ spring:
 
 logging:
   level:
-    web: debug
+    web: trace
