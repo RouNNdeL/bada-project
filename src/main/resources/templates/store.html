@@ -3,25 +3,8 @@
 <head th:replace="fragments/layout :: head('Store')">
     <meta charset="UTF-8">
     <title>Store</title>
-    <link rel="stylesheet" type="text/css" th:href="@{/static/css/store.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/static/css/main.css}"/>
 </head>
-
-<!--TODO static css file doesn't work-->
-<style>
-    html,
-    body {
-        height: 100%;
-        background-color: whitesmoke
-    }
-
-    .flex-fill {
-        flex: 1;
-    }
-
-    .sticky-top {
-        top: 1em
-    }
-</style>
 <body>
 <nav th:replace="fragments/layout :: navbar(~{ :: #navbarRight}, ~{ :: #navbarLeft})">
     <ul class="navbar-nav mr-auto" id="navbarRight">

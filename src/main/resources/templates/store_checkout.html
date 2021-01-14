@@ -3,25 +3,7 @@
 <head th:replace="fragments/layout :: head('Checkout')">
     <meta charset="UTF-8">
     <title>Checkout</title>
-    <link rel="stylesheet" type="text/css" th:href="@{/static/css/store.css}"/>
 </head>
-
-<!--TODO static css file doesn't work-->
-<style>
-    html,
-    body {
-        height: 100%;
-        background-color: whitesmoke
-    }
-
-    .flex-fill {
-        flex: 1;
-    }
-
-    .sticky-top {
-        top: 1em
-    }
-</style>
 
 <body>
 <nav th:replace="fragments/layout :: navbar(~{ :: #navbarRight}, ~{ :: #navbarLeft})">
@@ -43,57 +25,86 @@
     <div class="row flex-grow-1 d-flex justify-content-center px-2 py-3">
         <div class="col-sm-9 px-2">
             <div class="card bg-white p-3">
+                <div class="row w-100 p-3 text-muted">
+                    <div class="col-sm-5  d-flex align-items-center">
+                        <div>
+                            <p class="font-weight-bold m-0">Name</p>
+                        </div>
+                    </div>
+                    <div class="col-sm-2 d-flex align-items-center">
+                        <div class="d-flex align-items-center">
+
+
+                            <div>
+                                <p class="font-weight-bold m-0">Item Price</p>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="col-sm d-flex align-items-center">
+
+                        <div>
+                            <p class="font-weight-bold m-0">Quantity</p>
+                        </div>
+                    </div>
+                    <div class="col-sm-2 d-flex align-items-center">
+                        <div class="d-flex align-items-center">
+
+
+                            <div>
+                                <p class="font-weight-bold m-0">Full Price</p>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="col-sm-1 d-flex align-items-center">
+
+                        <div>
+                            <p class="font-weight-bold m-0">Delete</p>
+                        </div>
+                    </div>
+                </div>
                 <div class="list-group-flush">
-                    <a href="#"
-                       class="list-group-item list-group-item-action d-flex justify-content-between align-items-between flex-wrap">
-                        <div class="mr-auto align-items-center d-flex justify-content-start">
-                            <div>
-                                <button class="btn btn-outline-danger mr-2" type="button" id="button-addon1">&#10005;
-                                </button>
-                            </div>
-                            <div>
-                                <p class="font-weight-normal m-0">Zasilacz Capacitory Japońskie</p>
-                                <small class="text-muted">ID: 12345</small>
-                            </div>
-                        </div>
-                        <div class="d-flex align-items-center justify-content-end">
-                            <p class="d-flex align-items-center m-0 mr-2">Quantity:</p>
-                            <input class="quantity text-center m-0" min="0" max="999999" name="quantity" value="1"
-                                   type="number">
-                        </div>
-                        <div class="d-flex align-items-center ml-2" style="width: 15%">
+                    <div class="list-group-item d-flex justify-content-between align-items-between flex-wrap">
 
-                <span class="font-weight-bold w-100 text-right">
-                  $7.21
-                </span>
-
-                        </div>
-                    </a>
-                    <a href="#"
-                       class="list-group-item list-group-item-action d-flex justify-content-between align-items-between flex-wrap">
-                        <div class="mr-auto align-items-center d-flex justify-content-start">
-                            <div>
-                                <button class="btn btn-outline-danger mr-2" type="button" id="button-addon2">&#10005;
-                                </button>
+                        <div class="row w-100">
+                            <div class="col-sm-5  d-flex align-items-center">
+                                <div>
+                                    <a href="#" class="font-weight-normal m-0 text-reset">
+                                        <p>Zasilacz Capacitory Japońskie</p></a>
+                                    <small class="text-muted">ID: 12345</small>
+                                </div>
                             </div>
-                            <div>
-                                <p class="font-weight-normal m-0">Komputer Wiedźmin</p>
-                                <small class="text-muted">ID: 54321</small>
+                            <div class="col-sm-2 d-flex align-items-center">
+                                <div class="d-flex align-items-center">
+
+                      <span class="font-weight-bold">
+                        $7.21
+                      </span>
+
+                                </div>
+                            </div>
+                            <div class="col-sm d-flex align-items-center">
+                                <input class="quantity text-center m-0" min="0" max="999999" name="quantity" value="1" type="number">
+                            </div>
+                            <div class="col-sm-2 d-flex align-items-center">
+                                <div class="d-flex align-items-center">
+
+                      <span class="font-weight-bold">
+                        $7.21
+                      </span>
+
+                                </div>
+                            </div>
+                            <div class="col-sm-1 d-flex align-items-center">
+                                <div>
+                                    <button class="btn btn-outline-danger mr-2" type="button" id="button-addon1">&#10005;
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                        <div class="d-flex align-items-center justify-content-end">
-                            <p class="d-flex align-items-center m-0 mr-2">Quantity:</p>
-                            <input class="quantity text-center m-0" min="0" max="999999" name="quantity" value="1"
-                                   type="number">
-                        </div>
-                        <div class="d-flex align-items-center ml-2" style="width: 15%">
 
-                <span class="font-weight-bold w-100 text-right">
-                  $1337420.69
-                </span>
-
-                        </div>
-                    </a>
+                    </div>
                 </div>
                 <div class="align-items-center d-flex justify-content-end">
                     <p class="d-flex align-items-center m-0 mr-2">Full Price: </p>
@@ -126,8 +137,7 @@
                     </div>
                     <div class="form-group">
                         <label for="inputAddress2">Address 2</label>
-                        <input type="text" class="form-control" id="inputAddress2"
-                               placeholder="Apartment, studio, or floor">
+                        <input type="text" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor">
                     </div>
                     <div class="form-row">
                         <div class="form-group col-md-6">
@@ -147,7 +157,7 @@
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" id="gridCheck">
                             <label class="form-check-label" for="gridCheck">
-                                I accep terms of service
+                                I accept terms of service
                             </label>
                         </div>
                     </div>
