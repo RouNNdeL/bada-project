@@ -1,6 +1,7 @@
 package com.bada.app.config
 
 import com.bada.app.auth.EmployeeDetailsService
+import com.bada.app.auth.Role
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.annotation.Order
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
@@ -8,6 +9,8 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
+import org.springframework.security.config.web.servlet.invoke
+
 
 @Configuration
 @EnableWebSecurity
@@ -18,27 +21,28 @@ class EmployeeSecurityConfig(
 ) : WebSecurityConfigurerAdapter() {
 
     override fun configure(http: HttpSecurity?) {
-        http?.run {
-            authorizeRequests()
-                .antMatchers("/", "/index", "/static/**").permitAll()
-                .and()
-                .formLogin()
-                .loginProcessingUrl("/management/login")
-                .loginPage("/management/login")
-                .usernameParameter("username")
-                .passwordParameter("password")
-                .defaultSuccessUrl("/")
-                .permitAll()
-                .and()
-                .rememberMe()
-                .and()
-                .csrf().disable()
+        http {
+            securityMatcher("/management/**")
+            authorizeRequests {
+                authorize("/management/**", hasAnyRole(Role.WAREHOUSE_MANAGER.name, Role.WAREHOUSE_EMPLOYEE.name))
+            }
+            formLogin {
+                loginPage = "/management/login"
+                defaultSuccessUrl("/", true)
+                permitAll()
+            }
+            logout {
+                logoutUrl = "/management/logout"
+            }
+            csrf {
+                disable()
+            }
         }
+
     }
 
     override fun configure(auth: AuthenticationManagerBuilder?) {
-        auth?.run {
-            userDetailsService(employeeDetailsService)
-        }
+        auth?.userDetailsService(employeeDetailsService)
     }
 }
+
