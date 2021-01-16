@@ -31,7 +31,7 @@ class CompanyController(
         return "employees"
     }
 
-    @GetMapping("/login")
+    @GetMapping("/user/login")
     fun customerLogin(): String {
         return "customer-login"
     }

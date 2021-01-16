@@ -17,6 +17,12 @@ spring:
     password: password
   mvc:
     static-path-pattern: /static/**
+  web:
+    resources:
+      cache:
+        cachecontrol:
+          max-age: 1d
+          cache-public: true
 
 management:
   server:
