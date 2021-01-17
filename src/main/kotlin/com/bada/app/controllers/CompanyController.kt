@@ -1,9 +1,6 @@
 package com.bada.app.controllers
 
-import com.bada.app.auth.EmployeeUserDetails
-import com.bada.app.auth.Permission
-import com.bada.app.auth.Role
-import com.bada.app.auth.SimpleUserDetails
+import com.bada.app.auth.*
 import com.bada.app.models.*
 import com.bada.app.repos.*
 import org.springframework.http.HttpStatus
@@ -19,6 +16,7 @@ import org.springframework.web.server.ResponseStatusException
 @Controller
 class CompanyController(
     val employeeRepository: EmployeeRepository,
+    val customerRepository: CustomerRepository,
     val orderRepository: OrderRepository,
     val itemRepository: ItemRepository,
     val warehousesRepository: WarehousesRepository,
@@ -33,12 +31,28 @@ class CompanyController(
 
     @GetMapping("/user/login")
     fun customerLogin(): String {
-        return "customer-login"
+        return "client_login"
+    }
+
+    @GetMapping("/user/home")
+    fun customerHome(model: Model, authentication: Authentication?): String {
+        val user = authentication?.principal as? SimpleUserDetails ?: throw RuntimeException("Invalid user principal")
+
+        if (user !is CustomerUserDetails) {
+            throw ResponseStatusException(HttpStatus.UNAUTHORIZED)
+        }
+
+        val customer = customerRepository.findByUsername(user.username).orElseThrow {
+            throw ResponseStatusException(HttpStatus.UNAUTHORIZED)
+        }
+
+        model.addAttribute("user", customer)
+        return "customer_home"
     }
 
     @GetMapping("/management/login")
     fun managementLogin(): String {
-        return "management-login"
+        return "management_login"
     }
 
     @PostMapping(

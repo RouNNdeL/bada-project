@@ -14,7 +14,7 @@ class CustomerDetailsService(
             throw UsernameNotFoundException("Username cannot be null")
         }
 
-        val customer = customerRepository.findCustomerByUsername(username).orElseThrow {
+        val customer = customerRepository.findByUsername(username).orElseThrow {
             throw UsernameNotFoundException("User does not exist")
         }
         return customer.getUserDetails()

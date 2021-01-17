@@ -1,10 +1,7 @@
 package com.bada.app.models
 
 import com.bada.app.auth.CustomerUserDetails
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.ManyToOne
-import javax.persistence.Table
+import javax.persistence.*
 
 @Entity
 @Table(name = "customers")
@@ -20,6 +17,13 @@ class Customer(
 
     @ManyToOne
     var company: Company,
+
+    @OneToMany(mappedBy = "customer", cascade = [CascadeType.ALL], orphanRemoval = true)
+    val orders: List<Order>,
+
+    @OneToOne
+    val address: Address
+
 ) : AbstractEntityLong() {
     fun getUserDetails(): CustomerUserDetails {
         return CustomerUserDetails(username, password, company.id)
