@@ -41,6 +41,7 @@ ALTER TABLE companies
 CREATE TABLE warehouses
 (
     id                     SERIAL,
+    name                   VARCHAR(100)     NOT NULL,
     capacity               DOUBLE PRECISION NOT NULL,
     number_of_loading_bays INTEGER          NOT NULL,
     is_retail              CHAR(1)          NOT NULL,
@@ -2475,26 +2476,26 @@ VALUES ('TME', '9871234371231', '20-FEB-19', '4911232761', null, 537, 393);
 INSERT INTO companies (name, nip, establishment_date, krs, parent_company_id, hq_address_id, tax_address_id)
 VALUES ('Kazu', '205vxh3421236', '21-JAN-18', '4301236521', 1, 962, 953);
 
-INSERT INTO warehouses (capacity, number_of_loading_bays, is_retail, company_id, address_id, manager_id)
-VALUES (19241.94, 9, 'F', 1, 1, null);
-INSERT INTO warehouses (capacity, number_of_loading_bays, is_retail, company_id, address_id, manager_id)
-VALUES (93212.31, 5, 'T', 1, 2, null);
-INSERT INTO warehouses (capacity, number_of_loading_bays, is_retail, company_id, address_id, manager_id)
-VALUES (45470.25, 5, 'F', 1, 3, null);
-INSERT INTO warehouses (capacity, number_of_loading_bays, is_retail, company_id, address_id, manager_id)
-VALUES (15385.35, 5, 'F', 2, 4, null);
-INSERT INTO warehouses (capacity, number_of_loading_bays, is_retail, company_id, address_id, manager_id)
-VALUES (94854.54, 9, 'F', 1, 5, null);
-INSERT INTO warehouses (capacity, number_of_loading_bays, is_retail, company_id, address_id, manager_id)
-VALUES (68836.09, 5, 'F', 2, 6, null);
-INSERT INTO warehouses (capacity, number_of_loading_bays, is_retail, company_id, address_id, manager_id)
-VALUES (78462.36, 7, 'T', 2, 7, null);
-INSERT INTO warehouses (capacity, number_of_loading_bays, is_retail, company_id, address_id, manager_id)
-VALUES (31545.55, 3, 'F', 1, 8, null);
-INSERT INTO warehouses (capacity, number_of_loading_bays, is_retail, company_id, address_id, manager_id)
-VALUES (10170.43, 7, 'F', 1, 9, null);
-INSERT INTO warehouses (capacity, number_of_loading_bays, is_retail, company_id, address_id, manager_id)
-VALUES (91237.97, 10, 'T', 2, 10, null);
+INSERT INTO warehouses (name, capacity, number_of_loading_bays, is_retail, company_id, address_id, manager_id)
+VALUES ('Warehouse #1', 19241.94, 9, 'F', 1, 1, null);
+INSERT INTO warehouses (name, capacity, number_of_loading_bays, is_retail, company_id, address_id, manager_id)
+VALUES ('Warehouse #2', 93212.31, 5, 'T', 1, 2, null);
+INSERT INTO warehouses (name, capacity, number_of_loading_bays, is_retail, company_id, address_id, manager_id)
+VALUES ('Warehouse #3', 45470.25, 5, 'F', 1, 3, null);
+INSERT INTO warehouses (name, capacity, number_of_loading_bays, is_retail, company_id, address_id, manager_id)
+VALUES ('Warehouse #4', 15385.35, 5, 'F', 2, 4, null);
+INSERT INTO warehouses (name, capacity, number_of_loading_bays, is_retail, company_id, address_id, manager_id)
+VALUES ('Warehouse #5', 94854.54, 9, 'F', 1, 5, null);
+INSERT INTO warehouses (name, capacity, number_of_loading_bays, is_retail, company_id, address_id, manager_id)
+VALUES ('Warehouse #6', 68836.09, 5, 'F', 2, 6, null);
+INSERT INTO warehouses (name, capacity, number_of_loading_bays, is_retail, company_id, address_id, manager_id)
+VALUES ('Warehouse #7', 78462.36, 7, 'T', 2, 7, null);
+INSERT INTO warehouses (name, capacity, number_of_loading_bays, is_retail, company_id, address_id, manager_id)
+VALUES ('Warehouse #8', 31545.55, 3, 'F', 1, 8, null);
+INSERT INTO warehouses (name, capacity, number_of_loading_bays, is_retail, company_id, address_id, manager_id)
+VALUES ('Warehouse #9', 10170.43, 7, 'F', 1, 9, null);
+INSERT INTO warehouses (name, capacity, number_of_loading_bays, is_retail, company_id, address_id, manager_id)
+VALUES ('Warehouse #10', 91237.97, 10, 'T', 2, 10, null);
 
 insert into employees (id, username, password, email, role, first_name, last_name, pesel,
                        employment_date, phone_number, company_id, warehouse_id, address_id)

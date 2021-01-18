@@ -72,7 +72,7 @@
                         th:each="stockItem: ${stock}"
                         th:id="|warehouseStockId${stockItem.warehouse.id}=${warehouseIdEdit}|">
                         <p class="m-0"
-                           th:text="${stockItem.warehouse.cityOrCountry()}">
+                           th:text="${stockItem.warehouse.nameci}">
                             Warszawa</p>
                         <span class="badge bg-primary rounded-pill text-white px-2 py-1"
                               th:unless="${user.hasPermission('CHANGE_STOCK_ALL') || (user.hasPermission('CHANGE_STOCK') && warehouseIdEdit == stockItem.warehouse.id)}"

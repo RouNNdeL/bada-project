@@ -5,6 +5,8 @@ import javax.persistence.*
 @Entity
 @Table(name = "warehouses")
 class Warehouse(
+    var name: String,
+
     var capacity: Double,
 
     @Column(name = "number_of_loading_bays")
@@ -26,8 +28,4 @@ class Warehouse(
 
     @OneToOne
     val address: Address
-) : AbstractEntityLong() {
-    fun cityOrCountry(): String {
-        return address.city ?: "${address.country.countryName} #$id"
-    }
-}
+) : AbstractEntityLong()
