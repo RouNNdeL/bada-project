@@ -1,6 +1,9 @@
 package com.bada.app.controllers
 
-import com.bada.app.auth.*
+import com.bada.app.auth.EmployeeUserDetails
+import com.bada.app.auth.Permission
+import com.bada.app.auth.Role
+import com.bada.app.auth.SimpleUserDetails
 import com.bada.app.models.*
 import com.bada.app.repos.*
 import org.springframework.http.HttpStatus
@@ -16,39 +19,12 @@ import org.springframework.web.server.ResponseStatusException
 @Controller
 class CompanyController(
     val employeeRepository: EmployeeRepository,
-    val customerRepository: CustomerRepository,
     val orderRepository: OrderRepository,
     val itemRepository: ItemRepository,
     val warehousesRepository: WarehousesRepository,
     val priceRangeRepository: PriceRangeRepository,
     val warehouseItemRepository: WarehouseItemRepository
 ) {
-    @GetMapping("/companies/{id}/employees")
-    fun getEmployees(@PathVariable("id") id: String, model: Model): String {
-        model.addAttribute("employees", employeeRepository.findEmployeesByCompanyId(id.toLong()))
-        return "employees"
-    }
-
-    @GetMapping("/user/login")
-    fun customerLogin(): String {
-        return "client_login"
-    }
-
-    @GetMapping("/user/home")
-    fun customerHome(model: Model, authentication: Authentication?): String {
-        val user = authentication?.principal as? SimpleUserDetails ?: throw RuntimeException("Invalid user principal")
-
-        if (user !is CustomerUserDetails) {
-            throw ResponseStatusException(HttpStatus.UNAUTHORIZED)
-        }
-
-        val customer = customerRepository.findByUsername(user.username).orElseThrow {
-            throw ResponseStatusException(HttpStatus.UNAUTHORIZED)
-        }
-
-        model.addAttribute("user", customer)
-        return "customer_home"
-    }
 
     @GetMapping("/management/login")
     fun managementLogin(): String {
@@ -56,7 +32,7 @@ class CompanyController(
     }
 
     @PostMapping(
-        "/orders/{id}/update_status",
+        "/management/orders/{id}/update_status",
         consumes = [MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_FORM_URLENCODED_VALUE],
         produces = [MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE]
     )
@@ -92,25 +68,24 @@ class CompanyController(
         return ResponseEntity.ok().body("Success")
     }
 
-    @GetMapping("/")
+    @GetMapping("/management/home")
     fun home(model: Model, authentication: Authentication?): String {
         if (authentication == null) {
             throw ResponseStatusException(HttpStatus.UNAUTHORIZED)
         }
 
-        when (val user = authentication.principal) {
-            is EmployeeUserDetails -> {
-                val employee = employeeRepository.findByUsername(user.username).orElseThrow {
-                    throw ResponseStatusException(HttpStatus.UNAUTHORIZED)
-                }
-                return employeeHome(model, employee)
-            }
+        val user = authentication.principal
+        if (user !is EmployeeUserDetails) {
+            throw ResponseStatusException(HttpStatus.UNAUTHORIZED)
         }
 
-        return "home_default"
+        val employee = employeeRepository.findByUsername(user.username).orElseThrow {
+            throw ResponseStatusException(HttpStatus.UNAUTHORIZED)
+        }
+        return employeeHome(model, employee)
     }
 
-    @GetMapping("/store/item/{id}")
+    @GetMapping("/management/store/item/{id}")
     fun item(@PathVariable id: Long, model: Model, authentication: Authentication?): String {
         if (authentication == null) {
             throw ResponseStatusException(HttpStatus.UNAUTHORIZED)
@@ -148,7 +123,7 @@ class CompanyController(
     }
 
     @PostMapping(
-        "/store/item/{id}/update",
+        "/management/store/item/{id}/update",
         consumes = [MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_FORM_URLENCODED_VALUE],
         produces = [MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE]
     )
@@ -198,17 +173,13 @@ class CompanyController(
         return ResponseEntity.ok().body("Success")
     }
 
-    @GetMapping("/store")
-    fun store(model: Model) : String {
+    @GetMapping("/management/store")
+    fun store(model: Model): String {
         val items = itemRepository.findAll()
         model.addAttribute("items", items)
         return "store"
     }
 
-    @GetMapping("/store/checkout")
-    fun checkout(model: Model) : String{
-        return "store_checkout"
-    }
 
     private fun employeeHome(model: Model, employee: Employee): String {
         return when (employee.role) {

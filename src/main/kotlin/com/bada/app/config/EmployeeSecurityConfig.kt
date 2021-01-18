@@ -22,14 +22,13 @@ class EmployeeSecurityConfig(
 
     override fun configure(http: HttpSecurity?) {
         http {
-            //TODO move homepage to accessible url
             securityMatcher("/management/**")
             authorizeRequests {
                 authorize("/management/**", hasAnyRole(Role.WAREHOUSE_MANAGER.name, Role.WAREHOUSE_EMPLOYEE.name))
             }
             formLogin {
                 loginPage = "/management/login"
-                defaultSuccessUrl("/", true)
+                defaultSuccessUrl("/management/home", false)
                 permitAll()
             }
             logout {
