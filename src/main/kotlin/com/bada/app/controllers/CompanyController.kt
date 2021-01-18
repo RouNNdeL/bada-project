@@ -177,9 +177,9 @@ class CompanyController(
     fun store(model: Model): String {
         val items = itemRepository.findAll()
         model.addAttribute("items", items)
+        model.addAttribute("cart", false)
         return "store"
     }
-
 
     private fun employeeHome(model: Model, employee: Employee): String {
         return when (employee.role) {

@@ -1,5 +1,7 @@
 package com.bada.app.models
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import javax.persistence.*
 
 @Entity
@@ -33,6 +35,22 @@ class Item(
 
         return (warehouseItems + missing).sortedBy { it.warehouse.id }
     }
+
+    fun getPrice(quantity: Int): Double? {
+        var range: PriceRange? = null
+        for (r in priceRanges) {
+            if (quantity >= r.minQuantity) {
+                range = r
+            }
+        }
+
+        return range?.price
+    }
+
+    fun getPriceRangeJson(): String {
+        val objectMapper = ObjectMapper()
+        return objectMapper.writeValueAsString(priceRanges)
+    }
 }
 
 class ItemUpdate(
@@ -49,3 +67,14 @@ class ItemUpdate(
         val quantity: Int
     )
 }
+
+@JsonSerialize
+class CartItem(
+    val itemId: Long = -1,
+    var quantity: Int = 0
+)
+
+class CartItemMapped(
+    val item: Item,
+    val quantity: Int
+)

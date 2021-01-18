@@ -10,3 +10,8 @@ body {
 .sticky-top {
     top: 1em
 }
+
+.shopping-cart-add > i.material-icons {
+    position: relative;
+    top: 3px;
+}

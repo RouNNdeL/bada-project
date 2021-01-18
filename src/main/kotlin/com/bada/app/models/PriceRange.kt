@@ -1,5 +1,6 @@
 package com.bada.app.models
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import java.io.Serializable
 import javax.persistence.*
 
@@ -10,10 +11,12 @@ class PriceRange(
     val minQuantity: Int,
     var price: Double,
 
+    @JsonIgnore
     @ManyToOne
     @MapsId("itemId")
     var item: Item,
 
+    @JsonIgnore
     @EmbeddedId
     val id: PriceRangeId = PriceRangeId(item.id, minQuantity)
 )

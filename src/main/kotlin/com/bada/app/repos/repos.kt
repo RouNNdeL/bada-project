@@ -4,7 +4,6 @@ import com.bada.app.models.*
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.support.JpaEntityInformation
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository
-import org.springframework.data.repository.CrudRepository
 import org.springframework.data.repository.NoRepositoryBean
 import org.springframework.stereotype.Repository
 import java.io.Serializable
@@ -32,37 +31,37 @@ class RefreshRepositoryImpl<T, ID : Serializable?>(
 }
 
 @Repository
-interface OrderRepository : CrudRepository<Order, Long>
+interface OrderRepository : JpaRepository<Order, Long>
 
 @Repository
-interface CustomerRepository : CrudRepository<Customer, Long> {
+interface CustomerRepository : JpaRepository<Customer, Long> {
     fun findByUsername(username: String): Optional<Customer>
 }
 
 @Repository
-interface CompanyRepository : CrudRepository<Company, Long>
+interface CompanyRepository : JpaRepository<Company, Long>
 
 @Repository
-interface EmployeeRepository : CrudRepository<Employee, Long> {
+interface EmployeeRepository : JpaRepository<Employee, Long> {
     fun findAllByCompanyId(companyId: Long): Set<Employee>
     fun findByUsername(username: String): Optional<Employee>
 }
 
 @Repository
-interface AddressRepository : CrudRepository<Address, Long> {
+interface AddressRepository : JpaRepository<Address, Long> {
     fun findAddressById(addressId: Long): Address
 }
 
 @Repository
-interface WarehousesRepository : CrudRepository<Warehouse, Long>, JpaRepository<Warehouse, Long> {
+interface WarehousesRepository : JpaRepository<Warehouse, Long> {
     fun findAllByCompanyId(companyId: Long): Iterable<Warehouse>
 }
 
 @Repository
-interface WarehouseItemRepository : CrudRepository<WarehouseItem, Long>
+interface WarehouseItemRepository : JpaRepository<WarehouseItem, Long>
 
 @Repository
-interface ItemRepository : CrudRepository<Item, Long>
+interface ItemRepository : JpaRepository<Item, Long>
 
 @Repository
-interface PriceRangeRepository : CrudRepository<PriceRange, Long>
+interface PriceRangeRepository : JpaRepository<PriceRange, Long>
