@@ -18,6 +18,9 @@ class Order(
     @ManyToOne
     var assignedEmployee: Employee?,
 
+    @ManyToOne
+    var customer: Customer,
+
     @OneToMany(mappedBy = "order", cascade = [CascadeType.ALL], orphanRemoval = true)
     val items: List<OrderItem>
 ) : AbstractEntityLong() {

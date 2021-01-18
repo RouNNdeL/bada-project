@@ -24,6 +24,6 @@ class Address(
 
 ) : AbstractEntityLong(), Serializable {
     override fun toString(): String {
-        return "$addressLine1\n$addressLine2\n$zipcode $city\n$country"
+        return "$addressLine1\n$addressLine2\n$zipcode $city\n${country.countryName}"
     }
 }

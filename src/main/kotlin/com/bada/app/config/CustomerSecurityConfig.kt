@@ -17,6 +17,7 @@ class CustomerSecurityConfig(
 
     override fun configure(http: HttpSecurity?) {
         http {
+            //TODO move homepage to accessible url
             securityMatcher("/user/**")
             authorizeRequests {
                 authorize("/user/**", hasAnyRole(Role.CUSTOMER.name))
