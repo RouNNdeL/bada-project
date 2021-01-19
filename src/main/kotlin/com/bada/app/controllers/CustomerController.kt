@@ -3,7 +3,6 @@ package com.bada.app.controllers
 import com.bada.app.auth.CustomerUserDetails
 import com.bada.app.auth.SimpleUserDetails
 import com.bada.app.models.CartItem
-import com.bada.app.models.CartItemMapped
 import com.bada.app.repos.CustomerRepository
 import com.bada.app.repos.ItemRepository
 import org.springframework.http.HttpStatus
@@ -12,7 +11,10 @@ import org.springframework.http.ResponseEntity
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.DeleteMapping
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.server.ResponseStatusException
 import javax.servlet.http.HttpSession
 
@@ -52,13 +54,7 @@ class CustomerController(
 
         val cartItems = session.getAttribute("cartItems") as? ArrayList<CartItem> ?: ArrayList()
 
-        val mapped = cartItems.mapNotNullTo(ArrayList(), {
-            val item = itemRepository.findById(it.itemId)
-            if (item.isPresent) {
-                return@mapNotNullTo CartItemMapped(item.get(), it.quantity)
-            }
-            null
-        })
+        val mapped = cartItems.mapNotNullTo(ArrayList(), { it.load(itemRepository) })
 
         val cartTotalCost = mapped.sumByDouble { it.quantity * (it.item.getPrice(it.quantity) ?: 0.0) }
 
