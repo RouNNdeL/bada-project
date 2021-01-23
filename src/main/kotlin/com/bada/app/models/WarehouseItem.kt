@@ -18,7 +18,7 @@ class WarehouseItem(
     val quantity: Int,
 
     @EmbeddedId
-    val id: WarehouseItemId = WarehouseItemId(warehouse.id, item.id)
+    val id: WarehouseItemId = WarehouseItemId(warehouse.id!!, item.id!!)
 
 ) {
     override fun equals(other: Any?): Boolean {

@@ -8,7 +8,7 @@ abstract class AbstractEntity<T : Serializable>(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(updatable = false, nullable = false)
-    val id: T
+    val id: T? = null
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -26,4 +26,4 @@ abstract class AbstractEntity<T : Serializable>(
     }
 }
 
-abstract class AbstractEntityLong : AbstractEntity<Long>(-1)
+abstract class AbstractEntityLong : AbstractEntity<Long>()

@@ -46,7 +46,7 @@ class Employee(
 ) : AbstractEntityLong() {
 
     fun getUserDetails(): EmployeeUserDetails {
-        return EmployeeUserDetails(username, password, role, company.id)
+        return EmployeeUserDetails(username, password, role, company.id!!)
     }
 
     fun getDisplayName(): String {

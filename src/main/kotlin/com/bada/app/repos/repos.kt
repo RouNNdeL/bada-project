@@ -65,3 +65,8 @@ interface ItemRepository : JpaRepository<Item, Long>
 
 @Repository
 interface PriceRangeRepository : JpaRepository<PriceRange, Long>
+
+@Repository
+interface CountryRepository: JpaRepository<Country, Long>{
+    fun findByCountryName(countryName: String): Optional<Country>
+}

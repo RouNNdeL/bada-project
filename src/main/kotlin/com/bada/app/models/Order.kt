@@ -19,6 +19,7 @@ class Order(
     var assignedEmployee: Employee?,
 
     @ManyToOne
+    @JoinColumn(name = "customer_id")
     var customer: Customer,
 
     @OneToMany(mappedBy = "order", cascade = [CascadeType.ALL], orphanRemoval = true)
