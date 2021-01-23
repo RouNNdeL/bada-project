@@ -53,9 +53,7 @@ class CustomerController(
         model.addAttribute("cart", true)
 
         val cartItems = session.getAttribute("cartItems") as? ArrayList<CartItem> ?: ArrayList()
-
         val mapped = cartItems.mapNotNullTo(ArrayList(), { it.load(itemRepository) })
-
         val cartTotalCost = mapped.sumByDouble { it.quantity * (it.item.getPrice(it.quantity) ?: 0.0) }
 
         model.addAttribute("cartItems", mapped)
@@ -64,8 +62,16 @@ class CustomerController(
         return "store"
     }
 
+    @Suppress("DuplicatedCode")
     @GetMapping("/user/store/checkout")
-    fun checkout(model: Model): String {
+    fun checkout(model: Model, session: HttpSession): String {
+        val cartItems = session.getAttribute("cartItems") as? ArrayList<CartItem> ?: ArrayList()
+        val mapped = cartItems.mapNotNullTo(ArrayList(), { it.load(itemRepository) })
+        val cartTotalCost = mapped.sumByDouble { it.quantity * (it.item.getPrice(it.quantity) ?: 0.0) }
+
+        model.addAttribute("cartItems", mapped)
+        model.addAttribute("cartTotalCost", cartTotalCost)
+
         return "store_checkout"
     }
 

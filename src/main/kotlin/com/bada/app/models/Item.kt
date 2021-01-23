@@ -86,4 +86,7 @@ class CartItem(
 class CartItemMapped(
     val item: Item,
     val quantity: Int
-)
+) {
+    val price = item.getPrice(quantity) ?: 0.0
+    val totalPrice = price * quantity
+}
