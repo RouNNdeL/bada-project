@@ -2,16 +2,12 @@ package com.bada.app.config
 
 import com.bada.app.auth.CustomerDetailsService
 import com.bada.app.auth.Role
-import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.annotation.Order
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
 import org.springframework.security.config.web.servlet.invoke
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
-
-
 
 
 @Configuration
@@ -43,6 +39,6 @@ class CustomerSecurityConfig(
     }
 
     override fun configure(auth: AuthenticationManagerBuilder?) {
-        auth?.userDetailsService(customerDetailsService)?.passwordEncoder(BCryptPasswordEncoder())
+        auth?.userDetailsService(customerDetailsService)
     }
 }

@@ -10,7 +10,7 @@ import com.bada.app.repos.CustomerRepository
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.core.userdetails.UsernameNotFoundException
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import org.springframework.security.crypto.factory.PasswordEncoderFactories
 import org.springframework.stereotype.Service
 
 @Service
@@ -47,7 +47,7 @@ class CustomerDetailsService(
 
         val customer = Customer(registerCustomer, defaultCompany, address)
 
-        val hash = BCryptPasswordEncoder().encode(customer.password)
+        val hash = PasswordEncoderFactories.createDelegatingPasswordEncoder().encode(customer.password)
 
         customer.password = hash!!
 
@@ -55,7 +55,7 @@ class CustomerDetailsService(
          * For some reason Hibernate doesn't read the correct sequence value for the customers table.
          * We cannot be bothered with debugging it, so just attempt to insert until it works.
          * After that all queries will succeed.
-         * 
+         *
          * author: Bartosz Walusiak
          */
         while (true) {
