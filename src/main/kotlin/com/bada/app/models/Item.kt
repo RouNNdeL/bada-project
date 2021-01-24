@@ -1,6 +1,7 @@
 package com.bada.app.models
 
 import com.bada.app.repos.ItemRepository
+import com.fasterxml.jackson.annotation.JsonTypeInfo
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import javax.persistence.*
@@ -69,18 +70,16 @@ class ItemUpdate(
     )
 }
 
-@JsonSerialize
 class CartItem(
-    val itemId: Long = -1,
+    val itemId: Long? = null,
     var quantity: Int = 0
-) {
-    fun load(itemRepository: ItemRepository): CartItemMapped? {
-        val item = itemRepository.findById(itemId)
-        if (item.isPresent) {
-            return CartItemMapped(item.get(), quantity)
-        }
-        return null
-    }
+)
+
+@JsonSerialize
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS)
+class CartItems : HashMap<Long, Int>() {
+    fun toMapped(itemRepository: ItemRepository) =
+        mapNotNullTo(ArrayList(), { CartItemMapped(itemRepository.findById(it.key).orElseGet { null }, it.value) })
 }
 
 class CartItemMapped(

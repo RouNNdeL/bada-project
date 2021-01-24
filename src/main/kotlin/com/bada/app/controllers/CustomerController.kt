@@ -2,10 +2,6 @@ package com.bada.app.controllers
 
 import com.bada.app.auth.CustomerUserDetails
 import com.bada.app.auth.SimpleUserDetails
-import com.bada.app.models.CartItem
-import com.bada.app.repos.CustomerRepository
-import com.bada.app.repos.ItemRepository
-import com.bada.app.repos.WarehousesRepository
 import com.bada.app.models.*
 import com.bada.app.repos.*
 import org.springframework.http.HttpStatus
@@ -62,8 +58,8 @@ class CustomerController(
         model.addAttribute("items", items)
         model.addAttribute("cart", true)
 
-        val cartItems = session.getAttribute("cartItems") as? ArrayList<CartItem> ?: ArrayList()
-        val mapped = cartItems.mapNotNullTo(ArrayList(), { it.load(itemRepository) })
+        val cartItems = session.getAttribute("cartItems") as? CartItems ?: CartItems()
+        val mapped = cartItems.toMapped(itemRepository)
         val cartTotalCost = mapped.sumByDouble { it.quantity * (it.item.getPrice(it.quantity) ?: 0.0) }
 
         model.addAttribute("cartItems", mapped)
@@ -76,8 +72,8 @@ class CustomerController(
     @Suppress("DuplicatedCode")
     @GetMapping("/user/store/checkout")
     fun checkout(model: Model, session: HttpSession): String {
-        val cartItems = session.getAttribute("cartItems") as? ArrayList<CartItem> ?: ArrayList()
-        val mapped = cartItems.mapNotNullTo(ArrayList(), { it.load(itemRepository) })
+        val cartItems = session.getAttribute("cartItems") as? CartItems ?: CartItems()
+        val mapped = cartItems.toMapped(itemRepository)
         val cartTotalCost = mapped.sumByDouble { it.quantity * (it.item.getPrice(it.quantity) ?: 0.0) }
 
         model.addAttribute("cartItems", mapped)
@@ -107,8 +103,8 @@ class CustomerController(
             throw ResponseStatusException(HttpStatus.UNAUTHORIZED)
         }
 
-        val cartItems = session.getAttribute("cartItems") as? ArrayList<CartItem> ?: ArrayList()
-        val mapped = cartItems.mapNotNullTo(ArrayList(), { it.load(itemRepository) })
+        val cartItems = session.getAttribute("cartItems") as? CartItems ?: CartItems()
+        val mapped = cartItems.toMapped(itemRepository)
 
         if (mapped.isEmpty()) {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST)
@@ -149,12 +145,12 @@ class CustomerController(
         @RequestBody cartItem: CartItem,
         session: HttpSession
     ): ResponseEntity<String> {
-        if (cartItem.quantity <= 0) {
+        if (cartItem.quantity <= 0 || cartItem.itemId == null) {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST)
         }
 
-        val cartItems = session.getAttribute("cartItems") as? ArrayList<CartItem> ?: ArrayList()
-        cartItems.add(cartItem)
+        val cartItems = session.getAttribute("cartItems") as? CartItems ?: CartItems()
+        cartItems.merge(cartItem.itemId, cartItem.quantity, Int::plus)
         session.setAttribute("cartItems", cartItems)
 
         return ResponseEntity.ok().body("Success")
