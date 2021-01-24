@@ -224,4 +224,18 @@ class CustomerController(
         model.addAttribute("user", customer)
         return "customer_home"
     }
+
+    @PostMapping("/user/delete")
+    fun deleteUser(authentication: Authentication?): String {
+        if (authentication == null) {
+            throw ResponseStatusException(HttpStatus.UNAUTHORIZED)
+        }
+
+        val user = authentication.principal as? SimpleUserDetails ?: throw RuntimeException("Invalid user principal")
+
+        val customer = customerRepository.findByUsername(user.username).get()
+
+        customerRepository.deleteById(customer.id!!)
+        return "redirect:/user/logout"
+    }
 }

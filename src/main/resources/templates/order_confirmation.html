@@ -8,8 +8,8 @@
 <body>
 <nav th:replace="fragments/layout :: navbar(~{ :: #navbarRight}, ~{ :: #navbarLeft})">
     <ul class="navbar-nav mr-auto" id="navbarRight">
-        <li class="nav-item active">
-            <a class="nav-link" th:href="@{/}">Home</a>
+        <li class="nav-item">
+            <a class="nav-link active" th:href="@{__${path}__/home}">Home</a>
         </li>
         <li class="nav-item">
             <a class="nav-link active" th:href="@{__${path}__/store}">Store</a>
