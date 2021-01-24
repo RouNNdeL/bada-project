@@ -7,7 +7,7 @@ import com.bada.app.repos.AddressRepository
 import com.bada.app.repos.CompanyRepository
 import com.bada.app.repos.CountryRepository
 import com.bada.app.repos.CustomerRepository
-import org.springframework.context.annotation.Bean
+import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
@@ -31,7 +31,7 @@ class CustomerDetailsService(
         return customer.getUserDetails()
     }
 
-    fun register(registerCustomer: RegisterCustomer){
+    fun register(registerCustomer: RegisterCustomer) {
         val defaultCountry = countryRepository.findByCountryName("Poland").orElseThrow()
         val defaultCompany = companyRepository.findById(1).orElseThrow()
 
@@ -51,12 +51,20 @@ class CustomerDetailsService(
 
         customer.password = hash!!
 
-        while(true){//cursed sequence fix
+        /*
+         * For some reason Hibernate doesn't read the correct sequence value for the customers table.
+         * We cannot be bothered with debugging it, so just attempt to insert until it works.
+         * After that all queries will succeed.
+         * 
+         * author: Bartosz Walusiak
+         */
+        while (true) {
             try {
-                Thread.sleep(10)
                 customerRepository.saveAndFlush(customer)
                 break
-            } catch (e: Exception){}
+            } catch (e: DataIntegrityViolationException) {
+                Thread.sleep(10)
+            }
         }
     }
 }
