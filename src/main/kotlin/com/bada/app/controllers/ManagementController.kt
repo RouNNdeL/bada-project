@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
+import org.springframework.transaction.annotation.Transactional
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.server.ResponseStatusException
@@ -23,7 +24,8 @@ class ManagementController(
     val itemRepository: ItemRepository,
     val warehousesRepository: WarehousesRepository,
     val priceRangeRepository: PriceRangeRepository,
-    val warehouseItemRepository: WarehouseItemRepository
+    val warehouseItemRepository: WarehouseItemRepository,
+    val orderItemRepository: OrderItemRepository
 ) {
 
     @GetMapping("/management/login")
@@ -112,6 +114,7 @@ class ManagementController(
 
         val canSave = user.hasPermission(Permission.CHANGE_STOCK) || user.hasPermission(Permission.CHANGE_STOCK_ALL) ||
                 user.hasPermission(Permission.CHANGE_PRICE)
+        val canDelete = user.hasPermission(Permission.DELETE_ITEM)
 
         model.addAttribute("user", user)
 
@@ -120,6 +123,7 @@ class ManagementController(
         model.addAttribute("item", item)
         model.addAttribute("stock", item.getMergedStock(warehouses.toList()))
         model.addAttribute("canSave", canSave)
+        model.addAttribute("canDelete", canDelete)
 
         itemRepository.save(item)
 
@@ -177,6 +181,37 @@ class ManagementController(
         }
 
         return ResponseEntity.ok().body("Success")
+    }
+
+    @Transactional
+    @PostMapping("/management/store/item/{id}/delete")
+    fun deleteItem(@PathVariable id: Long, authentication: Authentication?): String{
+        if (authentication == null) {
+            throw ResponseStatusException(HttpStatus.UNAUTHORIZED)
+        }
+
+        val user = authentication.principal as? SimpleUserDetails ?: throw RuntimeException("Invalid user principal")
+        val item = itemRepository.findById(id).orElseThrow {
+            throw ResponseStatusException(HttpStatus.NOT_FOUND)
+        }
+
+        if (user !is EmployeeUserDetails) {
+            throw ResponseStatusException(HttpStatus.FORBIDDEN)
+        }
+
+        val employee = employeeRepository.findByUsername(user.username).orElseThrow {
+            throw ResponseStatusException(HttpStatus.UNAUTHORIZED)
+        }
+
+        if(user.hasPermission(Permission.DELETE_ITEM)){
+            orderItemRepository.deleteAllByItemId(id)
+            priceRangeRepository.deleteAll(item.priceRanges)
+            itemRepository.deleteById(id)
+        } else {
+            throw ResponseStatusException(HttpStatus.UNAUTHORIZED)
+        }
+
+        return "redirect:/management/store"
     }
 
     @GetMapping("/management/store")

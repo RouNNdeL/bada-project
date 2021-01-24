@@ -31,7 +31,14 @@ class RefreshRepositoryImpl<T, ID : Serializable?>(
 }
 
 @Repository
-interface OrderRepository : JpaRepository<Order, Long>
+interface OrderRepository : JpaRepository<Order, Long>{
+
+}
+
+@Repository
+interface OrderItemRepository : JpaRepository<OrderItem, Long>{
+    fun deleteAllByItemId(id: Long)
+}
 
 @Repository
 interface CustomerRepository : JpaRepository<Customer, Long> {

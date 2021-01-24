@@ -4,9 +4,9 @@ CREATE TABLE companies
 (
     id                 SERIAL,
     name               VARCHAR(75)  NOT NULL,
-    nip                CHAR(13)     NOT NULL,
+    nip                VARCHAR(13)     NOT NULL,
     establishment_date TIMESTAMP(0) NOT NULL,
-    krs                CHAR(10)     NOT NULL,
+    krs                VARCHAR(10)     NOT NULL,
     parent_company_id  INTEGER DEFAULT NULL,
     hq_address_id      INTEGER      NOT NULL,
     tax_address_id     INTEGER      NOT NULL
@@ -77,7 +77,7 @@ CREATE TABLE employees
     role            VARCHAR(256) DEFAULT '' NOT NULL,
     first_name      VARCHAR(30)             NOT NULL,
     last_name       VARCHAR(50)             NOT NULL,
-    pesel           CHAR(11)                NOT NULL,
+    pesel           VARCHAR(11)             NOT NULL,
     employment_date TIMESTAMP(0)            NOT NULL,
     phone_number    VARCHAR(20)             NOT NULL,
     company_id      INTEGER                 NOT NULL,
@@ -142,7 +142,7 @@ CREATE TABLE customers
     email        VARCHAR(50)  NOT NULL,
     first_name   VARCHAR(30)  NOT NULL,
     last_name    VARCHAR(50)  NOT NULL,
-    nip          CHAR(13),
+    nip          VARCHAR(13),
     phone_number VARCHAR(20),
     company_id   INTEGER      NOT NULL,
     address_id   INTEGER DEFAULT NULL
@@ -254,7 +254,7 @@ CREATE TABLE countries
 (
     id           SERIAL,
     country_name VARCHAR(56) NOT NULL,
-    iso_3166_1   CHAR(2)     NOT NULL,
+    iso_3166_1   VARCHAR(2)     NOT NULL,
     phone_prefix VARCHAR(3)  NOT NULL
 );
 
@@ -2997,7 +2997,8 @@ values (100, 'slaste2r', 'G2ZSEYUnNxNsV5RfejzefPPMACOK4WRPumIoMQpu3lGDvTN3VlahvJ
         'slaste2r@myspace.com', 'turpis', 'Sheff', 'Laste', '37170764606', '2020-04-02 02:49:32', '883-940-1914', 1, 3,
         741);
 
-ALTER SEQUENCE customers_id_seq RESTART WITH 101;
+ALTER SEQUENCE employees_id_seq RESTART WITH 101;
+UPDATE employees SET role = 'WAREHOUSE_EMPLOYEE' WHERE id != 2;
 
 UPDATE warehouses
 SET manager_id = 2
@@ -3265,35 +3266,6 @@ VALUES (7, 10, 11.8406);
 INSERT INTO price_ranges (item_id, min_quantity, price)
 VALUES (8, 1, 129.942);
 
-INSERT INTO categories (name, description)
-VALUES ('Honokahua Melicope', 'id massa id nisl venenatis lacinia aenean sit amet justo morbi ut odio');
-INSERT INTO categories (name, description)
-VALUES ('Craterostigma', 'sit amet consectetuer adipiscing elit proin risus praesent lectus vestibulum quam');
-INSERT INTO categories (name, description)
-VALUES ('Dipteryx', 'ut volutpat sapien arcu sed augue aliquam erat volutpat in congue etiam justo etiam pretium');
-INSERT INTO categories (name, description)
-VALUES ('Rufous Tiger Orchid',
-        'parturient montes nascetur ridiculus mus etiam vel augue vestibulum rutrum rutrum neque aenean auctor');
-INSERT INTO categories (name, description)
-VALUES ('Itchgrass',
-        'aliquet at feugiat non pretium quis lectus suspendisse potenti in eleifend quam a odio in hac habitasse platea dictumst maecenas ut massa quis augue luctus tincidunt nulla mollis');
-INSERT INTO categories (name, description)
-VALUES ('Nuttall''s Homalothecium Moss',
-        'posuere nonummy integer non velit donec diam neque vestibulum eget vulputate ut ultrices vel augue vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae donec pharetra');
-INSERT INTO categories (name, description)
-VALUES ('Orpine Stonecrop',
-        'phasellus id sapien in sapien iaculis congue vivamus metus arcu adipiscing molestie hendrerit');
-INSERT INTO categories (name, description)
-VALUES ('Indigoberry',
-        'mauris eget massa tempor convallis nulla neque libero convallis eget eleifend luctus ultricies eu nibh quisque id justo sit amet sapien dignissim vestibulum vestibulum ante ipsum primis in');
-INSERT INTO categories (name, description)
-VALUES ('Rusby''s Blazingstar',
-        'posuere metus vitae ipsum aliquam non mauris morbi non lectus aliquam sit amet diam in magna bibendum imperdiet');
-INSERT INTO categories (name, description)
-VALUES ('Mendrina',
-        'consequat in consequat ut nulla sed accumsan felis ut at dolor quis odio consequat varius integer ac leo pellentesque ultrices mattis odio donec vitae nisi nam ultrices libero');
-
-
 
 INSERT INTO orders (date, status, shipping_cost, customer_id, assigned_employee_id, address_id)
 VALUES ('20-Oct-25', 'RECEIVED', null, 19, 1, 826);
@@ -3356,47 +3328,6 @@ INSERT INTO orders_items (order_id, item_id, ordered_item_quantity)
 VALUES (7, 7, 97);
 INSERT INTO orders_items (order_id, item_id, ordered_item_quantity)
 VALUES (5, 6, 76);
-
-INSERT INTO items_categories (item_id, category_id)
-VALUES (2, 4);
-INSERT INTO items_categories (item_id, category_id)
-VALUES (5, 9);
-INSERT INTO items_categories (item_id, category_id)
-VALUES (4, 9);
-INSERT INTO items_categories (item_id, category_id)
-VALUES (4, 2);
-INSERT INTO items_categories (item_id, category_id)
-VALUES (3, 7);
-INSERT INTO items_categories (item_id, category_id)
-VALUES (8, 1);
-INSERT INTO items_categories (item_id, category_id)
-VALUES (1, 4);
-INSERT INTO items_categories (item_id, category_id)
-VALUES (4, 6);
-INSERT INTO items_categories (item_id, category_id)
-VALUES (7, 4);
-INSERT INTO items_categories (item_id, category_id)
-VALUES (1, 2);
-INSERT INTO items_categories (item_id, category_id)
-VALUES (3, 8);
-INSERT INTO items_categories (item_id, category_id)
-VALUES (6, 8);
-INSERT INTO items_categories (item_id, category_id)
-VALUES (7, 7);
-INSERT INTO items_categories (item_id, category_id)
-VALUES (1, 4);
-INSERT INTO items_categories (item_id, category_id)
-VALUES (5, 4);
-INSERT INTO items_categories (item_id, category_id)
-VALUES (4, 10);
-INSERT INTO items_categories (item_id, category_id)
-VALUES (4, 7);
-INSERT INTO items_categories (item_id, category_id)
-VALUES (2, 3);
-INSERT INTO items_categories (item_id, category_id)
-VALUES (5, 4);
-INSERT INTO items_categories (item_id, category_id)
-VALUES (2, 8);
 
 INSERT INTO warehouses_items (warehouse_id, item_id, item_quantity)
 VALUES (1, 1, 14512);
