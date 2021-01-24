@@ -66,8 +66,14 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             rangeList.forEach(el => {
-                const minQuantity = parseInt(el.querySelector("input.priceRangeQuantity").value);
-                const price = parseFloat(el.querySelector("input.priceRangePrice").value);
+                const minQuantityInput = el.querySelector("input.priceRangeQuantity");
+                const priceInput = el.querySelector("input.priceRangePrice");
+                if (minQuantityInput == null || priceInput == null) {
+                    return;
+                }
+
+                const minQuantity = parseInt(minQuantityInput.value);
+                const price = parseFloat(priceInput.value);
 
                 if (isNaN(minQuantity) || isNaN(price)) {
                     return;

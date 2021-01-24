@@ -118,10 +118,10 @@ ALTER TABLE items
 
 CREATE TABLE price_ranges
 (
-    item_id      INTEGER        NOT NULL,
-    min_quantity INTEGER        NOT NULL
+    item_id      INTEGER          NOT NULL,
+    min_quantity INTEGER          NOT NULL
         CONSTRAINT min_quantity_greater_0 CHECK (min_quantity >= 0),
-    price        DECIMAL(10, 2) NOT NULL
+    price        DOUBLE PRECISION NOT NULL
         CONSTRAINT price_geq_0 CHECK (price > 0)
 );
 
@@ -2477,25 +2477,25 @@ INSERT INTO companies (name, nip, establishment_date, krs, parent_company_id, hq
 VALUES ('Kazu', '205vxh3421236', '21-JAN-18', '4301236521', 1, 962, 953);
 
 INSERT INTO warehouses (name, capacity, number_of_loading_bays, is_retail, company_id, address_id, manager_id)
-VALUES ('Warehouse #1', 19241.94, 9, 'F', 1, 1, null);
+VALUES ('Warszawa Południe', 19241.94, 9, 'F', 1, 1, null);
 INSERT INTO warehouses (name, capacity, number_of_loading_bays, is_retail, company_id, address_id, manager_id)
-VALUES ('Warehouse #2', 93212.31, 5, 'T', 1, 2, null);
+VALUES ('Łódź', 93212.31, 5, 'T', 1, 2, null);
 INSERT INTO warehouses (name, capacity, number_of_loading_bays, is_retail, company_id, address_id, manager_id)
-VALUES ('Warehouse #3', 45470.25, 5, 'F', 1, 3, null);
+VALUES ('Warszawa Północ', 45470.25, 5, 'F', 1, 3, null);
 INSERT INTO warehouses (name, capacity, number_of_loading_bays, is_retail, company_id, address_id, manager_id)
-VALUES ('Warehouse #4', 15385.35, 5, 'F', 2, 4, null);
+VALUES ('Praga', 15385.35, 5, 'F', 2, 4, null);
 INSERT INTO warehouses (name, capacity, number_of_loading_bays, is_retail, company_id, address_id, manager_id)
-VALUES ('Warehouse #5', 94854.54, 9, 'F', 1, 5, null);
+VALUES ('Londyn', 94854.54, 9, 'F', 1, 5, null);
 INSERT INTO warehouses (name, capacity, number_of_loading_bays, is_retail, company_id, address_id, manager_id)
-VALUES ('Warehouse #6', 68836.09, 5, 'F', 2, 6, null);
+VALUES ('Poznań', 68836.09, 5, 'F', 2, 6, null);
 INSERT INTO warehouses (name, capacity, number_of_loading_bays, is_retail, company_id, address_id, manager_id)
-VALUES ('Warehouse #7', 78462.36, 7, 'T', 2, 7, null);
+VALUES ('Łódź sklep', 78462.36, 7, 'T', 2, 7, null);
 INSERT INTO warehouses (name, capacity, number_of_loading_bays, is_retail, company_id, address_id, manager_id)
-VALUES ('Warehouse #8', 31545.55, 3, 'F', 1, 8, null);
+VALUES ('Kraków', 31545.55, 3, 'F', 1, 8, null);
 INSERT INTO warehouses (name, capacity, number_of_loading_bays, is_retail, company_id, address_id, manager_id)
-VALUES ('Warehouse #9', 10170.43, 7, 'F', 1, 9, null);
+VALUES ('Berlin', 10170.43, 7, 'F', 1, 9, null);
 INSERT INTO warehouses (name, capacity, number_of_loading_bays, is_retail, company_id, address_id, manager_id)
-VALUES ('Warehouse #10', 91237.97, 10, 'T', 2, 10, null);
+VALUES ('Moscow', 91237.97, 10, 'T', 2, 10, null);
 
 insert into employees (id, username, password, email, role, first_name, last_name, pesel,
                        employment_date, phone_number, company_id, warehouse_id, address_id)
@@ -2508,7 +2508,7 @@ insert into employees (id, username, password, email, role, first_name, last_nam
 values (2, 'user2', '{noop}password2',
         'npoole1@friendfeed.com', 'WAREHOUSE_MANAGER', 'North', 'Poole', '02152406951', '2020-10-23 00:50:34',
         '118-264-5825', 1,
-        7, 891);
+        8, 891);
 insert into employees (id, username, password, email, role, first_name, last_name, pesel,
                        employment_date, phone_number, company_id, warehouse_id, address_id)
 values (3, 'nmeineking2', 'Ns27DWO8cSZP1Cn1qTHFccpNqipnzB1AVXzpQrE3KGzXFURoEh6TDPUOtpozIpUGBC0rHwgHcOqj',
@@ -2997,6 +2997,13 @@ values (100, 'slaste2r', 'G2ZSEYUnNxNsV5RfejzefPPMACOK4WRPumIoMQpu3lGDvTN3VlahvJ
         'slaste2r@myspace.com', 'turpis', 'Sheff', 'Laste', '37170764606', '2020-04-02 02:49:32', '883-940-1914', 1, 3,
         741);
 
+ALTER SEQUENCE customers_id_seq RESTART WITH 101;
+
+UPDATE warehouses
+SET manager_id = 2
+WHERE company_id = 1
+  AND id % 2 = 0;
+
 insert into customers (id, username, password, email, first_name, last_name, nip, phone_number, company_id,
                        address_id)
 values (1, 'user1', '{noop}password1',
@@ -3198,295 +3205,65 @@ insert into customers (id, username, password, email, first_name, last_name, nip
 values (50, 'abrammall1d', 'NODV1XWtnfkrhCqUfYzyQ9I6dUCCYHLsl66vW5mGRih49ktMfSD7ORXCqs1raXdKfVssgsIHna2k',
         'abrammall1d@studiopress.com', 'Andromache', 'Brammall', '5172703676', '226-968-8859', 2, 624);
 
-INSERT INTO items (name, description)
-VALUES ('Descurainia pinnata (Walter) Britton',
-        'ac tellus semper interdum mauris ullamcorper purus sit amet nulla quisque arcu libero rutrum ac lobortis vel');
-INSERT INTO items (name, description)
-VALUES ('Chelidonium L.',
-        'quisque ut erat curabitur gravida nisi at nibh in hac habitasse platea dictumst aliquam augue quam sollicitudin vitae consectetuer eget rutrum at lorem integer tincidunt ante vel ipsum praesent blandit');
-INSERT INTO items (name, description)
-VALUES ('Arctostaphylos glandulosa Eastw. ssp. zacaensis (Eastw.) P.V. Wells',
-        'sed accumsan felis ut at dolor quis odio consequat varius integer ac leo pellentesque');
-INSERT INTO items (name, description)
-VALUES ('Lithospermum ruderale Douglas ex Lehm.',
-        'dui vel sem sed sagittis nam congue risus semper porta volutpat quam pede lobortis ligula sit amet eleifend pede libero quis orci nullam molestie');
-INSERT INTO items (name, description)
-VALUES ('Aspicilia caesiocinerea (Nyl. ex Malbr.) Arnold',
-        'auctor sed tristique in tempus sit amet sem fusce consequat nulla nisl nunc nisl duis bibendum felis sed interdum venenatis turpis enim blandit mi in');
-INSERT INTO items (name, description)
-VALUES ('Scabrethia scabra (Hook.) W.A. Weber ssp. attenuata (W.A. Weber) W.A. Weber',
-        'congue vivamus metus arcu adipiscing molestie hendrerit at vulputate vitae nisl aenean lectus pellentesque eget nunc donec quis orci eget orci vehicula');
-INSERT INTO items (name, description)
-VALUES ('Thelypteris cordata (Fée) Proctor var. imitata (C. Chr.) Proctor',
-        'integer ac leo pellentesque ultrices mattis odio donec vitae nisi nam ultrices libero non mattis pulvinar nulla pede ullamcorper augue a suscipit nulla elit ac nulla sed vel enim sit');
-INSERT INTO items (name, description)
-VALUES ('Aristida palustris (Chapm.) Vasey',
-        'viverra diam vitae quam suspendisse potenti nullam porttitor lacus at turpis donec posuere metus vitae ipsum aliquam non mauris morbi');
-INSERT INTO items (name, description)
-VALUES ('Froelichia interrupta (L.) Moq.',
-        'sit amet eleifend pede libero quis orci nullam molestie nibh in lectus pellentesque at nulla suspendisse potenti cras');
-INSERT INTO items (name, description)
-VALUES ('Thalictrum sparsiflorum Turcz. ex Fisch. & C.A. Mey. var. richardsonii (A. Gray) B. Boivin',
-        'nisl duis ac nibh fusce lacus purus aliquet at feugiat non pretium');
-INSERT INTO items (name, description)
-VALUES ('Iris setosa Pall. ex Link',
-        'mauris ullamcorper purus sit amet nulla quisque arcu libero rutrum ac lobortis vel');
-INSERT INTO items (name, description)
-VALUES ('Cornus drummondii C.A. Mey.',
-        'velit eu est congue elementum in hac habitasse platea dictumst morbi vestibulum velit id pretium iaculis diam erat fermentum justo nec condimentum neque sapien placerat ante nulla');
-INSERT INTO items (name, description)
-VALUES ('Carex radfordii Gaddy',
-        'nibh quisque id justo sit amet sapien dignissim vestibulum vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae nulla dapibus dolor vel est donec odio justo');
-INSERT INTO items (name, description)
-VALUES ('Stereophyllum radiculosum (Hook.) Mitt.',
-        'cras in purus eu magna vulputate luctus cum sociis natoque penatibus et magnis dis');
-INSERT INTO items (name, description)
-VALUES ('Atriplex spongiosa F. Muell.',
-        'at feugiat non pretium quis lectus suspendisse potenti in eleifend quam a odio in hac');
-INSERT INTO items (name, description)
-VALUES ('Scutellaria elliptica Muhl. ex Spreng. var. elliptica',
-        'hac habitasse platea dictumst aliquam augue quam sollicitudin vitae consectetuer eget rutrum at lorem integer tincidunt');
-INSERT INTO items (name, description)
-VALUES ('Clematis terniflora DC.',
-        'augue a suscipit nulla elit ac nulla sed vel enim sit amet nunc viverra dapibus nulla');
-INSERT INTO items (name, description)
-VALUES ('Symphyotrichum tenuifolium (L.) G.L. Nesom',
-        'nam congue risus semper porta volutpat quam pede lobortis ligula sit amet eleifend pede libero quis orci nullam molestie nibh in lectus pellentesque at nulla suspendisse potenti');
-INSERT INTO items (name, description)
-VALUES ('Orbignya Mart. ex Endl.', 'quis orci eget orci vehicula condimentum curabitur in libero ut');
-INSERT INTO items (name, description)
-VALUES ('Fimbristylis decipiens Kral',
-        'porta volutpat quam pede lobortis ligula sit amet eleifend pede libero quis orci nullam molestie nibh in lectus pellentesque at nulla suspendisse');
-INSERT INTO items (name, description)
-VALUES ('Tetraneuris scaposa (DC.) Greene var. villosa (Shinners) Shinners',
-        'erat tortor sollicitudin mi sit amet lobortis sapien sapien non mi integer ac neque duis');
-INSERT INTO items (name, description)
-VALUES ('Penstemon franklinii S.L. Welsh',
-        'blandit mi in porttitor pede justo eu massa donec dapibus duis at velit eu est congue elementum in hac habitasse');
-INSERT INTO items (name, description)
-VALUES ('Adenophyllum Pers.',
-        'ipsum aliquam non mauris morbi non lectus aliquam sit amet diam in magna bibendum imperdiet nullam orci pede venenatis');
-INSERT INTO items (name, description)
-VALUES ('Chorizanthe xanti S. Watson var. xanti',
-        'pellentesque eget nunc donec quis orci eget orci vehicula condimentum');
-INSERT INTO items (name, description)
-VALUES ('Cordylanthus maritimus Nutt. ex Benth.',
-        'faucibus orci luctus et ultrices posuere cubilia curae donec pharetra magna vestibulum aliquet ultrices erat tortor sollicitudin mi sit');
-INSERT INTO items (name, description)
-VALUES ('Macromitrium Brid.', 'mus etiam vel augue vestibulum rutrum rutrum neque aenean auctor gravida sem praesent');
-INSERT INTO items (name, description)
-VALUES ('Miconia affinis DC.',
-        'integer aliquet massa id lobortis convallis tortor risus dapibus augue vel accumsan tellus nisi eu orci mauris lacinia sapien quis libero nullam sit amet turpis elementum');
-INSERT INTO items (name, description)
-VALUES ('Quercus dumosa Nutt.', 'convallis nulla neque libero convallis eget eleifend luctus ultricies eu nibh');
-INSERT INTO items (name, description)
-VALUES ('Iva hayesiana A. Gray',
-        'sem duis aliquam convallis nunc proin at turpis a pede posuere nonummy integer non velit donec diam neque vestibulum eget vulputate ut');
-INSERT INTO items (name, description)
-VALUES ('Eschscholzia minutiflora S. Watson ssp. minutiflora',
-        'ut rhoncus aliquet pulvinar sed nisl nunc rhoncus dui vel sem sed sagittis nam congue risus semper porta');
-INSERT INTO items (name, description)
-VALUES ('Encalypta affinis R. Hedw. var. affinis', 'nisl ut volutpat sapien arcu sed augue aliquam erat volutpat');
-INSERT INTO items (name, description)
-VALUES ('Oplopanax horridus (Sm.) Miq.',
-        'quam suspendisse potenti nullam porttitor lacus at turpis donec posuere metus vitae ipsum aliquam');
-INSERT INTO items (name, description)
-VALUES ('Lecanora tristiuscula H. Magn.',
-        'aliquam augue quam sollicitudin vitae consectetuer eget rutrum at lorem integer tincidunt ante vel ipsum praesent blandit lacinia erat vestibulum sed');
-INSERT INTO items (name, description)
-VALUES ('Argentina anserina (L.) Rydb.',
-        'erat quisque erat eros viverra eget congue eget semper rutrum nulla nunc purus phasellus in felis donec semper sapien a libero');
-INSERT INTO items (name, description)
-VALUES ('Lepidium lasiocarpum Nutt. var. wrightii (A. Gray) C.L. Hitchc.',
-        'nec dui luctus rutrum nulla tellus in sagittis dui vel nisl duis ac nibh fusce lacus purus aliquet at feugiat non pretium quis lectus suspendisse potenti in eleifend quam a');
-INSERT INTO items (name, description)
-VALUES ('Thymelaea passerina (L.) Coss. & Germ.',
-        'elementum eu interdum eu tincidunt in leo maecenas pulvinar lobortis est phasellus sit amet erat nulla tempus vivamus in felis eu sapien cursus');
-INSERT INTO items (name, description)
-VALUES ('Arctium lappa L.',
-        'ac consequat metus sapien ut nunc vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae mauris viverra diam vitae');
-INSERT INTO items (name, description)
-VALUES ('Tetraplasandra waimeae Wawra',
-        'sem mauris laoreet ut rhoncus aliquet pulvinar sed nisl nunc rhoncus dui vel sem sed sagittis nam congue risus semper porta volutpat quam pede lobortis ligula sit amet');
-INSERT INTO items (name, description)
-VALUES ('Trifolium monanthum A. Gray ssp. tenerum (Eastw.) J.M. Gillett',
-        'pede posuere nonummy integer non velit donec diam neque vestibulum eget vulputate ut ultrices vel augue vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere');
-INSERT INTO items (name, description)
-VALUES ('Calystegia malacophylla (Greene) Munz ssp. pedicellata (Jeps.) Munz',
-        'faucibus cursus urna ut tellus nulla ut erat id mauris vulputate elementum nullam varius nulla facilisi cras non velit nec nisi vulputate');
-INSERT INTO items (name, description)
-VALUES ('Stachytarpheta mutabilis (Jacq.) Vahl',
-        'felis eu sapien cursus vestibulum proin eu mi nulla ac enim in tempor turpis nec euismod');
-INSERT INTO items (name, description)
-VALUES ('Phacelia congdonii Greene',
-        'auctor sed tristique in tempus sit amet sem fusce consequat nulla nisl nunc nisl duis bibendum felis sed interdum venenatis');
-INSERT INTO items (name, description)
-VALUES ('Odontonema nitidum (Jacq.) Kuntze',
-        'aliquet massa id lobortis convallis tortor risus dapibus augue vel accumsan tellus nisi eu orci mauris lacinia sapien quis libero');
-INSERT INTO items (name, description)
-VALUES ('Geranium californicum G.N. Jones & F.F. Jones',
-        'velit nec nisi vulputate nonummy maecenas tincidunt lacus at velit vivamus vel nulla eget eros elementum pellentesque quisque porta volutpat erat quisque erat eros viverra eget');
-INSERT INTO items (name, description)
-VALUES ('Clappia A. Gray',
-        'elementum eu interdum eu tincidunt in leo maecenas pulvinar lobortis est phasellus sit amet erat nulla tempus vivamus in felis eu sapien cursus vestibulum proin eu');
-INSERT INTO items (name, description)
-VALUES ('Eriosorus Fée', 'odio odio elementum eu interdum eu tincidunt in leo maecenas pulvinar');
-INSERT INTO items (name, description)
-VALUES ('Echinocactus polycephalus Engelm. & J.M. Bigelow var. polycephalus',
-        'lorem ipsum dolor sit amet consectetuer adipiscing elit proin interdum mauris non ligula pellentesque ultrices phasellus id sapien in sapien iaculis congue');
-INSERT INTO items (name, description)
-VALUES ('Arnica acaulis (Walter) Britton, Sterns & Poggenb.',
-        'elit sodales scelerisque mauris sit amet eros suspendisse accumsan tortor quis turpis sed ante vivamus tortor duis mattis');
-INSERT INTO items (name, description)
-VALUES ('Packera flettii (Wiegand) W.A. Weber & Á. Löve',
-        'sem duis aliquam convallis nunc proin at turpis a pede posuere nonummy integer non velit donec diam neque vestibulum eget vulputate ut ultrices vel augue vestibulum ante ipsum');
-INSERT INTO items (name, description)
-VALUES ('Nyctaginia capitata Choisy',
-        'sed interdum venenatis turpis enim blandit mi in porttitor pede justo eu massa donec dapibus duis at velit eu est congue elementum in hac habitasse');
-INSERT INTO items (name, description)
-VALUES ('Aspicilia subradians (Nyl.) Hue',
-        'primis in faucibus orci luctus et ultrices posuere cubilia curae mauris viverra diam vitae quam suspendisse potenti nullam porttitor');
-INSERT INTO items (name, description)
-VALUES ('Hygroamblystegium noterophilum (Sull. & Lesq.) Warnst.',
-        'aliquam sit amet diam in magna bibendum imperdiet nullam orci pede venenatis non sodales sed tincidunt eu felis fusce posuere felis sed lacus morbi sem');
-INSERT INTO items (name, description)
-VALUES ('Crassula aquatica (L.) Schoenl.',
-        'magnis dis parturient montes nascetur ridiculus mus vivamus vestibulum sagittis sapien cum sociis natoque penatibus et magnis dis parturient montes nascetur ridiculus mus etiam vel augue vestibulum');
-INSERT INTO items (name, description)
-VALUES ('Angiopteris Hoffm.',
-        'sapien ut nunc vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae mauris viverra diam vitae quam');
-INSERT INTO items (name, description)
-VALUES ('Caloplaca approximata (Lynge) H. Magn.',
-        'aliquet at feugiat non pretium quis lectus suspendisse potenti in eleifend quam a odio in hac habitasse');
-INSERT INTO items (name, description)
-VALUES ('Juncus squarrosus L.',
-        'aliquam sit amet diam in magna bibendum imperdiet nullam orci pede venenatis non sodales sed tincidunt eu felis fusce posuere felis sed lacus');
-INSERT INTO items (name, description)
-VALUES ('Cyperus surinamensis Rottb.', 'risus praesent lectus vestibulum quam sapien varius ut blandit non');
-INSERT INTO items (name, description)
-VALUES ('Muhlenbergia filiculmis Vasey',
-        'justo aliquam quis turpis eget elit sodales scelerisque mauris sit amet eros suspendisse accumsan');
-INSERT INTO items (name, description)
-VALUES ('Jasminum sambac (L.) Aiton', 'eget eleifend luctus ultricies eu nibh quisque id justo sit');
-INSERT INTO items (name, description)
-VALUES ('Ramalina fastigiata (Pers.) Ach.',
-        'leo odio porttitor id consequat in consequat ut nulla sed accumsan felis ut at dolor quis odio consequat varius integer ac leo pellentesque ultrices mattis odio donec vitae nisi nam');
-INSERT INTO items (name, description)
-VALUES ('Quercus john-tuckeri Nixon & C.H. Mull.',
-        'augue aliquam erat volutpat in congue etiam justo etiam pretium iaculis justo in hac habitasse platea');
-INSERT INTO items (name, description)
-VALUES ('Camellia L.', 'vel sem sed sagittis nam congue risus semper porta volutpat quam pede');
-INSERT INTO items (name, description)
-VALUES ('Lilium humboldtii Roezl & Leichtlin ex Duch.',
-        'neque duis bibendum morbi non quam nec dui luctus rutrum nulla tellus in sagittis dui vel nisl duis ac nibh fusce');
-INSERT INTO items (name, description)
-VALUES ('Adiantum villosum L.',
-        'scelerisque mauris sit amet eros suspendisse accumsan tortor quis turpis sed ante vivamus tortor duis mattis egestas metus aenean fermentum donec ut');
-INSERT INTO items (name, description)
-VALUES ('Carex cyrtostachya Janeway & Zika',
-        'volutpat sapien arcu sed augue aliquam erat volutpat in congue etiam justo etiam pretium iaculis justo in hac habitasse platea dictumst etiam faucibus cursus urna ut tellus');
-INSERT INTO items (name, description)
-VALUES ('Duchesnea Sm.',
-        'curabitur gravida nisi at nibh in hac habitasse platea dictumst aliquam augue quam sollicitudin vitae consectetuer eget rutrum at lorem integer');
-INSERT INTO items (name, description)
-VALUES ('Graphina anguina (Mont.) Müll. Arg.',
-        'pellentesque ultrices phasellus id sapien in sapien iaculis congue vivamus metus arcu adipiscing molestie hendrerit at vulputate vitae');
-INSERT INTO items (name, description)
-VALUES ('Arabis lyallii S. Watson var. nubigena (J.F. Macbr. & Payson) Rollins',
-        'faucibus cursus urna ut tellus nulla ut erat id mauris vulputate elementum');
-INSERT INTO items (name, description)
-VALUES ('Taraxacum carneocoloratum A. Nelson',
-        'in imperdiet et commodo vulputate justo in blandit ultrices enim lorem ipsum dolor sit amet');
-INSERT INTO items (name, description)
-VALUES ('Hymenopappus tenuifolius Pursh',
-        'sed justo pellentesque viverra pede ac diam cras pellentesque volutpat dui maecenas tristique est et tempus semper est quam pharetra magna ac');
-INSERT INTO items (name, description)
-VALUES ('Koellensteinia Rchb. f.', 'sit amet diam in magna bibendum imperdiet nullam orci pede');
-INSERT INTO items (name, description)
-VALUES ('Lepidium apetalum Willd.',
-        'massa tempor convallis nulla neque libero convallis eget eleifend luctus ultricies eu nibh quisque id justo sit amet sapien dignissim vestibulum vestibulum ante');
-INSERT INTO items (name, description)
-VALUES ('Pyrrocoma clementis Rydb.',
-        'dui maecenas tristique est et tempus semper est quam pharetra magna ac consequat metus sapien ut nunc vestibulum ante ipsum primis in faucibus orci luctus et ultrices');
-INSERT INTO items (name, description)
-VALUES ('Placynthium petersii (Nyl.) Burnham',
-        'et ultrices posuere cubilia curae nulla dapibus dolor vel est donec odio justo sollicitudin ut suscipit a feugiat et eros vestibulum ac est lacinia');
-INSERT INTO items (name, description)
-VALUES ('Hexastylis arifolia (Michx.) Small var. arifolia',
-        'nascetur ridiculus mus etiam vel augue vestibulum rutrum rutrum neque aenean auctor');
-INSERT INTO items (name, description)
-VALUES ('Polystichum imbricans (D.C. Eaton) D.H. Wagner',
-        'sit amet erat nulla tempus vivamus in felis eu sapien cursus vestibulum proin eu mi nulla ac enim in tempor turpis nec euismod scelerisque');
-INSERT INTO items (name, description)
-VALUES ('Stroganowia tiehmii Rollins',
-        'a odio in hac habitasse platea dictumst maecenas ut massa quis augue luctus tincidunt nulla mollis molestie lorem quisque ut erat');
-INSERT INTO items (name, description)
-VALUES ('Potentilla plattensis Nutt.',
-        'nisl ut volutpat sapien arcu sed augue aliquam erat volutpat in congue etiam justo etiam pretium iaculis justo');
-INSERT INTO items (name, description)
-VALUES ('Paraserianthes lophantha (Willd.) I.C. Nielsen ssp. montana (Jungh.) I.C. Nielsen',
-        'eleifend pede libero quis orci nullam molestie nibh in lectus pellentesque at nulla suspendisse potenti cras in purus eu magna vulputate luctus cum sociis natoque penatibus et magnis');
-INSERT INTO items (name, description)
-VALUES ('Ficus macrophylla Desf. ex Pers.',
-        'nulla ac enim in tempor turpis nec euismod scelerisque quam turpis adipiscing lorem vitae mattis nibh ligula nec sem duis aliquam convallis nunc proin at turpis');
-INSERT INTO items (name, description)
-VALUES ('Carex illota L.H. Bailey',
-        'dictumst maecenas ut massa quis augue luctus tincidunt nulla mollis molestie lorem quisque ut erat curabitur gravida nisi at nibh in hac habitasse platea dictumst');
-INSERT INTO items (name, description)
-VALUES ('Anthaenantia P. Beauv.', 'felis donec semper sapien a libero nam dui proin leo odio porttitor');
-INSERT INTO items (name, description)
-VALUES ('Celosia palmeri S. Watson',
-        'primis in faucibus orci luctus et ultrices posuere cubilia curae mauris viverra diam vitae quam suspendisse');
-INSERT INTO items (name, description)
-VALUES ('Dichanthelium strigosum (Muhl. ex Elliott) Freckmann var. strigosum',
-        'sapien in sapien iaculis congue vivamus metus arcu adipiscing molestie hendrerit at vulputate vitae nisl aenean lectus pellentesque eget nunc donec quis orci');
-INSERT INTO items (name, description)
-VALUES ('Eleocharis schaffneri Boeckeler',
-        'rhoncus aliquet pulvinar sed nisl nunc rhoncus dui vel sem sed sagittis nam congue risus');
-INSERT INTO items (name, description)
-VALUES ('Agrostemma brachyloba (Fenzl) Hammer',
-        'a feugiat et eros vestibulum ac est lacinia nisi venenatis tristique fusce congue diam id ornare imperdiet sapien urna pretium nisl');
-INSERT INTO items (name, description)
-VALUES ('Dionaea muscipula Ellis',
-        'id lobortis convallis tortor risus dapibus augue vel accumsan tellus nisi eu orci mauris lacinia sapien quis libero nullam sit amet turpis elementum ligula vehicula consequat morbi a');
-INSERT INTO items (name, description)
-VALUES ('Centaurea uniflora Turra',
-        'ultrices erat tortor sollicitudin mi sit amet lobortis sapien sapien non mi integer ac neque duis bibendum morbi non quam nec dui luctus rutrum nulla tellus in sagittis dui');
-INSERT INTO items (name, description)
-VALUES ('Cuscuta obtusiflora Kunth var. glandulosa Engelm.',
-        'etiam pretium iaculis justo in hac habitasse platea dictumst etiam faucibus cursus urna ut tellus nulla ut erat id mauris vulputate elementum nullam varius nulla facilisi cras non');
-INSERT INTO items (name, description)
-VALUES ('Ferocactus hamatacanthus (Muehlenpf.) Britton & Rose var. hamatacanthus',
-        'vulputate luctus cum sociis natoque penatibus et magnis dis parturient montes nascetur ridiculus mus vivamus');
-INSERT INTO items (name, description)
-VALUES ('Salix amygdaloides Andersson',
-        'blandit mi in porttitor pede justo eu massa donec dapibus duis at velit eu est congue elementum');
-INSERT INTO items (name, description)
-VALUES ('Phascum hyalinotrichum Cardot & Thér.', 'platea dictumst maecenas ut massa quis augue luctus tincidunt nulla');
-INSERT INTO items (name, description)
-VALUES ('Carex baltzellii Chapm. ex Dewey',
-        'cursus vestibulum proin eu mi nulla ac enim in tempor turpis nec euismod scelerisque quam turpis adipiscing lorem');
-INSERT INTO items (name, description)
-VALUES ('Hieracium canadense Michx.',
-        'diam id ornare imperdiet sapien urna pretium nisl ut volutpat sapien arcu sed augue aliquam erat volutpat in congue etiam justo etiam pretium iaculis');
-INSERT INTO items (name, description)
-VALUES ('Camassia quamash (Pursh) Greene ssp. azurea (A. Heller) Gould',
-        'eu sapien cursus vestibulum proin eu mi nulla ac enim in tempor turpis nec euismod scelerisque quam turpis adipiscing lorem vitae mattis nibh ligula nec sem');
-INSERT INTO items (name, description)
-VALUES ('Triticum vavilovii Jakubz.',
-        'neque sapien placerat ante nulla justo aliquam quis turpis eget elit sodales scelerisque mauris sit amet');
-INSERT INTO items (name, description)
-VALUES ('Amaranthus cannabinus (L.) Sauer',
-        'velit nec nisi vulputate nonummy maecenas tincidunt lacus at velit vivamus vel nulla');
-INSERT INTO items (name, description)
-VALUES ('Catillaria terrena (Willey) Zahlbr.',
-        'sed justo pellentesque viverra pede ac diam cras pellentesque volutpat dui maecenas tristique est et tempus semper est quam pharetra magna ac consequat');
-INSERT INTO items (name, description)
-VALUES ('Physaria acutifolia Rydb. var. acutifolia',
-        'bibendum imperdiet nullam orci pede venenatis non sodales sed tincidunt eu felis fusce posuere felis sed lacus morbi sem mauris laoreet ut rhoncus aliquet pulvinar sed');
-INSERT INTO items (name, description)
-VALUES ('Lobelia portoricensis (Vatke) Urb.',
-        'odio donec vitae nisi nam ultrices libero non mattis pulvinar nulla pede ullamcorper augue a suscipit nulla elit ac nulla sed vel enim');
+ALTER SEQUENCE customers_id_seq RESTART WITH 51;
+
+INSERT INTO items (name, description)
+VALUES ('Rezystor 10k SMD0602', 'Najlepszej jakości rezystor firmy Samsung');
+INSERT INTO items (name, description)
+VALUES ('Dioda zielona THT 100mW', 'Śliczna zielona dioda, świeci jak liście na drzewach');
+INSERT INTO items (name, description)
+VALUES ('Kabel YDYp 1m 3x1.5mm²', 'Takim kablem wszytskie elektrony, które trzeba przelecą');
+INSERT INTO items (name, description)
+VALUES ('ATmega 328p TQFP', 'Taki super mikrokontroler, co jest w Arduino, tylko mniejszy');
+INSERT INTO items (name, description)
+VALUES ('ESP8266', 'Jak kiedyś chciałeś Arduino na WiFi, to własnie takie coś');
+INSERT INTO items (name, description)
+VALUES ('Guzik SMD', 'Guzik do klikania, klikasz i płynie prąd');
+INSERT INTO items (name, description)
+VALUES ('Crystal 16MHz', 'Kryształ jak kryształ, lubi rezonować');
+INSERT INTO items (name, description)
+VALUES ('Zasilacz 1000W', 'Nada się nawet do RTX3090, ale nie ma gwarancji');
+
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (1, 100, 0.003412);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (1, 500, 0.003098);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (1, 1000, 0.002499);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (2, 5, 1.0123);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (2, 25, 0.9653);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (2, 100, 0.90016);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (3, 5, 3.869243);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (3, 10, 3.65123);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (3, 100, 3.23443);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (4, 1, 19.437);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (4, 10, 18.3217);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (4, 100, 17.8432);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (5, 1, 7.43432);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (5, 10, 6.80834);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (5, 100, 6.20977);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (6, 5, 1.89765);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (6, 50, 1.589123);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (7, 1, 12.09779);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (7, 10, 11.8406);
+INSERT INTO price_ranges (item_id, min_quantity, price)
+VALUES (8, 1, 129.942);
 
 INSERT INTO categories (name, description)
 VALUES ('Honokahua Melicope', 'id massa id nisl venenatis lacinia aenean sit amet justo morbi ut odio');
@@ -3516,206 +3293,7 @@ INSERT INTO categories (name, description)
 VALUES ('Mendrina',
         'consequat in consequat ut nulla sed accumsan felis ut at dolor quis odio consequat varius integer ac leo pellentesque ultrices mattis odio donec vitae nisi nam ultrices libero');
 
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (1, 1, 91.79);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (2, 1, 71.4);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (3, 1, 12.42);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (4, 1, 3.81);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (5, 1, 62.88);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (6, 1, 82.11);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (7, 1, 96.39);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (8, 1, 15.7);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (9, 1, 42.67);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (10, 1, 4.84);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (11, 1, 59.66);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (12, 1, 76.2);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (13, 1, 16.14);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (14, 1, 75.55);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (15, 1, 48.83);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (16, 1, 18.85);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (17, 1, 35.44);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (18, 1, 73.33);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (19, 1, 43.23);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (20, 1, 67.04);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (21, 1, 60.57);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (22, 1, 57.92);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (23, 1, 65.1);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (24, 1, 88.51);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (25, 1, 1.53);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (26, 1, 65.26);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (27, 1, 28.28);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (28, 1, 24.34);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (29, 1, 23.01);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (30, 1, 21.77);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (31, 1, 93.89);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (32, 1, 87.38);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (33, 1, 3.91);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (34, 1, 26.45);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (35, 1, 74.18);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (36, 1, 0.08);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (37, 1, 21.12);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (38, 1, 14.35);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (39, 1, 97.6);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (40, 1, 44.12);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (41, 1, 66.32);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (42, 1, 50.08);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (43, 1, 46.13);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (44, 1, 80.17);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (45, 1, 7.16);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (46, 1, 45.87);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (47, 1, 55.09);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (48, 1, 49.05);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (49, 1, 42.21);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (50, 1, 82.94);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (51, 1, 99.42);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (52, 1, 43.37);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (53, 1, 2.99);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (54, 1, 98.97);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (55, 1, 26.58);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (56, 1, 5.34);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (57, 1, 16.21);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (58, 1, 89.95);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (59, 1, 70.91);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (60, 1, 2.29);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (61, 1, 55.11);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (62, 1, 47.74);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (63, 1, 61.15);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (64, 1, 58.36);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (65, 1, 7.14);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (66, 1, 7.05);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (67, 1, 1.96);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (68, 1, 70.6);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (69, 1, 32.09);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (70, 1, 92.09);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (71, 1, 34.84);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (72, 1, 93.58);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (73, 1, 20.79);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (74, 1, 56.16);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (75, 1, 56.04);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (76, 1, 22.03);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (77, 1, 56.84);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (78, 1, 42.54);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (79, 1, 6.37);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (80, 1, 2.76);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (81, 1, 81.09);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (82, 1, 43.89);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (83, 1, 22.76);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (84, 1, 60.04);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (85, 1, 6.29);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (86, 1, 86.28);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (87, 1, 99.87);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (88, 1, 5.72);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (89, 1, 96.87);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (90, 1, 70.54);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (91, 1, 3.01);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (92, 1, 35.39);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (93, 1, 26.65);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (94, 1, 41.18);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (95, 1, 17.65);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (96, 1, 39.86);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (97, 1, 74.41);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (98, 1, 52.19);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (99, 1, 53.51);
-INSERT INTO price_ranges (item_id, min_quantity, price)
-VALUES (100, 1, 29.2);
+
 
 INSERT INTO orders (date, status, shipping_cost, customer_id, assigned_employee_id, address_id)
 VALUES ('20-Oct-25', 'RECEIVED', null, 19, 1, 826);
@@ -3739,97 +3317,107 @@ INSERT INTO orders (date, status, shipping_cost, customer_id, assigned_employee_
 VALUES ('20-Mar-03', 'RECEIVED', 307.24, 13, 1, 284);
 
 INSERT INTO orders_items (order_id, item_id, ordered_item_quantity)
-VALUES (10, 29, 33);
+VALUES (10, 6, 33);
 INSERT INTO orders_items (order_id, item_id, ordered_item_quantity)
-VALUES (5, 8, 62);
+VALUES (5, 1, 62);
 INSERT INTO orders_items (order_id, item_id, ordered_item_quantity)
-VALUES (5, 48, 36);
+VALUES (5, 5, 36);
 INSERT INTO orders_items (order_id, item_id, ordered_item_quantity)
-VALUES (1, 47, 12);
+VALUES (1, 6, 12);
 INSERT INTO orders_items (order_id, item_id, ordered_item_quantity)
-VALUES (3, 29, 44);
+VALUES (3, 5, 44);
 INSERT INTO orders_items (order_id, item_id, ordered_item_quantity)
-VALUES (5, 13, 47);
+VALUES (5, 2, 47);
 INSERT INTO orders_items (order_id, item_id, ordered_item_quantity)
-VALUES (6, 75, 91);
+VALUES (6, 4, 91);
 INSERT INTO orders_items (order_id, item_id, ordered_item_quantity)
-VALUES (7, 62, 8);
+VALUES (7, 1, 8);
 INSERT INTO orders_items (order_id, item_id, ordered_item_quantity)
-VALUES (6, 82, 56);
+VALUES (6, 7, 56);
 INSERT INTO orders_items (order_id, item_id, ordered_item_quantity)
-VALUES (7, 37, 3);
+VALUES (7, 3, 3);
 INSERT INTO orders_items (order_id, item_id, ordered_item_quantity)
-VALUES (7, 84, 100);
+VALUES (7, 1, 100);
 INSERT INTO orders_items (order_id, item_id, ordered_item_quantity)
-VALUES (9, 76, 82);
+VALUES (9, 4, 82);
 INSERT INTO orders_items (order_id, item_id, ordered_item_quantity)
-VALUES (5, 25, 79);
+VALUES (5, 8, 79);
 INSERT INTO orders_items (order_id, item_id, ordered_item_quantity)
-VALUES (6, 53, 62);
+VALUES (6, 3, 62);
 INSERT INTO orders_items (order_id, item_id, ordered_item_quantity)
-VALUES (2, 19, 5);
+VALUES (2, 4, 5);
 INSERT INTO orders_items (order_id, item_id, ordered_item_quantity)
-VALUES (8, 2, 46);
+VALUES (8, 1, 46);
 INSERT INTO orders_items (order_id, item_id, ordered_item_quantity)
-VALUES (7, 39, 13);
+VALUES (7, 4, 13);
 INSERT INTO orders_items (order_id, item_id, ordered_item_quantity)
-VALUES (4, 89, 26);
+VALUES (4, 8, 26);
 INSERT INTO orders_items (order_id, item_id, ordered_item_quantity)
-VALUES (7, 24, 97);
+VALUES (7, 7, 97);
 INSERT INTO orders_items (order_id, item_id, ordered_item_quantity)
-VALUES (5, 44, 76);
+VALUES (5, 6, 76);
 
 INSERT INTO items_categories (item_id, category_id)
-VALUES (32, 4);
+VALUES (2, 4);
 INSERT INTO items_categories (item_id, category_id)
-VALUES (52, 9);
+VALUES (5, 9);
 INSERT INTO items_categories (item_id, category_id)
-VALUES (13, 9);
+VALUES (4, 9);
 INSERT INTO items_categories (item_id, category_id)
-VALUES (46, 2);
+VALUES (4, 2);
 INSERT INTO items_categories (item_id, category_id)
-VALUES (60, 7);
+VALUES (3, 7);
 INSERT INTO items_categories (item_id, category_id)
-VALUES (22, 1);
+VALUES (8, 1);
 INSERT INTO items_categories (item_id, category_id)
-VALUES (60, 4);
+VALUES (1, 4);
 INSERT INTO items_categories (item_id, category_id)
-VALUES (75, 6);
+VALUES (4, 6);
 INSERT INTO items_categories (item_id, category_id)
-VALUES (81, 4);
+VALUES (7, 4);
 INSERT INTO items_categories (item_id, category_id)
-VALUES (41, 2);
+VALUES (1, 2);
 INSERT INTO items_categories (item_id, category_id)
-VALUES (41, 8);
+VALUES (3, 8);
 INSERT INTO items_categories (item_id, category_id)
-VALUES (76, 8);
+VALUES (6, 8);
 INSERT INTO items_categories (item_id, category_id)
-VALUES (81, 7);
+VALUES (7, 7);
 INSERT INTO items_categories (item_id, category_id)
-VALUES (12, 4);
+VALUES (1, 4);
 INSERT INTO items_categories (item_id, category_id)
-VALUES (12, 4);
+VALUES (5, 4);
 INSERT INTO items_categories (item_id, category_id)
-VALUES (69, 10);
+VALUES (4, 10);
 INSERT INTO items_categories (item_id, category_id)
-VALUES (52, 7);
+VALUES (4, 7);
 INSERT INTO items_categories (item_id, category_id)
-VALUES (36, 3);
+VALUES (2, 3);
 INSERT INTO items_categories (item_id, category_id)
-VALUES (37, 4);
+VALUES (5, 4);
 INSERT INTO items_categories (item_id, category_id)
-VALUES (48, 8);
+VALUES (2, 8);
 
 INSERT INTO warehouses_items (warehouse_id, item_id, item_quantity)
-VALUES (1, 83, 276);
+VALUES (1, 1, 14512);
 INSERT INTO warehouses_items (warehouse_id, item_id, item_quantity)
-VALUES (7, 60, 345);
+VALUES (1, 2, 345);
 INSERT INTO warehouses_items (warehouse_id, item_id, item_quantity)
-VALUES (6, 2, 254);
+VALUES (2, 3, 8246);
 INSERT INTO warehouses_items (warehouse_id, item_id, item_quantity)
-VALUES (6, 46, 250);
+VALUES (2, 4, 250);
 INSERT INTO warehouses_items (warehouse_id, item_id, item_quantity)
-VALUES (3, 35, 140);
+VALUES (1, 5, 2572);
+INSERT INTO warehouses_items (warehouse_id, item_id, item_quantity)
+VALUES (1, 6, 452);
+INSERT INTO warehouses_items (warehouse_id, item_id, item_quantity)
+VALUES (1, 7, 67123);
+INSERT INTO warehouses_items (warehouse_id, item_id, item_quantity)
+VALUES (2, 8, 254);
+INSERT INTO warehouses_items (warehouse_id, item_id, item_quantity)
+VALUES (2, 1, 1234);
+INSERT INTO warehouses_items (warehouse_id, item_id, item_quantity)
+VALUES (2, 2, 76445);
 
 INSERT INTO salaries (salary_date, salary, employee_id)
 VALUES ('26-Mar-2020', 2730.67, 1);
