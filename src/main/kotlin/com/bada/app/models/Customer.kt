@@ -7,12 +7,6 @@ import javax.persistence.*
 @Entity
 @Table(name = "customers")
 class Customer(
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq")
-    @SequenceGenerator(name = "user_seq", sequenceName = "customers_id_seq", allocationSize = 50)
-    @Column(updatable = false, nullable = false)
-    override val id: Long? = null,
-
     @Column(name = "username", unique = true)
     var username: String,
     var password: String,
@@ -23,7 +17,7 @@ class Customer(
     var phoneNumber: String,
 
     @ManyToOne
-    @JoinColumn(name="company_id")
+    @JoinColumn(name = "company_id")
     var company: Company,
 
     @OneToMany(mappedBy = "customer", cascade = [CascadeType.ALL], orphanRemoval = true)
@@ -31,7 +25,7 @@ class Customer(
     val orders: List<Order>,
 
     @OneToOne
-    @JoinColumn(name="address_id")
+    @JoinColumn(name = "address_id")
     val address: Address
 
 ) : AbstractEntity<Long>(), Serializable {
@@ -40,7 +34,6 @@ class Customer(
         company: Company,
         address: Address,
     ) : this(
-        null,
         registerCustomer.username,
         registerCustomer.password,
         registerCustomer.email,
@@ -70,4 +63,17 @@ class RegisterCustomer(
     var addressLine2: String = "",
     var zipcode: String? = "",
     var city: String? = ""
+)
+
+
+class CustomerDetailsUpdate(
+    val email: String = "",
+    val firstName: String = "",
+    val lastName: String = "",
+    val nip: String = "",
+    val phone: String = "",
+    val addressLine1: String = "",
+    val addressLine2: String = "",
+    val city: String = "",
+    val zipcode: String = ""
 )

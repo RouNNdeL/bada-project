@@ -2,10 +2,7 @@ package com.bada.app.controllers
 
 import com.bada.app.auth.CustomerUserDetails
 import com.bada.app.auth.SimpleUserDetails
-import com.bada.app.models.CartItem
-import com.bada.app.models.Order
-import com.bada.app.models.OrderAddress
-import com.bada.app.models.OrderItem
+import com.bada.app.models.*
 import com.bada.app.repos.*
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -159,5 +156,36 @@ class CustomerController(
         session.removeAttribute("cartItems")
 
         return ResponseEntity.ok().body("Success")
+    }
+
+    @PostMapping(
+        "/user/details",
+        consumes = [MediaType.APPLICATION_FORM_URLENCODED_VALUE]
+    )
+    fun updateDetails(model: Model, details: CustomerDetailsUpdate, authentication: Authentication?): String {
+        val user = authentication?.principal as? SimpleUserDetails ?: throw RuntimeException("Invalid user principal")
+
+        if (user !is CustomerUserDetails) {
+            throw ResponseStatusException(HttpStatus.UNAUTHORIZED)
+        }
+
+        var customer = customerRepository.findByUsername(user.username).orElseThrow {
+            throw ResponseStatusException(HttpStatus.UNAUTHORIZED)
+        }
+
+        customer.address.addressLine1 = details.addressLine1
+        customer.address.addressLine2 = details.addressLine2
+        customer.address.zipcode = details.zipcode
+        customer.address.city = details.city
+        customer.email = details.email
+        customer.phoneNumber = details.phone
+        customer.firstName = details.firstName
+        customer.lastName = details.lastName
+        customer.nip = details.nip
+
+        customer = customerRepository.save(customer)
+
+        model.addAttribute("user", customer)
+        return "customer_home"
     }
 }
