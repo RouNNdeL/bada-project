@@ -25,6 +25,7 @@
     <div class="row flex-grow-1 d-flex justify-content-center px-2 py-3">
         <div class="col-sm-9 px-2">
             <div class="card bg-white p-3">
+                <h4>Your cart</h4>
                 <div class="row w-100 p-3 text-muted">
                     <div class="col-sm-5  d-flex align-items-center">
                         <div>
@@ -119,47 +120,44 @@
     <div class="row flex-grow-1 d-flex justify-content-center px-2 py-3">
         <div class="col-sm-9 px-2">
             <div class="card bg-white p-3">
-                <form>
+                <h4>Shipping Address</h4>
+                <form method="post">
                     <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label for="inputEmail">Email</label>
-                            <input type="email" class="form-control" id="inputEmail" placeholder="email@example.com">
-                        </div>
                         <div class="form-group col-md-3">
                             <label for="inputFirstName">First Name</label>
-                            <input type="text" class="form-control" id="inputFirstName" placeholder="John">
+                            <input type="text" class="form-control" id="inputFirstName" placeholder="John"
+                                   name="firstName">
                         </div>
                         <div class="form-group col-md-3">
                             <label for="inputLastName">Last Name</label>
-                            <input type="text" class="form-control" id="inputLastName" placeholder="Smith">
+                            <input type="text" class="form-control" id="inputLastName" placeholder="Smith"
+                                   name="lastName">
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="inputAddress">Address</label>
-                        <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St">
+                        <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St"
+                               name="addressLine1">
                     </div>
                     <div class="form-group">
                         <label for="inputAddress2">Address 2</label>
-                        <input type="text" class="form-control" id="inputAddress2"
+                        <input type="text" class="form-control" id="inputAddress2" name="addressLine2"
                                placeholder="Apartment, studio, or floor">
                     </div>
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label for="inputCity">City</label>
-                            <input type="text" class="form-control" id="inputCity" placeholder="New York City">
-                        </div>
-                        <div class="form-group col-md-4">
-                            <label for="inputState">State</label>
-                            <input type="text" class="form-control" id="inputState" placeholder="New York">
+                            <input type="text" class="form-control" id="inputCity" placeholder="New York City"
+                                   name="city">
                         </div>
                         <div class="form-group col-md-2">
                             <label for="inputZip">Zip</label>
-                            <input type="text" class="form-control" id="inputZip" placeholder="13370">
+                            <input type="text" class="form-control" id="inputZip" placeholder="13370" name="zip">
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="gridCheck">
+                            <input class="form-check-input" type="checkbox" id="gridCheck" name="acceptedTerms">
                             <label class="form-check-label" for="gridCheck">
                                 I accept terms of service
                             </label>

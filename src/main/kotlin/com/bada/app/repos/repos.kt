@@ -49,7 +49,7 @@ interface EmployeeRepository : JpaRepository<Employee, Long> {
 
 @Repository
 interface AddressRepository : JpaRepository<Address, Long> {
-    fun findAddressById(addressId: Long): Address
+    fun findAddressById(addressId: Long): Optional<Address>
 }
 
 @Repository
