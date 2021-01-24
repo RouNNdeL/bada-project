@@ -186,6 +186,7 @@ class CustomerController(
         model.addAttribute("item", item)
         model.addAttribute("stock", item.getMergedStock(warehouses.toList()))
         model.addAttribute("canSave", false)
+        model.addAttribute("canDelete", false)
 
         itemRepository.save(item)
 
@@ -195,7 +196,7 @@ class CustomerController(
     }
 
     @PostMapping(
-        "/user/details",
+        "/user/home",
         consumes = [MediaType.APPLICATION_FORM_URLENCODED_VALUE]
     )
     fun updateDetails(model: Model, details: CustomerDetailsUpdate, authentication: Authentication?): String {

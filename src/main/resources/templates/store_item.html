@@ -22,7 +22,8 @@
 </nav>
 <div class="container">
     <div class="card mt-3" style="width: 100%;">
-        <form th:action="@{__${path}__/store/item/__${item?.id}__/update}" method="post" id="itemSaveForm">
+        <form th:action="@{__${path}__/store/item/__${item?.id}__/update}" method="post" id="itemSaveForm"></form>
+        <form th:action="@{__${path}__/store/item/__${item?.id}__/delete}" method="post" id="itemDeleteForm"></form>
             <div class="card-body">
                 <h5 class="card-title" th:text="${item.name}">10k resistor</h5>
                 <h6 class="card-subtitle mb-2 text-muted font-weight-light" th:text="|ID: ${item?.id}|">ID: 123455</h6>
@@ -37,14 +38,16 @@
                             <div>
                                 <input class="m-0 priceRangeQuantity" th:value="${priceRange.minQuantity}" value="1"
                                        style="max-width: 75px"
-                                       th:if="${user.hasPermission('CHANGE_PRICE')}"/>
+                                       th:if="${user.hasPermission('CHANGE_PRICE')}"
+                                       form="itemSaveForm"/>
                                 <p class="m-0" th:text="|${priceRange.minQuantity}+|"
                                    th:unless="${user.hasPermission('CHANGE_PRICE')}">3+</p>
                             </div>
                             <div class="d-flex align-items-center">
                                 <input class="m-0 priceRangePrice" th:value="${priceRange.price}" value="10"
                                        style="max-width: 75px"
-                                       th:if="${user.hasPermission('CHANGE_PRICE')}"/>
+                                       th:if="${user.hasPermission('CHANGE_PRICE')}"
+                                       form="itemSaveForm"/>
                                 <button th:if="${user.hasPermission('CHANGE_PRICE')}"
                                         class="btn btn-danger btn-sm removePriceRangeBtn ml-2 price-range-delete" type="button">
                                     <i class="material-icons">delete</i>
@@ -76,15 +79,41 @@
                               th:text="${stockItem.quantity}">14</span>
                         <input class="m-0 itemStock" th:value="${stockItem.quantity}" value="10" style="max-width: 75px"
                                th:attr="data-warehouse-id=${stockItem.warehouse.id}"
-                               th:if="${user.hasPermission('CHANGE_STOCK_ALL') || (user.hasPermission('CHANGE_STOCK') && warehouseIdEdit == stockItem.warehouse.id)}"/>
+                               th:if="${user.hasPermission('CHANGE_STOCK_ALL') || (user.hasPermission('CHANGE_STOCK') && warehouseIdEdit == stockItem.warehouse.id)}"
+                               form="itemSaveForm"/>
                     </li>
                 </ul>
-                <button class="btn btn-primary mt-2" type="button" id="saveItem"
-                        th:if="${canSave}">
-                    Save
-                </button>
+                <div class="d-flex justify-content-between">
+                    <button class="btn btn-primary mt-2" type="button" id="saveItem"
+                            th:if="${canSave}"  form="itemSaveForm">
+                        Save
+                    </button>
+                    <button type="button" class="btn btn-danger mt-2" data-toggle="modal"
+                            th:if="${canDelete}" data-target="#exampleModalDelete">
+                        Delete Item
+                    </button>
+                    <div class="modal fade" id="exampleModalDelete" tabindex="-1"
+                         aria-labelledby="exampleModalLabelDelete" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabelDelete">Do you want to delete Item</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body d-flex justify-content-center">
+                                        <button type="button" class="btn btn-secondary mx-2" data-dismiss="modal">Close
+                                        </button>
+                                        <button type="submit" class="btn btn-danger mx-2" form="itemDeleteForm">Delete</button>
+                                    </div>
+                                    <div class="modal-footer">
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </form>
     </div>
 </div>
 
