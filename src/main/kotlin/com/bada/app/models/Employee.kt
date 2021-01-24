@@ -43,10 +43,10 @@ class Employee(
     @OneToMany
     val scores: List<Score>
 
-) : AbstractEntityLong() {
+) : AbstractEntity<Long>() {
 
     fun getUserDetails(): EmployeeUserDetails {
-        return EmployeeUserDetails(username, password, role, company.id)
+        return EmployeeUserDetails(username, password, role, company.id!!)
     }
 
     fun getDisplayName(): String {

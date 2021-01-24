@@ -158,7 +158,7 @@ CREATE
 
 
 ALTER TABLE customers
-    ADD CONSTRAINT Unique_Identifier3 PRIMARY KEY (id);
+    ADD CONSTRAINT PK_customers PRIMARY KEY (id);
 
 -- Table orders
 

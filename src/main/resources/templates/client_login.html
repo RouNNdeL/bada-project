@@ -8,6 +8,9 @@
 <body>
 <nav th:replace="fragments/layout :: navbar(~{ :: #navbarRight}, ~{ :: #navbarLeft})">
     <ul class="navbar-nav mr-auto" id="navbarRight">
+        <li class="nav-item active">
+            <a class="nav-link" th:href="@{/}">Home</a>
+        </li>
     </ul>
     <ul class="navbar-nav ml-auto" id="navbarLeft">
     </ul>
@@ -37,8 +40,6 @@
                     </div>
                 </form>
             </div>
-
-
         </div>
     </div>
 </div>

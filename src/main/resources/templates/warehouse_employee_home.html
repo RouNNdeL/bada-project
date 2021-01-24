@@ -11,19 +11,19 @@
             <a class="nav-link" th:href="@{/}">Home</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link active" th:href="@{/store}">Store</a>
+            <a class="nav-link active" th:href="@{/management/store}">Store</a>
         </li>
     </ul>
     <ul class="navbar-nav ml-auto">
         <li class="nav-item">
-            <a class="nav-link" th:href="@{/logout}">Logout</a>
+            <a class="nav-link" th:href="@{/management/logout}">Logout</a>
         </li>
     </ul>
 </nav>
 <div class="container">
     <ul class="list-group accordion m-3" id="orderAccordion">
         <li class="list-group-item" th:each="order, i: ${orders}">
-            <form th:action="@{/orders/__${order?.id}__/update_status}" method="POST" class="updateOrderForm">
+            <form th:action="@{/management/orders/__${order?.id}__/update_status}" method="POST" class="updateOrderForm">
                 <div class="d-flex w-100 justify-content-between align-items-center">
                     <div>
                         <h5 th:text="'Order #'+${order?.id}">Order #1234</h5>
@@ -50,7 +50,7 @@
                                 <div>
 
                                     <p class="font-weight-normal m-0">
-                                        <a th:href="@{/store/item/__${item?.item?.id}__}" class="text-reset"
+                                        <a th:href="@{/management/store/item/__${item?.item?.id}__}" class="text-reset"
                                            th:text="${item?.item?.name}">Rezystroy 10k</a>
                                     </p>
 

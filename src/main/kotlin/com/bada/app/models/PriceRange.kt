@@ -18,7 +18,7 @@ class PriceRange(
 
     @JsonIgnore
     @EmbeddedId
-    val id: PriceRangeId = PriceRangeId(item.id, minQuantity)
+    val id: PriceRangeId = PriceRangeId(item.id!!, minQuantity)
 )
 
 @Embeddable

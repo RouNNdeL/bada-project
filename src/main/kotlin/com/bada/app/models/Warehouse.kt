@@ -28,4 +28,4 @@ class Warehouse(
 
     @OneToOne
     val address: Address
-) : AbstractEntityLong()
+) : AbstractEntity<Long>()

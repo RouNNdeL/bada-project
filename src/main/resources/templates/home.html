@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/layout :: head('TNE')">
+    <meta charset="UTF-8">
+    <title>TNE</title>
+</head>
+
+<body>
+<nav th:replace="fragments/layout :: navbar(~{ :: #navbarRight}, ~{ :: #navbarLeft})">
+    <ul class="navbar-nav mr-auto" id="navbarRight">
+    </ul>
+    <ul class="navbar-nav ml-auto" id="navbarLeft">
+    </ul>
+</nav>
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <div class="card bg-white my-3 p-3 ">
+                <h1 class="card-title d-flex justify-content-center">Welcome to TNE</h1>
+                <div class="list-group list-group-horizontal">
+                    <a href="#" th:href="@{/user/login}" class="list-group-item list-group-item-action">Login User</a>
+                    <a href="#" th:href="@{/management/login}" class="list-group-item list-group-item-action">Login Management</a>
+                    <a href="#" th:href="@{/register}" class="list-group-item list-group-item-action">Register</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+
+</html>

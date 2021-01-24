@@ -18,7 +18,7 @@ class OrderItem(
     val quantity: Int,
 
     @EmbeddedId
-    val id: OrderItemId = OrderItemId(order.id, item.id)
+    val id: OrderItemId = OrderItemId(order.id!!, item.id!!)
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

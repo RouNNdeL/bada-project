@@ -1,5 +1,6 @@
 package com.bada.app.models
 
+import com.bada.app.repos.CountryRepository
 import java.io.Serializable
 import javax.persistence.Column
 import javax.persistence.Entity
@@ -19,10 +20,11 @@ class Address(
     var city: String?,
 
     @ManyToOne
-    var country: Country
+    var country: Country,
 
 
-) : AbstractEntityLong(), Serializable {
+    ) : AbstractEntity<Long>(), Serializable {
+
     override fun toString(): String {
         return "$addressLine1\n$addressLine2\n$zipcode $city\n${country.countryName}"
     }

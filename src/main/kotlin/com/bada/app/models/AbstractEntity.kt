@@ -8,7 +8,7 @@ abstract class AbstractEntity<T : Serializable>(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(updatable = false, nullable = false)
-    val id: T
+    open val id: T? = null
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -25,5 +25,3 @@ abstract class AbstractEntity<T : Serializable>(
         return id.hashCode()
     }
 }
-
-abstract class AbstractEntityLong : AbstractEntity<Long>(-1)
