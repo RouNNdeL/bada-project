@@ -30,5 +30,8 @@ jobs:
         with:
           push: true
           tags: roundel/bada:latest
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache
+          mode: max  
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
