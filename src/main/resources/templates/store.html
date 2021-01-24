@@ -12,12 +12,12 @@
             <a class="nav-link" th:href="@{/}">Home</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link active" th:href="@{/store}">Store</a>
+            <a class="nav-link active" th:href="@{__${path}__/store}">Store</a>
         </li>
     </ul>
     <ul class="navbar-nav ml-auto" id="navbarLeft">
         <li class="nav-item">
-            <a class="nav-link" th:href="@{/user/logout}">Logout</a>
+            <a class="nav-link" th:href="@{__${path}__/logout}">Logout</a>
         </li>
     </ul>
 </nav>
@@ -30,7 +30,7 @@
                         th:each="item : ${items}"
                         th:attr="data-price-ranges=${item.getPriceRangeJson()},data-item-id=${item?.id}">
                         <div class="mr-auto" style="max-width: 60%">
-                            <a href="#" th:href="@{/user/store/item/__${item?.id}__}" class="text-reset">
+                            <a href="#" th:href="@{__${path}__/store/item/__${item?.id}__}" class="text-reset">
                                 <div class="font-weight-normal m-0 text-truncate"
                                      th:text="${item?.name}">Rezystroy 10k
                                 </div>
@@ -72,7 +72,7 @@
                             </div>
                         </li>
                     </ul>
-                    <a href="#" th:href="@{/user/store/checkout}" class="card-link">Checkout</a>
+                    <a href="#" th:href="@{__${path}__/store/checkout}" class="card-link">Checkout</a>
                     <a href="#" class="card-link" id="cart-clear-btn">Clear</a>
                 </div>
             </div>
