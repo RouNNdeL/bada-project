@@ -35,6 +35,7 @@ class Employee(
     val managedWarehouses: Set<Warehouse>,
 
     @OneToMany(mappedBy = "assignedEmployee")
+    @OrderBy("id DESC")
     val handledOrders: List<Order>,
 
     @OneToMany

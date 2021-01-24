@@ -27,6 +27,7 @@ class Customer(
     var company: Company,
 
     @OneToMany(mappedBy = "customer", cascade = [CascadeType.ALL], orphanRemoval = true)
+    @OrderBy("id DESC")
     val orders: List<Order>,
 
     @OneToOne
