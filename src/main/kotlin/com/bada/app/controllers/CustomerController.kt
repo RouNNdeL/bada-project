@@ -2,6 +2,10 @@ package com.bada.app.controllers
 
 import com.bada.app.auth.CustomerUserDetails
 import com.bada.app.auth.SimpleUserDetails
+import com.bada.app.models.CartItem
+import com.bada.app.repos.CustomerRepository
+import com.bada.app.repos.ItemRepository
+import com.bada.app.repos.WarehousesRepository
 import com.bada.app.models.*
 import com.bada.app.repos.*
 import org.springframework.http.HttpStatus
@@ -10,10 +14,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
-import org.springframework.web.bind.annotation.DeleteMapping
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.*
 import org.springframework.web.server.ResponseStatusException
 import javax.servlet.http.HttpSession
 
@@ -21,14 +22,19 @@ import javax.servlet.http.HttpSession
 @Controller
 class CustomerController(
     val customerRepository: CustomerRepository,
+    val itemRepository: ItemRepository,
+    val warehousesRepository: WarehousesRepository,
     val employeeRepository: EmployeeRepository,
     val orderRepository: OrderRepository,
-    val itemRepository: ItemRepository,
     val addressRepository: AddressRepository,
-    val countryRepository: CountryRepository
+    val countryRepository: CountryRepository,
 ) {
     @GetMapping("/user/login")
-    fun customerLogin(): String {
+    fun customerLogin(authentication: Authentication?): String {
+        if (authentication != null){
+            return "redirect:/user/home"
+        }
+
         return "client_login"
     }
 
@@ -45,6 +51,7 @@ class CustomerController(
         }
 
         model.addAttribute("user", customer)
+        model.addAttribute("path", "/user")
         return "customer_home"
     }
 
@@ -61,6 +68,7 @@ class CustomerController(
 
         model.addAttribute("cartItems", mapped)
         model.addAttribute("cartTotalCost", cartTotalCost)
+        model.addAttribute("path", "/user")
 
         return "store"
     }
@@ -74,6 +82,7 @@ class CustomerController(
 
         model.addAttribute("cartItems", mapped)
         model.addAttribute("cartTotalCost", cartTotalCost)
+        model.addAttribute("path", "/user")
 
         return "store_checkout"
     }
@@ -125,8 +134,9 @@ class CustomerController(
         session.removeAttribute("cartItems")
 
 
-        // TODO: Replace with order confirm view
-        return "store_checkout"
+        model.addAttribute("path", "/user")
+        model.addAttribute("id", order.id)
+        return "order_confirmation"
     }
 
     @Suppress("UNCHECKED_CAST")
@@ -158,6 +168,32 @@ class CustomerController(
         return ResponseEntity.ok().body("Success")
     }
 
+    @GetMapping("/user/store/item/{id}")
+    fun item(@PathVariable id: Long, model: Model, authentication: Authentication?): String {
+        if (authentication == null) {
+            throw ResponseStatusException(HttpStatus.UNAUTHORIZED)
+        }
+
+        val user = authentication.principal as? SimpleUserDetails ?: throw RuntimeException("Invalid user principal")
+        val item = itemRepository.findById(id).orElseThrow {
+            throw ResponseStatusException(HttpStatus.NOT_FOUND)
+        }
+
+        model.addAttribute("user", user)
+
+        val warehouses = warehousesRepository.findAllByCompanyId(user.companyId)
+
+        model.addAttribute("item", item)
+        model.addAttribute("stock", item.getMergedStock(warehouses.toList()))
+        model.addAttribute("canSave", false)
+
+        itemRepository.save(item)
+
+        model.addAttribute("path", "/user")
+
+        return "store_item"
+    }
+
     @PostMapping(
         "/user/details",
         consumes = [MediaType.APPLICATION_FORM_URLENCODED_VALUE]
@@ -187,5 +223,19 @@ class CustomerController(
 
         model.addAttribute("user", customer)
         return "customer_home"
+    }
+
+    @PostMapping("/user/delete")
+    fun deleteUser(authentication: Authentication?): String {
+        if (authentication == null) {
+            throw ResponseStatusException(HttpStatus.UNAUTHORIZED)
+        }
+
+        val user = authentication.principal as? SimpleUserDetails ?: throw RuntimeException("Invalid user principal")
+
+        val customer = customerRepository.findByUsername(user.username).get()
+
+        customerRepository.deleteById(customer.id!!)
+        return "redirect:/user/logout"
     }
 }

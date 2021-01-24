@@ -8,16 +8,16 @@
 <body>
 <nav th:replace="fragments/layout :: navbar(~{ :: #navbarRight}, ~{ :: #navbarLeft})">
     <ul class="navbar-nav mr-auto" id="navbarRight">
-        <li class="nav-item active">
-            <a class="nav-link" th:href="@{/}">Home</a>
+        <li class="nav-item">
+            <a class="nav-link active" th:href="@{__${path}__/home}">Home</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link active" th:href="@{/user/store}">Store</a>
+            <a class="nav-link active" th:href="@{__${path}__/store}">Store</a>
         </li>
     </ul>
     <ul class="navbar-nav ml-auto" id="navbarLeft">
         <li class="nav-item">
-            <a class="nav-link" th:href="@{/user/logout}">Logout</a>
+            <a class="nav-link" th:href="@{__${path}__/logout}">Logout</a>
         </li>
     </ul>
 </nav>
@@ -108,9 +108,10 @@
                         </div>
                     </li>
                 </ul>
-                <div class="d-flex justify-content-center align-items-center">
+                <div class="d-flex justify-content-between align-items-center">
                     <!-- Button trigger modal -->
-                    <button type="button" class="btn btn-primary m-1" data-toggle="modal" data-target="#exampleModal">
+                    <button type="button" class="btn btn-primary m-2 mx-3" data-toggle="modal"
+                            data-target="#exampleModal">
                         Edit
                     </button>
                     <!-- Modal -->
@@ -135,14 +136,12 @@
                                             <div class="form-group col-md-3">
                                                 <label for="inputFirstName">First Name</label>
                                                 <input type="text" class="form-control" id="inputFirstName"
-                                                       name="firstName"
-                                                       th:value="${user.firstName}">
+                                                       name="firstName" th:value="${user.firstName}">
                                             </div>
                                             <div class="form-group col-md-3">
                                                 <label for="inputLastName">Last Name</label>
                                                 <input type="text" class="form-control" id="inputLastName"
-                                                       name="lastName"
-                                                       th:value="${user.lastName}">
+                                                       name="lastName" th:value="${user.lastName}">
                                             </div>
                                         </div>
                                         <div class="form-row">
@@ -160,14 +159,12 @@
                                         <div class="form-group">
                                             <label for="inputAddress">Address</label>
                                             <input type="text" class="form-control" id="inputAddress"
-                                                   name="addressLine1"
-                                                   th:value="${user.address.addressLine1}">
+                                                   name="addressLine1" th:value="${user.address.addressLine1}">
                                         </div>
                                         <div class="form-group">
                                             <label for="inputAddress2">Address 2</label>
                                             <input type="text" class="form-control" id="inputAddress2"
-                                                   name="addressLine2"
-                                                   th:value="${user.address.addressLine2}">
+                                                   name="addressLine2" th:value="${user.address.addressLine2}">
                                         </div>
                                         <div class="form-row">
                                             <div class="form-group col-md-9">
@@ -186,6 +183,35 @@
                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close
                                         </button>
                                         <button type="submit" class="btn btn-primary">Save changes</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-danger m-2 mx-3" data-toggle="modal"
+                            data-target="#exampleModalDelete">
+                        Delete Account
+                    </button>
+                    <div class="modal fade" id="exampleModalDelete" tabindex="-1"
+                         aria-labelledby="exampleModalLabelDelete" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <form method="POST" th:action="@{/user/delete}">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabelDelete">Do you want to delete your
+                                            account</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body d-flex justify-content-center">
+                                        <button type="button" class="btn btn-secondary mx-2" data-dismiss="modal">Close
+                                        </button>
+                                        <button type="submit" class="btn btn-danger mx-2">Delete</button>
+                                    </div>
+                                    <div class="modal-footer">
                                     </div>
                                 </form>
                             </div>
@@ -230,7 +256,8 @@
                                     <div>
 
                                         <p class="font-weight-normal m-0">
-                                            <a th:href="@{/user/store/item/__${item?.item?.id}__}" class="text-reset"
+                                            <a th:href="@{__${path}__/store/item/__${item?.item?.id}__}"
+                                               class="text-reset"
                                                th:text="${item?.item?.name}">Rezystroy 10k</a>
                                         </p>
 

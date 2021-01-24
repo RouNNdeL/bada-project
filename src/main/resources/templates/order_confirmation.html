@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/layout :: head('Order Confirmation')">
+    <meta charset="UTF-8">
+    <title>Order Confirmation</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/static/css/main.css}"/>
+</head>
+<body>
+<nav th:replace="fragments/layout :: navbar(~{ :: #navbarRight}, ~{ :: #navbarLeft})">
+    <ul class="navbar-nav mr-auto" id="navbarRight">
+        <li class="nav-item">
+            <a class="nav-link active" th:href="@{__${path}__/home}">Home</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link active" th:href="@{__${path}__/store}">Store</a>
+        </li>
+    </ul>
+    <ul class="navbar-nav ml-auto" id="navbarLeft">
+        <li class="nav-item">
+            <a class="nav-link" th:href="@{__${path}__/logout}">Logout</a>
+        </li>
+    </ul>
+</nav>
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <div class="card bg-white my-3 p-3 d-flex justify-content-center">
+                <h3 class="card-title d-flex justify-content-center">Order Confirmation</h3>
+                <div class="d-flex justify-content-center my-3">
+                    Thanks for using our services, your order: Order #<span th:text="${id}"></span> has been confirmed.
+                </div>
+                <div class="d-flex justify-content-center">
+                    <a class="btn btn-primary" th:href="@{__${path}__/store}" href="#" role="button">Go back to the Store</a>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

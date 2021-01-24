@@ -7,22 +7,22 @@
 <body>
 <nav th:replace="fragments/layout :: navbar(~{ :: .mr-auto}, ~{ :: .ml-auto})">
     <ul class="navbar-nav mr-auto">
-        <li class="nav-item active">
-            <a class="nav-link" th:href="@{/}">Home</a>
+        <li class="nav-item">
+            <a class="nav-link active" th:href="@{__${path}__/home}">Home</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link active" th:href="@{/user/store}">Store</a>
+            <a class="nav-link active" th:href="@{__${path}__/store}">Store</a>
         </li>
     </ul>
     <ul class="navbar-nav ml-auto">
         <li class="nav-item">
-            <a class="nav-link" th:href="@{/user/logout}">Logout</a>
+            <a class="nav-link" th:href="@{__${path}__/logout}">Logout</a>
         </li>
     </ul>
 </nav>
 <div class="container">
     <div class="card mt-3" style="width: 100%;">
-        <form th:action="@{/management/store/item/__${item?.id}__/update}" method="post" id="itemSaveForm">
+        <form th:action="@{__${path}__/store/item/__${item?.id}__/update}" method="post" id="itemSaveForm">
             <div class="card-body">
                 <h5 class="card-title" th:text="${item.name}">10k resistor</h5>
                 <h6 class="card-subtitle mb-2 text-muted font-weight-light" th:text="|ID: ${item?.id}|">ID: 123455</h6>
@@ -46,8 +46,8 @@
                                        style="max-width: 75px"
                                        th:if="${user.hasPermission('CHANGE_PRICE')}"/>
                                 <button th:if="${user.hasPermission('CHANGE_PRICE')}"
-                                        class="btn btn-danger btn-sm removePriceRangeBtn ml-2" type="button">
-                                    <i class="material-icons">trash</i>
+                                        class="btn btn-danger btn-sm removePriceRangeBtn ml-2 price-range-delete" type="button">
+                                    <i class="material-icons">delete</i>
                                 </button>
                                 <p class="m-0" th:text="|$${priceRange.price}|"
                                    th:unless="${user.hasPermission('CHANGE_PRICE')}">5$</p>
@@ -96,11 +96,8 @@
             </div>
             <div>
                 <input class="m-0 priceRangePrice" style="max-width: 75px">
-                <button class="btn btn-danger btn-sm removePriceRangeBtn ml-2" type="button">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                         class="bi bi-trash-fill" viewBox="0 0 16 16">
-                        <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
-                    </svg>
+                <button class="btn btn-danger btn-sm removePriceRangeBtn ml-2 price-range-delete" type="button">
+                    <i class="material-icons">delete</i>
                 </button>
             </div>
         </div>

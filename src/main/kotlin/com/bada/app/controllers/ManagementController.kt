@@ -27,7 +27,10 @@ class ManagementController(
 ) {
 
     @GetMapping("/management/login")
-    fun managementLogin(): String {
+    fun managementLogin(authentication: Authentication?): String {
+        if (authentication != null){
+            return "redirect:/management/home"
+        }
         return "management_login"
     }
 
@@ -82,6 +85,7 @@ class ManagementController(
         val employee = employeeRepository.findByUsername(user.username).orElseThrow {
             throw ResponseStatusException(HttpStatus.UNAUTHORIZED)
         }
+        model.addAttribute("path", "/management")
         return employeeHome(model, employee)
     }
 
@@ -118,6 +122,8 @@ class ManagementController(
         model.addAttribute("canSave", canSave)
 
         itemRepository.save(item)
+
+        model.addAttribute("path", "/management")
 
         return "store_item"
     }
@@ -178,6 +184,7 @@ class ManagementController(
         val items = itemRepository.findAll()
         model.addAttribute("items", items)
         model.addAttribute("cart", false)
+        model.addAttribute("path", "/management")
         return "store"
     }
 
