@@ -23,20 +23,7 @@ class Address(
     var country: Country,
 
 
-    ) : AbstractEntityLong(), Serializable {
-    constructor(
-        addressLine1: String,
-        addressLine2: String,
-        zipcode: String?,
-        city: String?,
-        countryRepository: CountryRepository
-    ) : this(
-        addressLine1,
-        addressLine2,
-        zipcode,
-        city,
-        countryRepository.findByCountryName("Poland").orElseThrow()
-    )
+    ) : AbstractEntity<Long>(), Serializable {
 
     override fun toString(): String {
         return "$addressLine1\n$addressLine2\n$zipcode $city\n${country.countryName}"

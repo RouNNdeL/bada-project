@@ -27,4 +27,4 @@ class Company(
 
     @OneToMany(mappedBy = "company")
     val customers: Set<Customer>,
-) : AbstractEntityLong()
+) : AbstractEntity<Long>()

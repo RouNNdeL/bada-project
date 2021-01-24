@@ -24,7 +24,7 @@ class Order(
 
     @OneToMany(mappedBy = "order", cascade = [CascadeType.ALL], orphanRemoval = true)
     val items: List<OrderItem>
-) : AbstractEntityLong() {
+) : AbstractEntity<Long>() {
     enum class Status {
         RECEIVED,
         IN_PROGRESS,

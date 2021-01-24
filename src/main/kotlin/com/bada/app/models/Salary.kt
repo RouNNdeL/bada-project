@@ -12,4 +12,4 @@ class Salary(
     val date: Date,
 
     val salary: Double
-) : AbstractEntityLong()
+) : AbstractEntity<Long>()

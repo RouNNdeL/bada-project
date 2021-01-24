@@ -13,4 +13,4 @@ class Country(
     var isoCode: String,
 
     var phonePrefix: String
-) : AbstractEntityLong()
+) : AbstractEntity<Long>()

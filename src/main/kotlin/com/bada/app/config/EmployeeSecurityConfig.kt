@@ -28,11 +28,12 @@ class EmployeeSecurityConfig(
             }
             formLogin {
                 loginPage = "/management/login"
-                defaultSuccessUrl("/management/home", false)
+                defaultSuccessUrl("/management/home", true)
                 permitAll()
             }
             logout {
                 logoutUrl = "/management/logout"
+                logoutSuccessUrl = "/management/login"
             }
             csrf {
                 disable()

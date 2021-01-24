@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/layout :: head('Assigned orders')">
+<head th:replace="fragments/layout :: head('Item')">
     <meta charset="UTF-8">
-    <title>Assigned orders</title>
+    <title>Item</title>
 </head>
 <body>
 <nav th:replace="fragments/layout :: navbar(~{ :: .mr-auto}, ~{ :: .ml-auto})">
@@ -11,18 +11,18 @@
             <a class="nav-link" th:href="@{/}">Home</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link active" th:href="@{/store}">Store</a>
+            <a class="nav-link active" th:href="@{/user/store}">Store</a>
         </li>
     </ul>
     <ul class="navbar-nav ml-auto">
         <li class="nav-item">
-            <a class="nav-link" th:href="@{/logout}">Logout</a>
+            <a class="nav-link" th:href="@{/user/logout}">Logout</a>
         </li>
     </ul>
 </nav>
 <div class="container">
     <div class="card mt-3" style="width: 100%;">
-        <form th:action="@{/store/item/__${item?.id}__/update}" method="post" id="itemSaveForm">
+        <form th:action="@{/management/store/item/__${item?.id}__/update}" method="post" id="itemSaveForm">
             <div class="card-body">
                 <h5 class="card-title" th:text="${item.name}">10k resistor</h5>
                 <h6 class="card-subtitle mb-2 text-muted font-weight-light" th:text="|ID: ${item?.id}|">ID: 123455</h6>
@@ -69,7 +69,7 @@
                         th:each="stockItem: ${stock}"
                         th:id="|warehouseStockId${stockItem.warehouse.id}=${warehouseIdEdit}|">
                         <p class="m-0"
-                           th:text="${stockItem.warehouse.nameci}">
+                           th:text="${stockItem.warehouse.name}">
                             Warszawa</p>
                         <span class="badge bg-primary rounded-pill text-white px-2 py-1"
                               th:unless="${user.hasPermission('CHANGE_STOCK_ALL') || (user.hasPermission('CHANGE_STOCK') && warehouseIdEdit == stockItem.warehouse.id)}"

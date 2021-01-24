@@ -2,18 +2,24 @@ package com.bada.app.config
 
 import com.bada.app.auth.CustomerDetailsService
 import com.bada.app.auth.Role
+import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.annotation.Order
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
 import org.springframework.security.config.web.servlet.invoke
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+
+
+
 
 @Configuration
 @Order(2)
 class CustomerSecurityConfig(
     val customerDetailsService: CustomerDetailsService
 ) : WebSecurityConfigurerAdapter() {
+
 
     override fun configure(http: HttpSecurity?) {
         http {
@@ -23,11 +29,12 @@ class CustomerSecurityConfig(
             }
             formLogin {
                 loginPage = "/user/login"
-                defaultSuccessUrl("/", true)
+                defaultSuccessUrl("/user/home", true)
                 permitAll()
             }
             logout {
                 logoutUrl = "/user/logout"
+                logoutSuccessUrl = "/user/login"
             }
             csrf {
                 disable()
@@ -36,6 +43,6 @@ class CustomerSecurityConfig(
     }
 
     override fun configure(auth: AuthenticationManagerBuilder?) {
-        auth?.userDetailsService(customerDetailsService)
+        auth?.userDetailsService(customerDetailsService)?.passwordEncoder(BCryptPasswordEncoder())
     }
 }

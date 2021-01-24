@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*
 import org.springframework.web.server.ResponseStatusException
 
 @Controller
-class CompanyController(
+class ManagementController(
     val employeeRepository: EmployeeRepository,
     val orderRepository: OrderRepository,
     val itemRepository: ItemRepository,

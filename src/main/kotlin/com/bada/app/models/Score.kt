@@ -14,4 +14,4 @@ class Score(
     var quarter: Int,
 
     var score: Double
-) : AbstractEntityLong()
+) : AbstractEntity<Long>()

@@ -12,12 +12,12 @@
             <a class="nav-link" th:href="@{/}">Home</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link active" th:href="@{/store}">Store</a>
+            <a class="nav-link active" th:href="@{/user/store}">Store</a>
         </li>
     </ul>
     <ul class="navbar-nav ml-auto" id="navbarLeft">
         <li class="nav-item">
-            <a class="nav-link" th:href="@{/logout}">Logout</a>
+            <a class="nav-link" th:href="@{/user/logout}">Logout</a>
         </li>
     </ul>
 </nav>
@@ -222,7 +222,7 @@
                                     <div>
 
                                         <p class="font-weight-normal m-0">
-                                            <a th:href="@{/store/item/__${item?.item?.id}__}" class="text-reset"
+                                            <a th:href="@{/user/store/item/__${item?.item?.id}__}" class="text-reset"
                                                th:text="${item?.item?.name}">Rezystroy 10k</a>
                                         </p>
 

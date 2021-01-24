@@ -8,6 +8,12 @@ import javax.persistence.*
 @Entity
 @Table(name = "customers")
 class Customer(
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq")
+    @SequenceGenerator(name = "user_seq", sequenceName = "customers_id_seq", allocationSize = 50)
+    @Column(updatable = false, nullable = false)
+    override val id: Long? = null,
+
     @Column(name = "username", unique = true)
     var username: String,
     var password: String,
@@ -28,12 +34,13 @@ class Customer(
     @JoinColumn(name="address_id")
     val address: Address
 
-) : AbstractEntityLong(), Serializable {
+) : AbstractEntity<Long>(), Serializable {
     constructor(
         registerCustomer: RegisterCustomer,
-        companyRepository: CompanyRepository,
-        address: Address
+        company: Company,
+        address: Address,
     ) : this(
+        null,
         registerCustomer.username,
         registerCustomer.password,
         registerCustomer.email,
@@ -41,7 +48,7 @@ class Customer(
         registerCustomer.lastName,
         registerCustomer.nip,
         registerCustomer.phoneNumber,
-        companyRepository.findById(1).orElseThrow(),
+        company,
         emptyList(),
         address
     )

@@ -18,7 +18,7 @@ class Item(
     @OneToMany(mappedBy = "item")
     @OrderBy("min_quantity ASC")
     val priceRanges: List<PriceRange>
-) : AbstractEntityLong() {
+) : AbstractEntity<Long>() {
     fun getMergedStock(warehouses: List<Warehouse>, forceCompanyCheck: Boolean = true): List<WarehouseItem> {
         if (warehouses.isEmpty()) {
             return emptyList()

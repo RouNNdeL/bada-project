@@ -8,4 +8,4 @@ import javax.persistence.Table
 class Category(
     var name: String,
     var description: String
-) : AbstractEntityLong()
+) : AbstractEntity<Long>()
