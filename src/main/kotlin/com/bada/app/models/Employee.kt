@@ -57,4 +57,8 @@ class Employee(
     fun showPermissions(): String {
         return role.permissions.joinToString(", ")
     }
+
+    fun getNotCompletedOrders(): List<Order> {
+        return handledOrders.filter { it.status != Order.Status.COMPLETED }
+    }
 }

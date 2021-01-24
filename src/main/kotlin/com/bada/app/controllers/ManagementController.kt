@@ -30,7 +30,7 @@ class ManagementController(
 
     @GetMapping("/management/login")
     fun managementLogin(authentication: Authentication?): String {
-        if (authentication != null){
+        if (authentication != null) {
             return "redirect:/management/home"
         }
         return "management_login"
@@ -185,7 +185,7 @@ class ManagementController(
 
     @Transactional
     @PostMapping("/management/store/item/{id}/delete")
-    fun deleteItem(@PathVariable id: Long, authentication: Authentication?): String{
+    fun deleteItem(@PathVariable id: Long, authentication: Authentication?): String {
         if (authentication == null) {
             throw ResponseStatusException(HttpStatus.UNAUTHORIZED)
         }
@@ -203,7 +203,7 @@ class ManagementController(
             throw ResponseStatusException(HttpStatus.UNAUTHORIZED)
         }
 
-        if(user.hasPermission(Permission.DELETE_ITEM)){
+        if (user.hasPermission(Permission.DELETE_ITEM)) {
             orderItemRepository.deleteAllByItemId(id)
             priceRangeRepository.deleteAll(item.priceRanges)
             itemRepository.deleteById(id)
@@ -230,6 +230,7 @@ class ManagementController(
                 "warehouse_employee_home"
             }
             Role.WAREHOUSE_MANAGER -> {
+                model.addAttribute("warehouses", employee.managedWarehouses)
                 "warehouse_manager_home"
             }
             else -> throw IllegalArgumentException("Invalid role for employee ${employee.role}")

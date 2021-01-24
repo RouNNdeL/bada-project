@@ -21,6 +21,7 @@ class Warehouse(
     var manager: Employee,
 
     @OneToMany(mappedBy = "warehouse")
+    @OrderBy("id ASC")
     val employees: Set<Employee>,
 
     @OneToMany(mappedBy = "warehouse", cascade = [CascadeType.ALL], orphanRemoval = true)
