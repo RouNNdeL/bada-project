@@ -14,6 +14,7 @@ import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.ui.Model
+import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.server.ResponseStatusException
 
@@ -219,8 +220,30 @@ class ManagementController(
         val items = itemRepository.findAll()
         model.addAttribute("items", items)
         model.addAttribute("cart", false)
+        model.addAttribute("canAdd", true)
         model.addAttribute("path", "/management")
+        model.addAttribute("newItem", NewItem())
         return "store"
+    }
+
+    @PostMapping("/management/store/item/add")
+    fun addItem(
+        model: Model,
+        @ModelAttribute("newItem") newItem: NewItem,
+        bindingResult: BindingResult
+    ): String {
+        if (bindingResult.hasErrors()) {
+            return "redirect:/management/store"
+        }
+
+        if (newItem.basePrice <= 0){
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST)
+        }
+
+        val item = itemRepository.save(Item(name = newItem.name, description = newItem.description))
+        priceRangeRepository.save(PriceRange(newItem.baseQuantity, newItem.basePrice, item))
+
+        return "redirect:/management/store"
     }
 
     private fun employeeHome(model: Model, employee: Employee): String {

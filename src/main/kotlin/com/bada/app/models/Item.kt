@@ -9,16 +9,16 @@ import javax.persistence.*
 @Entity
 @Table(name = "items")
 class Item(
-    val name: String,
-    val description: String,
+    val name: String = "",
+    val description: String = "",
 
     @OneToMany(mappedBy = "item", cascade = [CascadeType.ALL], orphanRemoval = true)
     @OrderBy("warehouse_id")
-    val warehouseItems: List<WarehouseItem>,
+    val warehouseItems: List<WarehouseItem> = emptyList(),
 
     @OneToMany(mappedBy = "item")
     @OrderBy("min_quantity ASC")
-    val priceRanges: List<PriceRange>
+    val priceRanges: MutableList<PriceRange> = ArrayList(),
 ) : AbstractEntity<Long>() {
     fun getMergedStock(warehouses: List<Warehouse>, forceCompanyCheck: Boolean = true): List<WarehouseItem> {
         if (warehouses.isEmpty()) {
@@ -89,3 +89,10 @@ class CartItemMapped(
     val price = item.getPrice(quantity) ?: 0.0
     val totalPrice = price * quantity
 }
+
+class NewItem(
+    val name: String = "",
+    val basePrice: Double = 0.0,
+    val baseQuantity: Int = 1,
+    val description: String = ""
+)

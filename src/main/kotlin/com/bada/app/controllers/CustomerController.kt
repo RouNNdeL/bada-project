@@ -64,6 +64,7 @@ class CustomerController(
 
         model.addAttribute("cartItems", mapped)
         model.addAttribute("cartTotalCost", cartTotalCost)
+        model.addAttribute("canAdd", false)
         model.addAttribute("path", "/user")
 
         return "store"
