@@ -19,6 +19,6 @@ ENV PORT 8080
 EXPOSE 8080
 
 HEALTHCHECK --timeout=5s --start-period=5s --retries=1 \
-    CMD curl -f http://localhost:$PORT/health_check
+    CMD curl -f http://localhost:8081/health_check
 
 CMD ["java","-jar","-Dspring.profiles.active=default","/bada.jar"]
