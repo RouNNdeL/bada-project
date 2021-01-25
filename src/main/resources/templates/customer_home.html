@@ -201,8 +201,11 @@
     </div>
     <div class="row">
         <div class="col">
-            <h3>Orders</h3>
             <ul class="list-group accordion mx-3" id="orderAccordion">
+                <li class="list-group-item"><h4>Orders</h4></li>
+                <li class="list-group-item" th:if="${user.orders.size() == 0}">
+                    <p>You don't have any orders yet</p>
+                </li>
                 <li class="list-group-item" th:each="order, i: ${user.orders}">
                     <div class="row">
                         <div class="col-4">
