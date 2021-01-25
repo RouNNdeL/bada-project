@@ -196,7 +196,7 @@ class CustomerController(
         "/user/home",
         consumes = [MediaType.APPLICATION_FORM_URLENCODED_VALUE]
     )
-    fun updateDetails(model: Model, details: CustomerDetailsUpdate, authentication: Authentication?): String {
+    fun updateDetails(details: CustomerDetailsUpdate, authentication: Authentication?): String {
         val user = authentication?.principal as? SimpleUserDetails ?: throw RuntimeException("Invalid user principal")
 
         if (user !is CustomerUserDetails) {
@@ -218,9 +218,7 @@ class CustomerController(
         customer.nip = details.nip
 
         customer = customerRepository.save(customer)
-
-        model.addAttribute("user", customer)
-        return "customer_home"
+        return "redirect:/user/home"
     }
 
     @PostMapping("/user/delete")
