@@ -27,7 +27,7 @@ class CustomerController(
 ) {
     @GetMapping("/user/login")
     fun customerLogin(authentication: Authentication?): String {
-        if (authentication != null){
+        if (authentication != null) {
             return "redirect:/user/home"
         }
 
@@ -107,7 +107,7 @@ class CustomerController(
         val cartItems = session.getAttribute("cartItems") as? CartItems ?: CartItems()
         val mapped = cartItems.toMapped(itemRepository)
 
-        if (mapped.isEmpty()) {
+        if ((cartItems.entries.minByOrNull { it.value }?.value ?: 0) <= 0) {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST)
         }
 
@@ -151,7 +151,10 @@ class CustomerController(
         }
 
         val cartItems = session.getAttribute("cartItems") as? CartItems ?: CartItems()
-        cartItems.merge(cartItem.itemId, cartItem.quantity, Int::plus)
+        cartItems.merge(cartItem.itemId, minOf(cartItem.quantity, Int.MAX_VALUE / 2)) { a, b ->
+            minOf(Int.MAX_VALUE / 2, a + b)
+        }
+
         session.setAttribute("cartItems", cartItems)
 
         return ResponseEntity.ok().body("Success")
