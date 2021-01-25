@@ -13,7 +13,8 @@ enum class Permission {
     ASSIGN_ORDERS,
     READ_EMPLOYEES,
     WRITE_EMPLOYEES,
-    DELETE_ITEM
+    DELETE_ITEM,
+    ADD_ITEM
 }
 
 enum class Role(permissions: MutableList<Permission>) {
@@ -26,7 +27,8 @@ enum class Role(permissions: MutableList<Permission>) {
             Permission.CHANGE_STOCK,
             Permission.ASSIGN_ORDERS,
             Permission.CHANGE_PRICE,
-            Permission.DELETE_ITEM
+            Permission.DELETE_ITEM,
+            Permission.ADD_ITEM
         )
     );
 
