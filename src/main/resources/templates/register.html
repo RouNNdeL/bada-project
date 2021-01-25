@@ -59,12 +59,13 @@
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label for="inputPhone">Phone number</label>
-                            <input th:field="*{phoneNumber}" name="phoneNumber" type="text" class="form-control"
+                            <input th:field="*{phoneNumber}" name="phoneNumber" type="tel" class="form-control"
+                                   pattern="^((\+\d{1,3} ?)?(\d{3} ?){3})$"
                                    id="inputPhone" required="true">
                         </div>
                         <div class="form-group col-md-6">
                             <label for="inputNip">NIP</label>
-                            <input th:field="*{nip}" name="nip" type="text" class="form-control" id="inputNip">
+                            <input th:field="*{nip}" name="nip" type="number" class="form-control" id="inputNip">
                         </div>
                     </div>
                     <div class="form-group">
@@ -86,7 +87,8 @@
                         </div>
                         <div class="form-group col-md-3">
                             <label for="inputZip">Zip</label>
-                            <input th:field="*{zipcode}" name="zipcode" type="text" class="form-control" id="inputZip"
+                            <input th:field="*{zipcode}" name="zipcode" type="text" inputmode="numeric"
+                                   pattern="^\d{2}-\d{3}$" class="form-control" id="inputZip"
                                    required="true">
                         </div>
                     </div>

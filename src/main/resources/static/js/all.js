@@ -5,6 +5,21 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    if (document.location.search.match(/error/) !== null &&
+        document.location.pathname.match(/login/) !== null) {
+        const passwordValidation = document.getElementById("validationPassword");
+        const passwordHelp = document.getElementById("passwordHelp");
+        const password = document.getElementById("password");
+        const username = document.getElementById("username");
+
+        if (passwordValidation !== null && passwordHelp !== null && password !== null && username !== null) {
+            passwordValidation.className = passwordValidation.className.replace(/\bd-none\b/, "");
+            passwordHelp.className += " d-none";
+            password.className += " is-invalid";
+            username.className += " is-invalid";
+        }
+    }
+
     document.querySelectorAll(".updateOrderForm").forEach(form => {
         form.querySelector("select").addEventListener("change", it => {
             const data = {
