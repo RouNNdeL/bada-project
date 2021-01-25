@@ -78,7 +78,7 @@
     <div class="row flex-grow-1 d-flex justify-content-center px-2 py-3">
         <div class="col-sm-9 px-2">
             <div class="card bg-white py-3">
-                <ul class="list-group-flush">
+                <ul class="list-group-flush pl-0 mb-0">
                     <li class="list-group-item d-flex justify-content-between align-items-center"
                         th:each="item : ${items}"
                         th:attr="data-price-ranges=${item.getPriceRangeJson()},data-item-id=${item?.id}">
@@ -109,7 +109,8 @@
             <div class="card sticky-top">
                 <div class="card-body">
                     <h5 class="card-title">Shopping Cart</h5>
-                    <h6 class="card-subtitle mb-2 text-muted">Total Cost: $<span th:text="${cartTotalCost}">10</span>
+                    <h6 class="card-subtitle mb-2 text-muted">Total Cost: $<span
+                            th:text="${#numbers.formatDecimal(cartTotalCost, 1,2)}">10</span>
                     </h6>
                     <ul class="list-group list-group-flush mb-2">
                         <li class="list-group-item px-0" th:each="item, i : ${cartItems}">
