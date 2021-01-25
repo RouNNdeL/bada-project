@@ -147,7 +147,9 @@
                                         <div class="form-row">
                                             <div class="form-group col-md-6">
                                                 <label for="inputFirstName">Nip</label>
-                                                <input type="text" class="form-control" id="inputNip" name="number"
+                                                <input type="text" class="form-control" id="inputNip" name="text"
+                                                       inputmode="numeric"
+                                                       pattern="^\d{3}-?\d{3}-?\d{2}-?\d{2}$"
                                                        th:value="${user.nip}">
                                             </div>
                                             <div class="form-group col-md-6">

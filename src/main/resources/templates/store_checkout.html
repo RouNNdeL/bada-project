@@ -111,39 +111,42 @@
                     <div class="form-row">
                         <div class="form-group col-md-3">
                             <label for="inputFirstName">First Name</label>
-                            <input type="text" class="form-control" id="inputFirstName" placeholder="John"
+                            <input type="text" class="form-control" id="inputFirstName" placeholder="John" required
                                    name="firstName">
                         </div>
                         <div class="form-group col-md-3">
                             <label for="inputLastName">Last Name</label>
-                            <input type="text" class="form-control" id="inputLastName" placeholder="Smith"
+                            <input type="text" class="form-control" id="inputLastName" placeholder="Smith" required
                                    name="lastName">
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="inputAddress">Address</label>
-                        <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St"
+                        <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St" required
                                name="addressLine1">
                     </div>
                     <div class="form-group">
                         <label for="inputAddress2">Address 2</label>
-                        <input type="text" class="form-control" id="inputAddress2" name="addressLine2"
+                        <input type="text" class="form-control" id="inputAddress2" name="addressLine2" required
                                placeholder="Apartment, studio, or floor">
                     </div>
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label for="inputCity">City</label>
-                            <input type="text" class="form-control" id="inputCity" placeholder="New York City"
+                            <input type="text" class="form-control" id="inputCity" placeholder="New York City" required
                                    name="city">
                         </div>
                         <div class="form-group col-md-2">
                             <label for="inputZip">Zip</label>
-                            <input type="text" class="form-control" id="inputZip" placeholder="13370" name="zip">
+                            <input type="text" class="form-control" id="inputZip" pattern="^\d{2}-\d{3}$"
+                                   inputmode="numeric"
+                                   placeholder="13-370" name="zip" required>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="gridCheck" name="acceptedTerms">
+                            <input class="form-check-input" type="checkbox" id="gridCheck" name="acceptedTerms"
+                                   required>
                             <label class="form-check-label" for="gridCheck">
                                 I accept terms of service
                             </label>
