@@ -216,11 +216,17 @@ class ManagementController(
     }
 
     @GetMapping("/management/store")
-    fun store(model: Model): String {
+    fun store(model: Model, authentication: Authentication?): String {
+        if (authentication == null) {
+            throw ResponseStatusException(HttpStatus.UNAUTHORIZED)
+        }
+
+        val user = authentication.principal as? SimpleUserDetails ?: throw RuntimeException("Invalid user principal")
+        val canAdd = user.hasPermission(Permission.ADD_ITEM)
         val items = itemRepository.findAll()
         model.addAttribute("items", items)
         model.addAttribute("cart", false)
-        model.addAttribute("canAdd", true)
+        model.addAttribute("canAdd", canAdd)
         model.addAttribute("path", "/management")
         model.addAttribute("newItem", NewItem())
         return "store"
@@ -230,18 +236,38 @@ class ManagementController(
     fun addItem(
         model: Model,
         @ModelAttribute("newItem") newItem: NewItem,
-        bindingResult: BindingResult
+        bindingResult: BindingResult,
+        authentication: Authentication?
     ): String {
         if (bindingResult.hasErrors()) {
             return "redirect:/management/store"
+        }
+
+        if (authentication == null) {
+            throw ResponseStatusException(HttpStatus.UNAUTHORIZED)
+        }
+
+        val user = authentication.principal as? SimpleUserDetails ?: throw RuntimeException("Invalid user principal")
+
+        if (user !is EmployeeUserDetails) {
+            throw ResponseStatusException(HttpStatus.FORBIDDEN)
+        }
+
+        val employee = employeeRepository.findByUsername(user.username).orElseThrow {
+            throw ResponseStatusException(HttpStatus.UNAUTHORIZED)
         }
 
         if (newItem.basePrice <= 0){
             throw ResponseStatusException(HttpStatus.BAD_REQUEST)
         }
 
-        val item = itemRepository.save(Item(name = newItem.name, description = newItem.description))
-        priceRangeRepository.save(PriceRange(newItem.baseQuantity, newItem.basePrice, item))
+        if (user.hasPermission(Permission.ADD_ITEM)) {
+            val item = itemRepository.save(Item(name = newItem.name, description = newItem.description))
+            priceRangeRepository.save(PriceRange(newItem.baseQuantity, newItem.basePrice, item))
+        } else {
+            throw ResponseStatusException(HttpStatus.UNAUTHORIZED)
+        }
+
 
         return "redirect:/management/store"
     }
