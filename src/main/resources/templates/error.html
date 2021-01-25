@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/layout :: head('Store')">
+    <meta charset="UTF-8">
+    <title>Store</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/static/css/main.css}"/>
+</head>
+<body>
+<div th:if="${loggedIn}">
+    <nav th:replace="fragments/layout :: navbar(~{ :: #navbarRight}, ~{ :: #navbarLeft})">
+        <ul class="navbar-nav mr-auto" id="navbarRight">
+            <li class="nav-item">
+                <a class="nav-link active" th:href="@{__${path}__/home}">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" th:href="@{__${path}__/store}">Store</a>
+            </li>
+        </ul>
+        <ul class="navbar-nav ml-auto" id="navbarLeft">
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{__${path}__/logout}">Logout</a>
+            </li>
+        </ul>
+    </nav>
+</div>
+<div th:unless="${loggedIn}">
+    <nav th:replace="fragments/layout :: navbar(~{ :: #navbarRight2}, ~{ :: #navbarLeft2})">
+        <ul class="navbar-nav mr-auto" id="navbarRight2">
+        </ul>
+        <ul class="navbar-nav ml-auto" id="navbarLeft2">
+        </ul>
+    </nav>
+</div>
+<div class="container pt-4">
+    <div class="jumbotron pt-1">
+        <img th:src="@{/static/error_monkey.png}"
+             class="w-100"/>
+        <h1 class="display-4 mt-3">OOPSIE WOOPSIE!!</h1>
+        <p class="lead">Uwu We made a fucky wucky!! A wittle fucko boingo! The code monkeys at our headquarters are
+            working VEWY HAWD to fix this!</p>
+        <hr class="my-4">
+        <small class="text-muted" th:text="${error}">Error 404</small>
+    </div>
+</div>
+</body>
+</html>
